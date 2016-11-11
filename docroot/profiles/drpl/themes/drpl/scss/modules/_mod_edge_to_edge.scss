@@ -1,0 +1,30 @@
+.panel-col-hundred {
+  & > .inside {
+    margin: 0;
+    .field-name-field-paragraphs-header,
+    .field-name-field-paragraphs {
+      & > div.field-items {
+        & > .section-column {
+          padding: 0;
+          & > .section-edge-to-edge {
+            padding: 0px;
+            border: 0;
+          }
+          & > div:not(.section-edge-to-edge) {
+            padding: 0;
+            border-left: 25px solid $white;
+            border-right: 25px solid $white;
+            &:first-child {
+              border-left: 25px solid $white !important;
+              border-right: none;
+            }
+            &:last-child {
+              border-left: none;
+              border-right: 25px solid $white !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

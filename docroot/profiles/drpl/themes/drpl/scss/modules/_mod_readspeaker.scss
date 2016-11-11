@@ -1,0 +1,62 @@
+div[id*="readspeaker_button"] {
+  // width: 330px;
+  &.rsexpanded {
+    width: 340px !important;
+  }
+  span.rsplay,
+  span.rsbtn_left.rsimg {
+    background: white;
+    .rsbtn_text {
+      line-height: 30px;
+    }
+  }
+  .rsbtn_play {
+    margin-top: -5px !important;
+    position: relative;
+    height: 50px;
+  }
+  .rsbtn_left .rsbtn_text {
+    height: 35px;
+    padding-left: 40px !important;
+  }
+}
+
+.rscompact {
+  span.rsplay,
+  span.rsbtn_left.rsimg {
+    background: transparent;
+    .rsbtn_text {
+      line-height: 30px;
+    }
+  }
+  .rsbtn_play {
+    position: relative;
+    height: 50px;
+  }
+  .rsbtn_left .rsbtn_text {
+    height: 30px;
+    top: 3px;
+    background-size: 30px 30px !important;
+    border-radius: 50%;
+  }
+}
+
+.rsbtn.rspopup .rsbtn_left .rsbtn_text {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+  margin: 0;
+}
+
+.rsbtn.rspopup.rscompact .rsbtn_left .rsbtn_text {
+  padding-left: 30px !important;
+}
+
+.rsbtn .rsbtn_left .rsbtn_text {
+  background-color: white !important;
+  background-image: url(../img/speaker.png) !important;
+  background-repeat: no-repeat;
+}
+
+.rsbtn_status_overlay {
+  display: none !important;
+}

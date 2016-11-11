@@ -1,0 +1,245 @@
+.paragraphs-item-events-search {
+  margin: 15px 0;
+  padding: 0 10px;
+  //color: #fff;
+  font-family: "Montserrat";
+  .group-paragraph {
+    .group-search {
+      display: inline-block;
+      width: 100%;
+      .field-type-blockreference {
+        display: inline-block;
+        vertical-align: middle;
+        &.field-name-field-block-reference-v2 {
+          width: 100%;
+        }
+        &.field-name-field-block-reference {
+          width: 100%;
+          #-exp-events_search-page {
+            width: 100%;
+            .views-exposed-widget {
+              &.views-widget-filter-field_event_type {
+                width: 100%;
+                .form-item-field-event-type {
+                  position: relative;
+                  background-color: #FFFFFF;
+                  @include border-radius(5px);
+                  border: none;
+                  select {
+                    background-color: transparent;
+                    position: relative;
+                    z-index: 1;
+                    padding: 6px 36px 6px 12px;
+                    @include appearance(none);
+                    border: none;
+                  }
+                    &:after {
+                    content: "\f0d7";
+                    font-family: "Font Awesome";
+                    position: absolute;
+                    top: 0;
+                    right: 5px;
+                    height: 33px;
+                    line-height: 33px;
+                    text-align: center;
+                    font-size: 24px;
+                    width: 25px;
+                    color: #000;
+                  }
+                }
+              }
+              &.views-widget-filter-search_api_views_fulltext {
+                width: 100%;
+                .form-control {
+                  @include border-radius(100px);
+                  border: none;
+                }
+              }
+              &.views-widget-filter-field_date_value,
+              &.views-widget-filter-field_date_value2 {
+                display: none;
+              }
+              &.views-submit-button {
+                width: 100%;
+                text-align: center;
+                padding: 0.5em 0 0 0;
+              }
+            }
+          }
+        }
+        section {
+          & > div {
+            display: inline-block;
+            &#drpl_events_month_navigation {
+              display: block;
+              text-align: center;
+              font-family: "Montserrat-light";
+              text-transform: uppercase;
+              margin: 30px 0;
+              .date-diary {
+                font-size: 24px;
+                width: 240px;
+              }
+              .glyphicon {
+                font-family: "Font Awesome";
+                font-size: 30px;
+                cursor: pointer;
+                color: #999;
+                &.glyphicon-menu-left {
+                  &:before {
+                    content: "\f104";
+                  }
+                }
+                &.glyphicon-menu-right {
+                  &:before {
+                    content: "\f105";
+                  }
+                }
+              }
+            }
+            &.contextual-links-wrapper {
+              display: none;
+            }
+            .events_searchs_block {
+              & > span,
+              & > div {
+                display: inline-block;
+              }
+            }
+            #edit-submit-events-search {
+              margin: 0;
+              @include border-radius(100px);
+              border-color: #DB1F16;
+              color: #DB1F16;
+              background-color: transparent;
+              padding: 6px 30px;
+              width: 100%;
+            }
+            .view-exposed-widget {
+              padding: .5em 1em 0 0;
+            }
+          }
+        }
+      }
+    }
+    .field-name-field-link {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+#views-exposed-form-events-search-page {
+  .views-exposed-widget {
+    padding: 0 0 20px 0 !important;
+    &.views-widget-filter-field_event_type,
+    &.views-widget-filter-search_api_views_fulltext {
+      padding: 0.5em 0 0 0;
+      .form-control {
+        border: 1px solid #ddd !important;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1190px) {
+  .paragraphs-item-events-search {
+    .group-paragraph {
+      .group-search {
+        .field-type-blockreference {
+          &.field-name-field-block-reference,
+          &.field-name-field-block-reference-v2 {
+            display: inline-block;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .paragraphs-item-events-search {
+    .group-paragraph {
+      .group-search {
+        .field-type-blockreference {
+          &.field-name-field-block-reference,
+          &.field-name-field-block-reference-v2 {
+            display: inline-block;
+            width: 100%;
+            margin: 0 0 20px 0;
+          }
+          &.field-name-field-block-reference {
+            #-exp-events_search-page {
+              .views-exposed-widget {
+                &.views-widget-filter-field_event_type,
+                &.views-widget-filter-search_api_views_fulltext {
+                  width: 100%;
+                  padding: 0 0 10px 0;
+                }
+                &.views-submit-button {
+                  width: 100%;
+                  text-align: center;
+                  padding: 0;
+                }
+              }
+            }
+          }
+          section {
+            > div {
+              &.block-title {
+                padding: 0;
+              }
+              &#drpl_events_month_navigation {
+                padding: 0;
+                .date-diary {
+                  width: auto;
+                  padding: 0 10px;
+                  font-size: 20px;
+                }
+                .glyphicon {
+                  font-size: 20px;
+                }
+              }
+              #edit-submit-events-search {
+                width: 50%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .paragraphs-item-events-search {
+    .group-paragraph {
+      .group-search {
+        .field-type-blockreference {
+          section {
+            > div {
+              &#drpl_events_month_navigation {
+                .date-diary {
+                  font-size: 20px;
+                }
+                .glyphicon {
+                  font-size: 20px;
+                }
+              }
+              #edit-submit-events-search {
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

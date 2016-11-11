@@ -1,0 +1,19 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_paragraphs_section_column
+//    Desripcion: -
+//    Fecha: 06/10/2016
+//******************************************************************************/
+// _mod_paragraphs_section_column
+
+@media only screen and (min-width: 992px) {
+  .section-column {
+    display: table;
+    width: 100%;
+    .paragraphs-item-column {    
+      display: table-cell;
+      float: none;
+      vertical-align: middle;
+    }
+  }
+}

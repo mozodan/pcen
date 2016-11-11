@@ -1,0 +1,78 @@
+.paragraphs-item-carousel-banners {
+  /* SHOW / HIDE ARROWS / BUTTONS IN CAROUSELS */
+  .carousel-navigation-bullets {
+    .owl-buttons {
+      display: none;
+    }
+  }
+  .carousel-navigation-arrows {
+    .owl-pagination {
+      display: none;
+    }
+  }
+  /* STYLING BUTTONS IN CAROUSELS */
+  .carousel-navigation-all,
+  .carousel-navigation-bullets,
+  .carousel-navigation-arrows {
+    .owl-controls {
+      .owl-page {
+        span {
+          width: 20px;
+          height: 20px;
+          background-color: $light_grey_2;
+        }
+      }
+      .owl-pagination {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        & > div.active {
+          span {
+            background-color: $red;
+          }
+        }
+      }
+      .owl-buttons {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        .owl-prev {
+          width: 50px;
+          height: 80px;
+          position: absolute;
+          left: 0;
+          background: none;
+          &:before {
+            font-family: "Font Awesome";
+            content: "\f104";
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 10rem;
+            color: #000;
+            width: 50px;
+            height: 80px;
+          }
+        }
+        .owl-next {
+          width: 50px;
+          height: 80px;
+          position: absolute;
+          right: 0;
+          background: none;
+          &:before {
+            font-family: "Font Awesome";
+            content: "\f105";
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 10rem;
+            color: #000;
+            width: 50px;
+            height: 80px;
+          }
+        }
+      }
+    }
+  }
+}

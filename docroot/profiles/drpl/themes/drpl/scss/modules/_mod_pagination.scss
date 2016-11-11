@@ -1,0 +1,50 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_pagination
+//    Desripcion: 
+//    Fecha: 27/10/2016
+//******************************************************************************/
+.pagination {
+  > li {
+    > a,
+    > span {
+      position: relative;
+      float: left;
+      padding: 6px 12px;
+      margin: 0 4px;
+      line-height: 1.42857143;
+      color: #000;
+      text-decoration: none;
+      border: 2px solid #fff;
+      &:hover,
+      &:focus {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #337ab7;
+        @include border-radius(4px);
+      }
+    }
+    &:first-child,
+    &:last-child {
+      > a,
+      > span {
+        @include border-radius(4px);
+      }
+    }
+    &.active {
+      > a,
+      > span {
+        background-color: #fff;
+        color: #337ab7;
+        border: 2px solid #ccc;
+        @include border-radius(4px);
+        font-weight: bold;
+        &:hover {
+          background-color: #fff;
+          color: #337ab7;
+          border: 2px solid #ccc;
+        }
+      }
+    }
+  }
+}

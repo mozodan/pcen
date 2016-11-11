@@ -1,0 +1,1937 @@
+<?php
+
+/**
+ * @file
+ * Module to prepare information of paragraphs in order to work
+ * properly using Vertical and Horizontal tabs.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function custom_drpl_paragraphs_init() {
+  libraries_load('fullcalendar');
+  libraries_load('coverflow');
+  libraries_load('jquery.imagesloaded');
+  drupal_add_js(drupal_get_path('module', 'custom_drpl_paragraphs') . '/js/custom_drpl_paragraphs.js');
+  drupal_add_css(drupal_get_path('module', 'custom_drpl_paragraphs') . '/css/coverflow.css');
+  drupal_add_css(drupal_get_path('module', 'custom_drpl_paragraphs') . '/css/menu-scroll.css');
+}
+
+/**
+ * Implements hook_libraries_menu().
+ */
+function custom_drpl_paragraphs_menu() {
+  //Paragraph diary
+  $items['calendar_script_ajax'] = array(
+    'page callback' => 'custom_drpl_paragraphs_calendar_script_ajax',
+    'access arguments' => array('access content'),
+  );
+  $items['calendar_navigation_script_ajax'] = array(
+    'page callback' => 'custom_drpl_paragraphs_events_search_navigation',
+    'access arguments' => array('access content'),
+  );
+  $items['news_navigation_script_ajax'] = array(
+    'page callback' => 'custom_drpl_paragraphs_news_search_navigation',
+    'access arguments' => array('access content'),
+  );
+  $items['files_navigation_script_ajax'] = array(
+    'page callback' => 'custom_drpl_paragraphs_files_search_navigation',
+    'access arguments' => array('access content'),
+  );
+  $items['files_showall_script_ajax'] = array(
+    'page callback' => 'custom_drpl_paragraphs_files_search_showall',
+    'access arguments' => array('access content'),
+  );
+  return $items;
+}
+
+/**
+ * hook_list_option_info()
+ *
+ */
+function custom_drpl_paragraphs_list_option_info() {
+  $info['list_mode_filter'] = array(
+    'label' => t('List mode filter'),
+    'callback' => 'custom_drpl_paragraphs_list_mode_filter',
+  );
+  $info['list_mode_config'] = array(
+    'label' => t('List mode config'),
+    'callback' => 'custom_drpl_paragraphs_list_mode_config',
+  );
+  return $info;
+}
+
+function custom_drpl_paragraphs_list_mode_filter() {
+  $options = array(
+    'categories' => t("Filter by categories"),
+    'content_type' => t("Filter by content_type"),
+  );
+  return $options;
+}
+
+function custom_drpl_paragraphs_list_mode_config() {
+  $options = array(
+    'manual' => t("Manual"),
+    'auto' => t("Auto"),
+  );
+  return $options;
+}
+
+/**
+ * hook_classy_paragraphs_list_options()
+ *
+ */
+function custom_drpl_paragraphs_classy_paragraphs_list_options($options, $field, $instance) {
+  if (isset($instance['bundle'])) {
+    if ($instance['bundle'] == 'call') {
+      $options['vertical_disposition'] = t('Vertical disposition');
+      $options['horizontal_disposition'] = t('Horizontal disposition');
+      $options['lateral_disposition'] = t('Lateral disposition');
+      $options['hover_disposition'] = t('Hover disposition');
+    }
+    elseif ($instance['bundle'] == 'featured_list') {
+      //$options['one_columns'] = t('1 column - 100%');
+      $options['two_columns'] = t('2 columns - 50%');
+      $options['three_columns'] = t('3 columns - 33%');
+      $options['four_columns'] = t('4 columns - 25%');
+    }
+    elseif ($instance['bundle'] == 'gallery' || $instance['bundle'] == 'list') {
+      $options['one_column'] = t('1 column - 100%');
+      $options['two_columns'] = t('2 columns - 50%');
+      $options['three_columns'] = t('3 columns - 33%');
+      $options['four_columns'] = t('4 columns - 25%');
+    }
+    elseif ($instance['bundle'] == 'two_columns') {
+      $options['50_x_50'] = t('50%/50%');
+      $options['25_x_75'] = t('25%/75%');
+      $options['75_x_25'] = t('75%/25%');
+    }
+    elseif ($instance['bundle'] == 'link_list') {
+      $options['simple_links'] = t('Simple links');
+      $options['simple_links_bullet'] = t('Simple links with left bullet');
+      $options['simple_links_bullet_border'] = t('Simple links with left bullet and border bottom');
+      $options['simple_links_square'] = t('Simple links with left square');
+      $options['simple_links_square_border'] = t('Simple links with left square and border bottom');
+      $options['simple_links_background_color'] = t('Simple links with background color');
+      $options['simple_links_individual_button'] = t('Simple links with single individual button');
+      $options['simple_links_global_button'] = t('Simple links with global button more information');
+      $options['simple_links_tags'] = t('Simple links with tags format');
+    }
+    elseif ($instance['bundle'] == 'information_container_block') {
+      $options['#e8b792'] = t('Orange');
+      $options['#e8df92'] = t('Yellow');
+      $options['#92cce8'] = t('Blue');
+      $options['#92e8e2'] = t('Green');
+    }
+    elseif ($instance['bundle'] == 'carousel_banners') {
+      $options['50_x_100'] = t('50%');
+      $options['100_x_100'] = t('100%');
+    }
+    elseif ($instance['bundle'] == 'column') { //Bootstrap columns
+      //$options['1_columns'] = t('10% ');
+      //$options['2_columns'] = t('15%');
+      $options['3_columns'] = t('25%');
+      $options['4_columns'] = t('34%');
+      $options['5_columns'] = t('40%');
+      $options['6_columns'] = t('50%');
+      $options['7_columns'] = t('60%');
+      $options['8_columns'] = t('66%');
+      $options['9_columns'] = t('75%');
+      //$options['10_columns'] = t('85%');
+      //$options['11_columns'] = t('90%');
+      $options['12_columns'] = t('100%');
+    }
+  }
+  return $options;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function custom_drpl_paragraphs_libraries_info() {
+  $libraries = array();
+  $libraries['coverflow'] = array(
+    'name' => 'Coverflow',
+    'vendor url' => 'https://coverflowjs.github.io/coverflow/',
+    'download url' => 'https://github.com/coverflowjs/coverflow/archive/3.0.2.zip',
+    'version arguments' => array(
+      'file' => 'jquery.coverflow.js',
+      'pattern' => '@(?i:CoverflowJS -)\sv?([0-9\.a-z]+)@',
+      'lines' => 5,
+    ),
+    'files' => array(
+      'js' => array(
+        'jquery-ui.min.js',
+        'jquery.coverflow.js',
+        'jquery.interpolate.js',
+        'jquery.mousewheel.js',
+        'jquery.touchSwipe.min.js',
+        'reflection.js',
+      ),
+    ),
+    'variants' => array(
+      'minified' => array(
+        'files' => array(
+          'js' => array(
+            'jquery-ui.min.js',
+            'jquery.coverflow.js',
+            'jquery.interpolate.js',
+            'jquery.mousewheel.js',
+            'jquery.touchSwipe.min.js',
+            'reflection.js',
+          ),
+        ),
+      ),
+      'source' => array(
+        'files' => array(
+          'js' => array(
+            'jquery-ui.min.js',
+            'jquery.coverflow.js',
+            'jquery.interpolate.js',
+            'jquery.mousewheel.js',
+            'jquery.touchSwipe.min.js',
+            'reflection.js',
+          ),
+        ),
+      ),
+    ),
+  );
+  $libraries['fullcalendar'] = array(
+    'name' => 'Fullcalendar',
+    'vendor url' => 'http://fullcalendar.io/',
+    'download url' => 'https://github.com/arshaw/fullcalendar/releases/download/v2.9.1/fullcalendar-2.9.1.zip',
+    'version arguments' => array(
+      'file' => 'fullcalendar.min.js',
+      'pattern' => '@(?i:FullCalendar)\sv?([0-9\.a-z]+)@',
+      'lines' => 5,
+    ),
+    'files' => array(
+      'js' => array(
+        'lib/moment.min.js',
+        'fullcalendar.js',
+        'lang/es.js',
+        'lang/en-gb.js',
+      ),
+      'css' => array(
+        'fullcalendar.css',
+      ),
+    ),
+    'variants' => array(
+      'minified' => array(
+        'files' => array(
+          'js' => array(
+            'fullcalendar.min.js',
+            'lib/moment.min.js'
+          ),
+        ),
+      ),
+      'source' => array(
+        'files' => array(
+          'js' => array(
+            'lib/moment.min.js',
+            'fullcalendar.js',
+            'lang/es.js',
+            'lang/en-gb.js',
+          ),
+          'css' => array(
+            'fullcalendar.css',
+          ),
+        ),
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function custom_drpl_paragraphs_block_info() {
+  $blocks = array();
+  $blocks['diary_fullcalendar'] = array(
+    'info' => t('Fullcalendar diary'),
+  );
+  $blocks['coverflow_controls'] = array(
+    'info' => t('Coverflow controls'),
+  );
+  $blocks['custom_drpl_slider_menu'] = array(
+    'info' => t('Slider menu paragraphs'),
+  );
+  $blocks['drpl_events_month_navigation'] = array(
+    'info' => t('Events searchs month navigation'),
+  );
+  $blocks['drpl_news_dates_navigation'] = array(
+    'info' => t('News searchs dates navigation'),
+  );
+  $blocks['drpl_files_dates_navigation'] = array(
+    'info' => t('Files searchs dates navigation'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function custom_drpl_paragraphs_block_view($delta='') {
+  $block = array();
+  switch ($delta) {
+    case 'diary_fullcalendar' :
+      $block['content'] = custom_drpl_paragraphs_diary_fullcalendar();
+      break;
+    case 'drpl_files_dates_navigation' :
+      $block['subject'] = t('Files search');
+      $block['content'] = custom_drpl_paragraphs_files_dates_navigation();
+      break;  
+    case 'coverflow_controls' :
+      $block['content'] = custom_drpl_paragraphs_coverflow_controls();
+      break;
+    case 'custom_drpl_slider_menu' :
+      $block['subject'] = t('Sections');
+      $block['content'] = custom_drpl_paragraphs_slider_menu_paragraphs();
+      break;
+    case 'drpl_events_month_navigation' :
+      $block['subject'] = t('Events search');
+      $block['content'] = custom_drpl_paragraphs_events_month_navigation();
+      break;
+    case 'drpl_news_dates_navigation' :
+      $block['subject'] = t('News search');
+      $block['content'] = custom_drpl_paragraphs_news_dates_navigation();
+      break;
+  }
+  return $block;
+}
+
+function custom_drpl_paragraphs_files_search_navigation($args = '') {
+  $response = '';
+  $action = isset($_GET['action']) ? $_GET['action'] : NULL;
+  if (!empty($action)) {
+    $date = isset($_GET['date']) ? $_GET['date'] : NULL;
+    $type = isset($_GET['type']) ? $_GET['type'] : NULL;
+    if (!empty($date) && !empty($type)) {
+      $month = explode('-', $date)[1];
+      $year = explode('-', $date)[0];
+      $response = array();
+      $action_date = '';
+      switch ($type) {
+        case 'month':
+          $date_single = 'month';
+          $action_date = " " . $action . "1 month";
+          break;
+        case 'year':
+          $action_date = " " . $action . "1 year";
+          break;
+      }
+      $response['date'] = date("Y-m", strtotime($date . $action_date));
+      $response['month'] = date("m", strtotime($response['date']));
+      $response['long_month'] = format_date(strtotime($response['date']), 'long_month');
+      $response['year'] = date("Y", strtotime($response['date']));
+    }
+  }
+  print json_encode($response); //Response to custom_drpl_paragraphs.js --> Drupal.behaviors.DRPLParagraphsFilesSearch
+  exit;
+}
+
+function custom_drpl_paragraphs_files_search_showall($args = '') {
+  $date = isset($_GET['date']) ? $_GET['date'] : date("Y-m");
+  $response = array();
+  $response['list'] = views_embed_view('file_list_by_date', 'file_list_by_date_block', date($date));
+  print json_encode($response); //Response to custom_drpl_paragraphs.js --> Drupal.behaviors.DRPLParagraphsFilesSearch
+  exit;
+}
+
+function custom_drpl_paragraphs_files_dates_navigation() {
+  $date = date("Y-m");
+  $month = format_date(strtotime($date), 'long_month');
+  $year = format_date(strtotime($date), 'year');
+  $id_num = uniqid();
+  $block_html = '<div class="files_searchs_block" id="files_searchs_block_id_' . $id_num . '">';
+    $block_html .= '<div class="date-start" date="' . $date . '">';
+      $block_html .= '<div class="date-container">';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-month glyphicon glyphicon-menu-up
+     up-arrow-date" type="month" action="+"></div>';
+            $block_html .= '<div class="date-diary month">' . $month . '</div>';
+          $block_html .= '<div class="date-arrow prev-month glyphicon glyphicon-menu-down
+     down-arrow-date" type="month" action="-"></div>';
+        $block_html .= '</div>';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-year glyphicon glyphicon-menu-up
+     up-arrow-date" type="year" action="+"></div>';
+            $block_html .= '<div class="date-diary year">' . $year . '</div>';
+          $block_html .= '<div class="date-arrow prev-year glyphicon glyphicon-menu-down
+     down-arrow-date" type="year" action="-"></div>';
+        $block_html .= '</div>';
+      $block_html .= '<div class="showall">';
+        $block_html .= t('View');
+      $block_html .= '</div>';
+    $block_html .= '</div>';
+    $block_html .= '<div id="files_searchs_block_list_' . $id_num . '">';
+      $block_html .= views_embed_view('file_list_by_date', 'file_list_by_date_block', $date);
+    $block_html .= '</div>';
+  $block_html .= '</div>';
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+function custom_drpl_paragraphs_news_search_navigation($args = '') {
+  $response = '';
+  $action = isset($_GET['action']) ? $_GET['action'] : NULL;
+  if (!empty($action)) {
+    $date = isset($_GET['date']) ? $_GET['date'] : NULL;
+    $type = isset($_GET['type']) ? $_GET['type'] : NULL;
+    if (!empty($date) && !empty($type)) {
+      $day = explode('-', $date)[2];
+      $month = explode('-', $date)[1];
+      $year = explode('-', $date)[0];
+      $response = array();
+      $action_date = '';
+      switch ($type) {
+        case 'days':
+          $action_date = " " . $action . "1 days";
+          break;
+        case 'month':
+          $date_single = 'month';
+          $current_last_day_month = date("t", strtotime($date));
+          $new_last_day_month = date("t", strtotime($year . "-" . $month . "-01 " . $action . "1 month"));
+          $new_month = date("m", strtotime($year . "-" . $month . "-01 " . $action . "1 month"));
+          if ($current_last_day_month > $new_last_day_month) {
+            $date = $year . "-" . $new_month . "-01 ";
+          }
+          else{
+            $action_date = " " . $action . "1 month";
+          }
+          break;
+        case 'year':
+          $action_date = " " . $action . "1 year";
+          break;
+      }
+      $response['date'] = date("Y-m-d", strtotime($date . $action_date));
+      $response['day'] = date("d", strtotime($response['date']));
+      $response['month'] = date("m", strtotime($response['date']));
+      $response['long_month'] = format_date(strtotime($response['date']), 'long_month');
+      $response['year'] = date("Y", strtotime($response['date']));
+    }
+  }
+  print json_encode($response); //Response to custom_drpl_paragraphs.js --> Drupal.behaviors.NewsSearch
+  exit;
+}
+
+function custom_drpl_paragraphs_news_dates_navigation() {
+  $date_start = isset($_GET['field_date_value']) ? $_GET['field_date_value'] : date("Y-m-d");
+  $date_end = isset($_GET['field_date_value2']) ? $_GET['field_date_value2'] : date("Y-m-d");
+  $date_start_since = format_date(strtotime($date_start), 'dmy');
+  $day_start = format_date(strtotime($date_start), 'day');
+  $day_end = format_date(strtotime($date_end), 'day');
+  $month_start = format_date(strtotime($date_start), 'long_month');
+  $month_end = format_date(strtotime($date_end), 'long_month');
+  $year_start = format_date(strtotime($date_start), 'year');
+  $year_end = format_date(strtotime($date_end), 'year');
+  $id_num = uniqid();
+  $block_html = '<div class="news_searchs_block" id="news_searchs_block_id_' . $id_num . '">';
+    $block_html .= '<div class="calendar-description">';
+      $block_html .= '<div class="legend">' . t('News repertory since') . ' <span class="since-date">' . $date_start_since . '</span></div>';
+      $block_html .= '<div class="description">' . t('Search tips') . '</div>';
+    $block_html .= '</div>';
+    $block_html .= '<div class="date-start" date="' . $date_start . '">';
+      $block_html .= '<div class="date-container">';
+        $block_html .= '<span class="date-from">' . t("From") . '</span>';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-day glyphicon glyphicon-menu-up
+     up-arrow-date" type="days" action="+"></div>';
+            $block_html .= '<div class="date-diary day">' . $day_start . '</div>';
+          $block_html .= '<div class="date-arrow prev-day glyphicon glyphicon-menu-down
+     down-arrow-date" type="days" action="-"></div>';
+        $block_html .= '</div>';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-month glyphicon glyphicon-menu-up
+     up-arrow-date" type="month" action="+"></div>';
+            $block_html .= '<div class="date-diary month">' . $month_start . '</div>';
+          $block_html .= '<div class="date-arrow prev-month glyphicon glyphicon-menu-down
+     down-arrow-date" type="month" action="-"></div>';
+        $block_html .= '</div>';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-year glyphicon glyphicon-menu-up
+     up-arrow-date" type="year" action="+"></div>';
+            $block_html .= '<div class="date-diary year">' . $year_start . '</div>';
+          $block_html .= '<div class="date-arrow prev-year glyphicon glyphicon-menu-down
+     down-arrow-date" type="year" action="-"></div>';
+        $block_html .= '</div>';
+      $block_html .= '</div>';
+    $block_html .= '</div>';
+    $block_html .= '<div class="date-end" date="' . $date_end . '">';
+      $block_html .= '<div class="date-container">';
+        $block_html .= '<span class="date-to">' . t("Until") . '</span>';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-day glyphicon glyphicon-menu-up
+     up-arrow-date" type="days" action="+"></div>';
+            $block_html .= '<div class="date-diary day" >' . $day_end . '</div>';
+          $block_html .= '<div class="date-arrow prev-day glyphicon glyphicon-menu-down
+     down-arrow-date" type="days" action="-"></div>';
+        $block_html .= '</div>';
+        $block_html .= '<div class="block-info-date">';
+          $block_html .= '<div class="date-arrow next-month glyphicon glyphicon-menu-up
+     up-arrow-date" type="month" action="+"></div>';
+            $block_html .= '<div class="date-diary month">' . $month_end . '</div>';
+          $block_html .= '<div class="date-arrow prev-month glyphicon glyphicon-menu-down
+   down-arrow-date" type="month" action="-"></div>';
+       $block_html .= '</div>';
+       $block_html .= '<div class="block-info-date">';
+        $block_html .= '<div class="date-arrow next-year glyphicon glyphicon-menu-up
+   up-arrow-date" type="year" action="+"></div>';
+          $block_html .= '<div class="date-diary year">' . $year_end . '</div>';
+        $block_html .= '<div class="date-arrow prev-year glyphicon glyphicon-menu-down
+   down-arrow-date" type="year" action="-"></div>';
+        $block_html .= '</div>';
+      $block_html .= '</div>';
+    $block_html .= '</div>';
+  $block_html .= '</div>';
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+function custom_drpl_paragraphs_events_search_navigation($args = '') {
+  $month = isset($_GET['date']) ? $_GET['date'] : date("Y-m");
+  $response = array();
+  $response['date'] = format_date(strtotime($month), 'month_year');
+  $response['date_from'] = format_date(strtotime($month), 'first_day_month');
+  $response['date_end'] = format_date(strtotime($month), 'last_day_month');
+  $response['prev_month'] = format_date(strtotime($month . ' -1 month'), 'month_year_short');
+  $response['next_month'] = format_date(strtotime($month . ' +1 month'), 'month_year_short');
+  print json_encode($response); //Response to custom_drpl_paragraphs.js --> Drupal.behaviors.EventsSearch
+  exit;
+}
+
+function custom_drpl_paragraphs_events_month_navigation() {
+  $month = date("Y-m");
+  $id_num = uniqid();
+  if (isset($_GET) && !empty($_GET)) {
+    if (isset($_GET['date']) && !empty($_GET['date'])) {
+      $month = $_GET['date'];
+    }
+  }
+  $month_prev = format_date(strtotime($month . ' -1 month'), 'month_year_short');
+  $month_next = format_date(strtotime($month . ' +1 month'), 'month_year_short');
+  $month_current = format_date(strtotime($month), 'month_year_short');
+  $date_sel = format_date(strtotime($month), 'month_year');
+  $block_html = '<div class="events_searchs_block" id="events_searchs_block_id_' . $id_num . '">';
+    $block_html .= '<span class="date-arrow glyphicon glyphicon-menu-left prev-month left-arrow-date" date="' . $month_prev . '"></span>';
+      $block_html .= '<div class="date-diary" date="' . $month_current . '">' . $date_sel . '</div>';
+    $block_html .= '<span class="date-arrow glyphicon glyphicon-menu-right next-month right-arrow-date" date="' . $month_next . '"></span>';
+  $block_html .= '</div>';
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+function custom_drpl_paragraphs_slider_menu_paragraphs() {
+  $block_html = '<div class="paragraph-menu-progress menu_slider">';
+    $block_html .= '<div class="wrapper">';
+    $paragraphs = custom_drpl_paragraphs_get_node_paragraphs(node_load(arg(1)));
+    if (!empty($paragraphs)) {
+      foreach ($paragraphs as $key => $paragraph) {
+        if (isset($paragraph->field_paragraph_item_to_menu[LANGUAGE_NONE]) && $paragraph->field_paragraph_item_to_menu[LANGUAGE_NONE][0]['value'] > 0) {
+          if (isset($paragraph->field_paragraph_title_to_menu[LANGUAGE_NONE]) && $paragraph->field_paragraph_title_to_menu[LANGUAGE_NONE][0]['value'] !== '') {
+            $menu_title = $paragraph->field_paragraph_title_to_menu[LANGUAGE_NONE][0]['value'];
+          }
+          else {
+            $menu_title =  t('Link to section:') . $paragraph->item_id;
+          }
+          $block_html .= '<div class="bar">';
+            $block_html .= '<a href="#paragraph-item-id-' . $paragraph->item_id . '">' . $menu_title . '</a>';
+            $block_html .= '<i class="icon-ok"></i>';
+            $block_html .= '<span></span>';
+          $block_html .= '</div>';
+        }
+      }
+    }
+    $block_html .= '</div>';
+  $block_html .= '</div>';
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+function custom_drpl_paragraphs_coverflow_controls() {
+  $block_html = '<div class="controls">';
+    $block_html .= '<div class="bx-pager bx-default-pager"></div>';
+    $block_html .= '<nav class="arrows bx-controls-direction">';
+      $block_html .= '<a href="" class="arrow bx-prev"></a>';
+      $block_html .= '<a href="" class="arrow bx-next"></a>';
+    $block_html .= '</nav>';
+  $block_html .= '</div>';
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+function custom_drpl_paragraphs_calendar_script_ajax($args = '') {
+  $date = isset($_GET['date']) ? $_GET['date'] : date("Y-m-d");
+  $tax_filter = isset($_GET['tax_filter']) ? $_GET['tax_filter'] : 'all';
+  $node_id = isset($_GET['node_id']) ? $_GET['node_id'] : '';
+  $response = array();
+  $response['list'] = views_embed_view('events', 'widget_diary_events_block', date($date), $node_id, $tax_filter);
+  $response['new_day_week'] = format_date(strtotime($date), 'day_of_the_week');
+  $response['new_day_month'] = format_date(strtotime($date), 'day_and_month');
+  print json_encode($response); //Response to custom_drpl_paragraphs.js --> Drupal.behaviors.Calendar
+  exit;
+}
+
+function custom_drpl_paragraphs_diary_fullcalendar() {
+  $node = node_load(arg(1));
+  $paragraphs = custom_drpl_paragraphs_get_node_paragraphs($node);
+  if (!empty($paragraphs)) {
+    foreach ($paragraphs as $key => $paragraph) {
+      $subparagraphs = isset($paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE]) ? $paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE] : NULL;
+      if (!empty($subparagraphs)) {
+        foreach ($subparagraphs as $key => $subparagraph) {
+          if (isset($subparagraph['entity'])) {
+            if ($subparagraph['entity']->bundle == 'calendar_block') {
+              if (!empty($node->nid)) {
+                $node_id = $node->nid; //exclude this node
+              }
+              if (isset($subparagraph['entity']->field_filter_categories[LANGUAGE_NONE])) {
+                $categories_show = $subparagraph['entity']->field_filter_categories[LANGUAGE_NONE];
+                if (!empty($categories_show)) {
+                  $tax_filter = array();
+                  foreach ($categories_show as $key => $categorie) {
+                    if (isset($categorie['target_id'])) {
+                      $tax_filter[] = $categorie['target_id'];
+                    }
+                  }
+                  $tax_filter = implode('+', $tax_filter);
+                }
+              }
+              else{
+                $tax_filter = 'all';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (!empty($node_id) && !empty($tax_filter)) {
+    $id_num = uniqid();
+    $block_html = '<div class="calendar-main-text">';
+      $block_html .= '<div id="calendar_block_date" class="calendar-block-date">';
+        $block_html .= '<span id="calendar_block_date_day_v1_' . $id_num . '">' . format_date(strtotime(date("Y-m-d")), 'day_of_the_week') . '</span>';
+        $block_html .= '<span id="calendar_block_date_day_v2_' . $id_num . '">' . format_date(strtotime(date("Y-m-d")), 'day_and_month') . '</span>';
+      $block_html .= '</div>';
+    $block_html .= '</div>';
+    $block_html .= '<div id="calendar_block_attributes_' . $id_num . '" calendar_block_node_id_' . $id_num . '="' . $node_id . '" calendar_block_tax_filter_' . $id_num . '="' . $tax_filter . '"></div>';
+    $block_html .= '<div id="calendar_block_diary_id_' . $id_num . '"></div>';
+    $block_html .= '<div id="calendar_block_events_list_' . $id_num . '">';
+      $block_html .= views_embed_view('events', 'widget_diary_events_block', date("Y-m-d"), $node_id, $tax_filter);
+    $block_html .= '</div>';
+    $block = array(
+      '#markup' => $block_html,
+    );
+    return $block;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_drpl_paragraphs_form_alter(&$form, &$form_state, $form_id) {
+  if (strpos($form_id, "views_exposed_form") !== FALSE) {
+    $node = node_load(arg(1));
+    $paragraphs = custom_drpl_paragraphs_get_node_paragraphs($node);
+    if ($form['#id'] == 'views-exposed-form-events-search-page') {
+      if (isset($form['field_event_type'])) {
+        $form['field_event_type']['#options']['All'] = t('Select a thematic');
+      }
+      if (isset($form['field_date_value'])) {
+        $form['field_date_value']['#prefix'] = '<div style="display:none;">';
+        $form['field_date_value']['#suffix'] = '</div>';
+        $form['field_date_value']['#default_value'] = date("Y-m-01");
+      }
+      if (isset($form['field_date_value2'])) {
+        $form['field_date_value2']['#prefix'] = '<div style="display:none;">';
+        $form['field_date_value2']['#suffix'] = '</div>';
+        $form['field_date_value2']['#default_value'] = date("Y-m-t");
+      }
+    }
+    elseif ($form['#id'] == 'views-exposed-form-news-search-page') {
+      if (isset($form['field_date_value'])) {
+        $form['field_date_value']['#prefix'] = '<div style="display:none;">';
+        $form['field_date_value']['#suffix'] = '</div>';
+        $form['field_date_value']['#default_value'] = date("Y-m-01");
+      }
+      if (isset($form['field_date_value2'])) {
+        $form['field_date_value2']['#prefix'] = '<div style="display:none;">';
+        $form['field_date_value2']['#suffix'] = '</div>';
+        $form['field_date_value2']['#default_value'] = date("Y-m-t");
+      }
+      if (isset($form['field_related_thematic'])) {
+        if (!empty($paragraphs)) {
+          foreach ($paragraphs as $key => $paragraph) {
+            $subparagraphs = isset($paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE]) ? $paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE] : NULL;
+            if (!empty($subparagraphs)) {
+              foreach ($subparagraphs as $key => $subparagraph) {
+                if (isset($subparagraph['entity'])) {
+                  if ($subparagraph['entity']->bundle == 'news_search') {
+                    $form['field_related_thematic']['#options'] = array(
+                      'All' => t("Select a thematic"),
+                    );
+                    $child_categories = views_get_view_result('related_content_by_terms', 'related_content_node_thematics', $node->nid);
+                    foreach ($child_categories as $key => $child_categorie) {
+                      $form['field_related_thematic']['#options'][$child_categorie->taxonomy_term_data_field_data_field_related_thematic_tid] = $child_categorie->taxonomy_term_data_field_data_field_related_thematic_name;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    elseif ($form['#id'] == 'views-exposed-form-frequent-questions-search-page') {
+      if (isset($form['field_related_thematic'])) {
+        if (!empty($paragraphs)) {
+          foreach ($paragraphs as $key => $paragraph) {
+            $subparagraphs = isset($paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE]) ? $paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE] : NULL;
+            if (!empty($subparagraphs)) {
+              foreach ($subparagraphs as $key => $subparagraph) {
+                if (isset($subparagraph['entity'])) {
+                  if ($subparagraph['entity']->bundle == 'frequent_questions') {
+                    if (isset($subparagraph['entity']->field_filter_parent_categorie) && !empty($subparagraph['entity']->field_filter_parent_categorie[LANGUAGE_NONE][0]['target_id'])) {
+                      $parent_tid = $subparagraph['entity']->field_filter_parent_categorie[LANGUAGE_NONE][0]['target_id'];
+                      $child_categories = views_get_view_result('menu_categories', 'children_categories_by_parent', $parent_tid);
+                      if (!empty($child_categories) && !empty($form['field_related_thematic']['#options'])) {
+                        $form['field_related_thematic']['#options'] = array(
+                          'All' => t("Select a thematic"),
+                        );
+                        foreach ($child_categories as $key => $child_categorie) {
+                          $form['field_related_thematic']['#options'][$child_categorie->tid] = $child_categorie->taxonomy_term_data_name;
+                        }
+                      }
+                      if (isset($form['type'])) {
+                        if (isset($subparagraph['entity']->field_content_types) && !empty($subparagraph['entity']->field_content_types[LANGUAGE_NONE])) {
+                          $contet_type_hidden = array();
+                          foreach ($subparagraph['entity']->field_content_types[LANGUAGE_NONE] as $key => $content_type) {
+                            $contet_type_hidden[$content_type['value']] = $content_type['value'];
+                          }
+                          if (!empty($contet_type_hidden)) {
+                            //If value not set, default_value dosnt work
+                            $form['type']['#value'] = $contet_type_hidden;
+                            $form['type']['#default_value'] = $contet_type_hidden;
+                            $form['type']['#prefix'] = '<div style="display:none;">';
+                            $form['type']['#suffix'] = '</div>';
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (strpos($form_id, "newsletter_entityform_") !== FALSE) {
+    $form['actions']['submit']['#submit'][] = 'custom_drpl_paragraphs_form_submit';
+    $form['#validate'][] = 'custom_drpl_paragraphs_form_validate';
+  }
+  if (strpos($form_id, "_node_form") !== FALSE || strpos($form_id, "_form_term") !== FALSE) {
+    //get fields paragraphs type
+    $paragraphs_fields = array();
+    foreach ($form as $key => $field) {
+      if (strpos($key, "field_") !== FALSE) {
+        if (isset($field['#attributes']['class']) && !empty($field['#attributes']['class'])) {
+          if (in_array("field-type-paragraphs", $field['#attributes']['class'])) {
+            $paragraphs_fields[] = $key;
+          }
+        }
+      }
+    }
+    $changed = 0;
+    $changed2 = 0;
+    foreach ($paragraphs_fields as $par => $paragraph_field) {
+      //If block_reference exist:
+      if (isset($form[$paragraph_field][LANGUAGE_NONE])) {
+        $paragraphs = $form[$paragraph_field][LANGUAGE_NONE];
+        foreach ($paragraphs as $key => $paragraph) {
+          if (is_numeric($key)) {
+            //Sections links
+            if (isset($paragraph['field_paragraph_item_to_menu'])) {
+              if (isset($paragraph['field_paragraph_title_to_menu'])) {
+                $form[$paragraph_field][LANGUAGE_NONE][$key]['field_paragraph_title_to_menu']['#states'] = array(
+                  'visible' => array(
+                    ':input[name="' . $paragraph_field . '[und][' . $key . '][field_paragraph_item_to_menu][und]"]' => array('checked' => TRUE),
+                  ),
+                  'invisible' => array(
+                    ':input[name="' . $paragraph_field . '[und][' . $key . '][field_paragraph_item_to_menu][und]"]' => array('checked' => FALSE),
+                  ),
+                );
+              }
+            }
+            $subparagraphs = isset($paragraph['field_subparagraphs'][LANGUAGE_NONE]) ? $paragraph['field_subparagraphs'][LANGUAGE_NONE] : NULL;
+            if (!empty($subparagraphs)) {
+              foreach ($subparagraphs as $val => $subparagraph) {
+                if (is_numeric($val)) {
+                  if ($subparagraph['#bundle'] == 'two_columns') { //Two columns
+                    if (isset($subparagraph['field_subparagraphs'][LANGUAGE_NONE])) {
+                      $subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items'] = array();
+                      foreach ($subparagraph['field_subparagraphs'][LANGUAGE_NONE] as $dp => $two_columns_subparagraph) {
+                        if (is_numeric($dp)) {
+                          $subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items'][] = $two_columns_subparagraph;
+                        }
+                      }
+                      $count_columns = isset($subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items']) ? count($subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items']) : 0;
+                      $button = t('Add left column');
+                      if ($count_columns == 1) {
+                        $button = t('Add right column');
+                      }
+                      elseif ($count_columns > 1) {
+                        $button = NULL;
+                      }
+                      if (!empty($button)) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_subparagraphs'][LANGUAGE_NONE]['add_more']['add_more']['#value'] = $button;
+                      }
+                      else {
+                        unset($form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_subparagraphs'][LANGUAGE_NONE]['add_more']);
+                      }
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'call') { //Call
+                    if (isset($subparagraph['field_background_type'])) {
+                      if (isset($subparagraph['field_color'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_color']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_background_type][und]"]' => array('value' => 'color'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_background_type][und]"]' => array('value' => 'image'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_image'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_image']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_background_type][und]"]' => array('value' => 'image'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_background_type][und]"]' => array('value' => 'color'),
+                          ),
+                        );
+                      }
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'list') { //News list
+                    if (isset($subparagraph['field_config_type'])) {
+                      if (isset($subparagraph['field_block_reference'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_block_reference']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_news_reference'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_news_reference']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_items_limit'])) {
+                        if ($changed2 === 0) {
+                          array_unshift($form['#validate'], 'custom_drpl_paragraphs_form_validate');
+                          $changed2 ++;
+                        }
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_items_limit']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                          'required' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                        );
+                      }
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'block_reference') { //Block
+                    if (isset($subparagraph['field_block_type'])) {
+                       $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_block_reference']['#states'] = array(
+                        'visible' => array(
+                          ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_block_type][und]"]' => array('value' => 'blocks'),
+                        ),
+                        'invisible' => array(
+                          ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_block_type][und]"]' => array('value' => 'views'),
+                        ),
+                      );
+                       $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_views_reference']['#states'] = array(
+                        'visible' => array(
+                          ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_block_type][und]"]' => array('value' => 'views'),
+                        ),
+                        'invisible' => array(
+                          ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_block_type][und]"]' => array('value' => 'blocks'),
+                        ),
+                      );
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'gallery') { //Gallery
+                    if (isset($subparagraph['field_paragraph_class_list'])) {
+                      $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_paragraph_class_list']['#states'] = array(
+                        'visible' => array(
+                          ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_paragraph_gallery_type][und]"]' => array('value' => 1),
+                        ),
+                        'invisible' => array(
+                          ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_paragraph_gallery_type][und]"]' => array('value' => 2),
+                        ),
+                      );
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'information_container') { //Information container
+                    if (isset($subparagraph['field_subparagraphs'][LANGUAGE_NONE])) {
+                      $subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items'] = array();
+                      $limit = $subparagraph['field_paragraph_sub_item_limit'][LANGUAGE_NONE]['#default_value'][0];
+                      if ($limit == 0) {
+                        $limit = 2;
+                      }
+                      elseif ($limit == 1) {
+                        $limit = 4;
+                      }
+                      else {
+                        $limit = 0;
+                      }
+                      foreach ($subparagraph['field_subparagraphs'][LANGUAGE_NONE] as $dp => $information_block) {
+                        if (is_numeric($dp)) {
+                          $subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items'][] = $information_block;
+                        }
+                      }
+                      $count_columns = isset($subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items']) ? count($subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items']) : 0;
+                      if ($count_columns >= $limit) {
+                        unset($form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_subparagraphs'][LANGUAGE_NONE]['add_more']);
+                      }
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'compound_information') { //Information container
+                    if (isset($subparagraph['field_subparagraphs'][LANGUAGE_NONE])) {
+                      $subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items'] = array();
+                      $limit = 4;
+                      foreach ($subparagraph['field_subparagraphs'][LANGUAGE_NONE] as $dp => $information_block) {
+                        if (is_numeric($dp)) {
+                          $subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items'][] = $information_block;
+                        }
+                      }
+                      $count_columns = isset($subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items']) ? count($subparagraph['field_subparagraphs'][LANGUAGE_NONE]['#items']) : 0;
+                      if ($count_columns >= $limit) {
+                        unset($form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_subparagraphs'][LANGUAGE_NONE]['add_more']);
+                      }
+                    }
+                  }
+                  elseif ($subparagraph['#bundle'] == 'calendar_block' ||
+                  $subparagraph['#bundle'] == 'featured_events') {
+                    if ($changed === 0) {
+                      array_unshift($form['actions']['submit']['#submit'], 'custom_drpl_paragraphs_form_submit');
+                      $changed ++;
+                    } 
+                  }
+                  elseif ($subparagraph['#bundle'] == 'featured_list_entity') { //Entity list
+                    if ($changed === 0) {
+                      array_unshift($form['actions']['submit']['#submit'], 'custom_drpl_paragraphs_form_submit');
+                      $changed ++;
+                    } 
+                    if (isset($subparagraph['field_config_type'])) {
+                      if (isset($subparagraph['field_block_reference'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_block_reference']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_associated_entities'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_associated_entities']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_items_limit'])) {
+                        if ($changed2 === 0) {
+                          array_unshift($form['#validate'], 'custom_drpl_paragraphs_form_validate');
+                          $changed2 ++;
+                        }
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_items_limit']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                          'required' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_live_category'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_live_category']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_enjoy_category'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_enjoy_category']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_invest_category'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_invest_category']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_open_government'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_open_government']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                      if (isset($subparagraph['field_content_types'])) {
+                        $form[$paragraph_field][LANGUAGE_NONE][$key]['field_subparagraphs'][LANGUAGE_NONE][$val]['field_content_types']['#states'] = array(
+                          'visible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'auto'),
+                          ),
+                          'invisible' => array(
+                            ':input[name="' . $paragraph_field . '[und][' . $key . '][field_subparagraphs][und][' . $val . '][field_config_type][und]"]' => array('value' => 'manual'),
+                          ),
+                        );
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_validate().
+ */
+function custom_drpl_paragraphs_form_validate($form, &$form_state) {
+  if (strpos($form['#form_id'], "newsletter_entityform_") !== FALSE) {
+    //check if email is suscribed - newsletter
+    $email = isset($form_state['values']['field_email'][LANGUAGE_NONE][0]['email']) ? $form_state['values']['field_email'][LANGUAGE_NONE][0]['email'] : NULL;
+    if (!empty($email)) {
+      $email_exists = views_get_view_result('newsletter_get_submission_by_id', 'master', $email);
+      if (!empty($email_exists)) {
+        form_set_error('field_email', t('Email is already suscribed'));
+      }
+    }
+  }
+  elseif (strpos($form['#form_id'], '_node_form') !== FALSE ) {
+    if (!empty($form_state['values']['field_paragraphs'][LANGUAGE_NONE])) {
+      foreach ($form_state['values']['field_paragraphs'][LANGUAGE_NONE] as $rp => $paragraph) {
+        if (!empty($paragraph['field_subparagraphs'][LANGUAGE_NONE])) {
+          foreach ($paragraph['field_subparagraphs'][LANGUAGE_NONE] as $tl => $subparagraph) {
+            if (isset($subparagraph['field_items_limit'])) {
+              if (empty($subparagraph['field_items_limit'][LANGUAGE_NONE][0]['value']) && $subparagraph['field_config_type'][LANGUAGE_NONE][0]['value'] == 'auto') {
+                $title = $form['field_paragraphs'][LANGUAGE_NONE][$rp]['field_subparagraphs'][LANGUAGE_NONE][$tl]['field_items_limit'][LANGUAGE_NONE]['#title'];
+                form_set_error("field_paragraphs][und][" . $rp . "][field_subparagraphs][und][" . $tl . "][field_items_limit][und", t("The field %field is required.", array('%field' => $title)));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function custom_drpl_paragraphs_form_submit($form, &$form_state) {
+  global $base_url;
+  if (strpos($form['#form_id'], "newsletter_entityform_") !== FALSE) {
+    $form_state['redirect'] = url(current_path(), array('absolute' => TRUE));
+  }
+  elseif (strpos($form['#form_id'], '_node_form') !== FALSE ) {
+    if (!empty($form_state['values']['field_paragraphs'][LANGUAGE_NONE])) {
+      foreach ($form_state['values']['field_paragraphs'][LANGUAGE_NONE] as $rp => $paragraph) {
+        if (!empty($paragraph['field_subparagraphs'][LANGUAGE_NONE])) {
+          foreach ($paragraph['field_subparagraphs'][LANGUAGE_NONE] as $tl => $subparagraph) {
+            if (isset($subparagraph['field_filter_categories'])) {
+              $tax_filter = array();
+              $all_taxonomies = array();
+              $categories = array();
+              $thematics = variable_get('thematics');
+              if (!empty($thematics)) {
+                foreach ($thematics as $key => $thematic) {
+                  if (isset($subparagraph['field_' . $thematic][LANGUAGE_NONE]) && !empty($subparagraph['field_' . $thematic][LANGUAGE_NONE])) {
+                    foreach ($subparagraph['field_' . $thematic][LANGUAGE_NONE] as $val => $taxonomy_thematic) {
+                      if (isset($taxonomy_thematic['target_id'])) {
+                        if (!in_array($taxonomy_thematic['target_id'], $all_taxonomies)) {
+                          $children_categories = taxonomy_get_children($taxonomy_thematic['target_id']);
+                          foreach ($children_categories as $tid => $categorie_child) {
+                            if (!in_array($tid, $all_taxonomies)) {
+                              $categories[$thematic][] = array(
+                                'target_id' => $tid,
+                              );
+                              $tax_filter[] = array(
+                                'target_id' => $tid,
+                              );
+                            }
+                          }
+                          $categories[$thematic][] = array(
+                            'target_id' => $taxonomy_thematic['target_id'],
+                          );
+                          $tax_filter[] = array(
+                            'target_id' => $taxonomy_thematic['target_id'],
+                          );
+                        }
+                        $all_taxonomies[] = $taxonomy_thematic['target_id'];
+                      }
+                      if (!empty($categories[$thematic])) {
+                        $form_state['values']['field_paragraphs'][LANGUAGE_NONE][$rp]['field_subparagraphs'][LANGUAGE_NONE][$tl]['field_' . $thematic][LANGUAGE_NONE] = $categories[$thematic];
+                        $form_state['values']['field_paragraphs'][LANGUAGE_NONE][$rp]['field_subparagraphs'][LANGUAGE_NONE][$tl]['entity']->{'field_' . $thematic}[LANGUAGE_NONE] = $categories[$thematic];
+                      }
+                    }
+                  }
+                }
+                if (!empty($tax_filter)) {
+                  $form_state['values']['field_paragraphs'][LANGUAGE_NONE][$rp]['field_subparagraphs'][LANGUAGE_NONE][$tl]['field_filter_categories'][LANGUAGE_NONE] = $tax_filter;
+                  $form_state['values']['field_paragraphs'][LANGUAGE_NONE][$rp]['field_subparagraphs'][LANGUAGE_NONE][$tl]['entity']->field_filter_categories[LANGUAGE_NONE] = $tax_filter;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_entity().
+ *
+ */
+function custom_drpl_paragraphs_preprocess_entity(&$vars) {
+  if ($vars['entity_type'] == 'paragraphs_item') {
+    // Get Paragraph ID.
+    $paragraph = $vars['elements']['#entity'];
+    $parent_paragraph = $paragraph->hostEntity();
+    //Add Unique class to paragraph
+    if (!empty($paragraph->item_id)) {
+      $vars['attributes_array']['id'] = 'paragraph-item-id-' . $paragraph->item_id;
+    }
+    //Add paragraph class if has anchor link
+    if (isset($paragraph->field_paragraph_item_to_menu[LANGUAGE_NONE])) {
+      if ($paragraph->field_paragraph_item_to_menu[LANGUAGE_NONE][0]['value'] > '0') {
+        $vars['classes_array'][] = 'anchor_link';
+      }
+    }
+    //Add coverflow attributte
+    if ($vars['elements']['#bundle'] == 'featured_events') {
+      $vars['attributes_array']['coverflow_slide'] = $paragraph->item_id;
+      $vars['classes_array'][] = 'coverflow-slide-' . $paragraph->item_id;
+    }
+    if ($vars['elements']['#bundle'] == 'gallery') {
+      if (isset($vars['elements']['#entity']->field_paragraph_gallery_type[LANGUAGE_NONE]) && $vars['elements']['#entity']->field_paragraph_gallery_type[LANGUAGE_NONE][0]['value'] > 1) {
+        $vars['attributes_array']['coverflow_slide'] = $paragraph->item_id;
+        $vars['classes_array'][] = 'coverflow-slide-' . $paragraph->item_id;
+      }
+    }
+    //[WIDGET TWO COLUMNS]
+    if ($vars['elements']['#bundle'] == 'two_columns_double_text') {
+      if (!empty($parent_paragraph)) {
+        $subparagraphs_items = isset($parent_paragraph->field_subparagraphs[LANGUAGE_NONE]) ? $parent_paragraph->field_subparagraphs[LANGUAGE_NONE] : NULL;
+        $subparagraphs_items_order = array();
+        foreach ($subparagraphs_items as $key => $subparagraphs_item) {
+          if (isset($subparagraphs_item['value']) && !empty($subparagraphs_item['value'])) {
+            $subparagraphs_items_order[$subparagraphs_item['value']] = array(
+              'position' => $key,
+              'value' => $subparagraphs_item['value']
+            );
+          }
+        }
+        $column_style = isset($parent_paragraph->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $parent_paragraph->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+        $item_id = isset($vars['elements']['#entity']->item_id) ? $vars['elements']['#entity']->item_id : NULL;
+        if (!empty($column_style) && !empty($item_id) && !empty($subparagraphs_items_order)) {
+          $item = array();
+          switch ($column_style) {
+            case '50_x_50':
+              $item['class'][0] = variable_get('two_columns');
+              $item['class'][1] = variable_get('two_columns');
+              break;
+            case '25_x_75':
+              $item['class'][0] = 'col-md-3';
+              $item['class'][1] = 'col-md-9';
+              break;
+            case '75_x_25':
+              $item['class'][0] = 'col-md-9';
+              $item['class'][1] = 'col-md-3';
+              break;
+          }
+          foreach ($subparagraphs_items_order as $key => $subparagraphs_item_order) {
+            if ($key == $item_id) {
+              $item['position'] = $subparagraphs_item_order['position'];
+            }
+          }
+          if (isset($vars['classes_array'])) {
+            $vars['classes_array'][] = $item['class'][$item['position']];
+          }
+        }
+      }
+    }
+    //[WIDGET INFORMATION CONTAINER]
+    if ($vars['elements']['#bundle'] == 'information_container') {
+      $limit_elements = isset($vars['elements']['#entity']->field_paragraph_sub_item_limit[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_sub_item_limit[LANGUAGE_NONE][0]['value'] : NULL;
+      if ((!empty($limit_elements) || $limit_elements === 0) && isset($vars['content']['field_subparagraphs'])) {
+        switch ($limit_elements) {
+          case 0:
+            $limit_items = 2; //Limit items to 2
+          break;
+          case 1:
+            $limit_items = 4; //Limit items to 4
+          break;
+        }
+        foreach ($vars['content']['field_subparagraphs'] as $key => $paragraph_item) {
+          if (is_numeric($key)) {
+            if ($key >= $limit_items) {
+              unset($vars['content']['field_subparagraphs'][$key]);
+            }
+          }
+        }
+      }
+    }
+    //[WIDGET INFORMATION CONTAINER BLOCK]
+    if ($vars['elements']['#bundle'] == 'information_container_block') {
+      $background_color = isset($vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? 'background-color: ' . $vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] . ';' : 'background-color: #fff;';
+      if (!empty($background_color)) {
+        $vars['attributes_array']['style'] = array(
+          $background_color
+        );
+      }
+    }
+    //[WIDGET COMPOUND INFORMATION BLOCK]
+    if ($vars['elements']['#bundle'] == 'compound_information_block') {
+      $background_color = isset($vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb']) ? 'background-color: ' . $vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb'] . ';' : 'background-color: #fff;';
+      if (!empty($background_color)) {
+        $vars['attributes_array']['style'] = array(
+          $background_color
+        );
+      }
+    }
+    //[WIDGET FREQUENTED QUESTIONS]
+    if ($vars['elements']['#bundle'] == 'frequent_questions') {
+      if (isset($vars['content']['field_link'][0]['#element']) && !empty($vars['content']['field_link'][0]['#element']['title'])) {
+        if (isset($vars['field_filter_parent_categorie']) && !empty($vars['field_filter_parent_categorie'][0]['entity']->name)) {
+          $vars['content']['field_link'][0]['#element']['title'] = $vars['content']['field_link'][0]['#element']['title'] . ' ' . $vars['field_filter_parent_categorie'][0]['entity']->name;
+        }
+      }
+      if (module_exists('search_api_facetapi') && module_exists('facetapi')) {
+        if (isset($vars['content']['field_link'][0]['#element']) && !empty($vars['content']['field_link'][0]['#element']['url'])) {
+          $url_fields = array();
+          if (isset($vars['elements']['#entity']->field_filter_parent_categorie) && !empty($vars['elements']['#entity']->field_filter_parent_categorie[LANGUAGE_NONE][0]['target_id'])) {
+            $url_fields['field_related_thematic'] = $vars['elements']['#entity']->field_filter_parent_categorie[LANGUAGE_NONE][0]['target_id'];
+          }
+          if (isset($vars['elements']['#entity']->field_content_types) && !empty($vars['elements']['#entity']->field_content_types[LANGUAGE_NONE])) {
+            foreach ($vars['elements']['#entity']->field_content_types[LANGUAGE_NONE] as $key => $content_type) {
+              $url_fields['type'][] = $content_type['value'];
+            }
+          }
+          $url_array_build_http = $url_fields;
+          if (!empty($url_array_build_http)) {
+            $url_frequent_questions = url($vars['content']['field_link'][0]['#element']['url'] . '?' . http_build_query($url_array_build_http), array('absolute' => TRUE));
+            $vars['content']['field_link'][0]['#element']['url'] = $url_frequent_questions;
+          }
+        }
+      }
+    }
+    //[WIDGET EDGE TO EDGE]
+    if (isset($vars['elements']['field_paragraph_edge_to_edge']) && isset($vars['classes_array'])) {
+      if ($vars['elements']['field_paragraph_edge_to_edge']['#items'][0]['value'] == 1) {
+        $vars['classes_array'][] = 'section-edge-to-edge';
+      }
+    }
+    //[WIDGET LIST]
+    if ($vars['elements']['#bundle'] == 'list') {
+      if (isset($vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE])) {
+        $column_style = isset($vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+        if (!empty($column_style)) {
+          switch ($column_style) {
+            case 'one_column':
+              $view_mode_image_choosen = 'block_teaser_image_horizontal';
+              break;
+            case 'two_columns':
+              $view_mode_image_choosen = 'block_teaser_image_horizontal';
+              break;
+          }
+          if (isset($view_mode_image_choosen) && !empty($view_mode_image_choosen)) {
+            if (isset($vars['content']['field_news_reference']) && !empty($vars['content']['field_news_reference'])) {
+              foreach ($vars['content']['field_news_reference'] as $key => $node_reference) {
+                if (is_numeric($key)) {
+                  foreach ($node_reference['node'] as $val => $node_static) {
+                    if (is_numeric($val)) {
+                      if (isset($node_static['field_image'][0]['#image_style']) && !empty($node_static['field_image'][0]['#image_style'])) {
+                        $vars['content']['field_news_reference'][$key]['node'][$val]['field_image'][0]['#image_style'] = $view_mode_image_choosen;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    //[WIDGET PARAGRAPH LINK LIST]
+    if ($vars['elements']['#bundle'] == 'link_list') {
+      $style_link  = isset($vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+      if (!empty($style_link)) {
+        $vars['classes_array'][] = 'link-style-' . $style_link;
+      }
+    }
+    //[WIDGET PARAGRAPH CAROUSEL]
+    if ($vars['elements']['#bundle'] == 'carousel') {
+      $navigation_style  = isset($vars['elements']['#entity']->field_paragraph_carousel_nav[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_carousel_nav[LANGUAGE_NONE][0]['value'] : 'all';
+      if (!empty($navigation_style)) {
+        $vars['classes_array'][] = 'carousel-navigation-' . $navigation_style;
+      }
+    }
+    //[WIDGET PARAGRAPH CAROUSEL BANNERS]
+    if ($vars['elements']['#bundle'] == 'carousel_banners') {
+      $paragraph_style  = isset($vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : '100_x_100';
+      $navigation_style  = isset($vars['elements']['#entity']->field_paragraph_carousel_nav[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_carousel_nav[LANGUAGE_NONE][0]['value'] : 'all';
+      if (!empty($paragraph_style)) {
+        $vars['classes_array'][] = 'carousel-' . $paragraph_style;
+      }
+      if (!empty($navigation_style)) {
+        $vars['classes_array'][] = 'carousel-navigation-' . $navigation_style;
+      }
+    }
+    //[WIDGET PARAGRAPH CAROUSEL BANNERS SLIDES]
+    if ($vars['elements']['#bundle'] == 'carousel_banners_slide') {
+      $paragraph_style  = isset($parent_paragraph->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $parent_paragraph->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : '100_x_100';
+      if (isset($vars['content']['field_image'][0])) {
+        $vars['content']['field_image'][0]['#path']['path'] = $vars['elements']['#entity']->field_link[LANGUAGE_NONE][0]['url'];
+        if (isset($vars['elements']['#entity']->field_link[LANGUAGE_NONE][0]['attributes']['target'])) {
+          if ($vars['elements']['#entity']->field_link[LANGUAGE_NONE][0]['attributes']['target'] !== 0) {
+            $vars['content']['field_image'][0]['#path']['options']['attributes']['target'] = '_blank';
+          }
+        }
+      }
+      if ($paragraph_style == '100_x_100') {
+        if (isset($vars['elements']['#group_children'])) {
+          unset($vars['elements']['#group_children']['field_link']);
+          unset($vars['content']['field_link']);
+        }
+      }
+    }
+    //[WIDGET IMAGE LINK AND BANNER]
+    if ($vars['elements']['#bundle'] == 'image_link' || $vars['elements']['#bundle'] == 'banner') {
+      if (isset($vars['elements']['#entity']->field_link) && isset($vars['elements']['#entity']->field_image)) {
+        if (isset($vars['elements']['#entity']->field_link[LANGUAGE_NONE]) && !empty($vars['elements']['#entity']->field_link[LANGUAGE_NONE])) {
+          if (isset($vars['content']['field_image'][0])) {
+            $vars['content']['field_image'][0]['#path']['path'] = $vars['elements']['#entity']->field_link[LANGUAGE_NONE][0]['url'];
+            if (isset($vars['elements']['#entity']->field_link[LANGUAGE_NONE][0]['attributes']['target'])) {
+              if ($vars['elements']['#entity']->field_link[LANGUAGE_NONE][0]['attributes']['target'] !== 0) {
+                $vars['content']['field_image'][0]['#path']['options']['attributes']['target'] = '_blank';
+              }
+            }
+          }
+        }
+
+      }
+    }
+    //[WIDGET COLUMN]
+    if ($vars['elements']['#bundle'] == 'column') {
+      $background_color = isset($vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb']) ? 'background-color: ' . $vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb'] . ';' : 'background-color: #fff;';
+      $width = isset($vars['elements']['#entity']->field_paragraph_container_size[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_container_size[LANGUAGE_NONE][0]['value'] : '100_x_100';
+      if (!empty($background_color)) {
+        $vars['attributes_array']['style'] = array(
+          $background_color
+        );
+      }
+      switch ($width) {
+        case '1_columns':
+          $col_width = 'col-md-1';
+          break;
+        case '2_columns':
+          $col_width = 'col-md-2';
+          break;
+        case '3_columns':
+          $col_width = 'col-md-3';
+          break;
+        case '4_columns':
+          $col_width = 'col-md-4';
+          break;
+        case '5_columns':
+          $col_width = 'col-md-5';
+          break;
+        case '6_columns':
+          $col_width = variable_get('two_columns');
+          break;
+        case '7_columns':
+          $col_width = 'col-md-7';
+          break;
+        case '8_columns':
+          $col_width = 'col-md-8';
+          break;
+        case '9_columns':
+          $col_width = 'col-md-9';
+          break;
+        case '10_columns':
+          $col_width = 'col-md-10';
+          break;
+        case '11_columns':
+          $col_width = 'col-md-11';
+          break;
+        case '12_columns':
+          $col_width = variable_get('one_columns');
+          break;
+      }
+      if (!empty($col_width)) {
+        $vars['classes_array'][] = $col_width;
+      }
+    }
+    //[WIDGET COMPOUND LINKS]
+    if ($vars['elements']['#bundle'] == 'multiple_compound_links') {
+      $background_color = isset($vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb']) ? 'background-color: ' . $vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb'] . ';' : 'background-color: #fff;';
+      if (!empty($background_color)) {
+        $vars['attributes_array']['style'] = array(
+          $background_color
+        );
+      }
+      $vars['classes_array'][] = 'col-md-3';
+    }
+    //[WIDGET PARAGRAPH CALL]
+    if ($vars['elements']['#bundle'] == 'call') {
+      $paragraph_style  = isset($vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : 0;
+      $background_color = isset($vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb']) ? 'background-color: ' . $vars['elements']['#entity']->field_color[LANGUAGE_NONE][0]['rgb'] : 'background-color: #fff';
+      $image = isset($vars['elements']['#entity']->field_image[LANGUAGE_NONE][0]) ? $vars['elements']['#entity']->field_image[LANGUAGE_NONE][0] : NULL;
+      $title = isset($vars['elements']['#entity']->field_title[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_title[LANGUAGE_NONE][0]['value'] : NULL;
+      $description = isset($vars['elements']['#entity']->field_description[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_description[LANGUAGE_NONE][0]['value'] : NULL;
+      $type_background = isset($vars['elements']['#entity']->field_background_type[LANGUAGE_NONE][0]['value']) ? $vars['elements']['#entity']->field_background_type[LANGUAGE_NONE][0]['value'] : NULL;
+      $group_class = '';
+      $vars['elements']['#groups']['group_paragraph_main_information']->format_settings['instance_settings']['classes'] = 'group-paragraph-main-information';
+      $vars['elements']['#groups']['group_paragraph_link']->format_settings['instance_settings']['classes'] = 'group-paragraph-link';
+      //Color background
+      if (!empty($background_color) && $type_background == 'color') {
+        $vars['attributes_array']['style'] = array(
+          $background_color,
+        );
+        $group_class = 'paragraphs-item-call-with-background-color';
+        unset($vars['content']['field_image']);
+        unset($vars['field_image']);
+        unset($vars['elements']['field_image']);
+      }
+      //Image background
+      if (!empty($image) && $type_background == 'image') {
+        $group_class = 'paragraphs-item-call-with-image';
+      }
+      //Horizontal disposition without-text
+      if (empty($description) && empty($title)) {
+        $group_class = 'paragraphs-item-call-no-text';
+      }
+      if (!empty($group_class)) {
+        $vars['classes_array'][] = $group_class;
+      }
+      $vars['classes_array'][] = 'call-style-' . $paragraph_style;
+      if (isset($paragraph_style) && isset($vars['elements']['#groups']['group_paragraph_main_information']) && isset($vars['elements']['#groups']['group_paragraph_link'])) {
+        switch ($paragraph_style) {
+          case 'vertical_disposition':
+              $col_width_info = variable_get('one_columns');
+              $col_width_link = variable_get('one_columns');
+            break;
+          case 'horizontal_disposition':
+              $col_width_info = 'col-md-8 col-xs-12';
+              $col_width_link = 'col-md-4 col-xs-12';
+            break;
+          case 'lateral_disposition':
+              $col_width_info = variable_get('two_columns') . ' col-xs-12';
+              $col_width_link = variable_get('two_columns') . ' col-xs-12';
+            break;
+          case 'hover_disposition':
+              $col_width_info = 'col-md-4 col-xs-12';
+              $col_width_link = 'col-md-8 col-xs-12';
+            break;
+        }
+        if ($paragraph_style == 'hover_disposition' && isset($vars['elements']['#group_children'])) {
+          if (isset($vars['elements']['#group_children']['field_link'])) {
+            $vars['elements']['#group_children']['field_link'] = 'group_paragraph_main_information';
+          }
+          if (isset($vars['elements']['#group_children']['field_description'])) {
+            $vars['elements']['#group_children']['field_description'] = 'group_paragraph_link';
+          }
+        }
+        $vars['elements']['#groups']['group_paragraph_main_information']->format_settings['instance_settings']['classes'] = $vars['elements']['#groups']['group_paragraph_main_information']->format_settings['instance_settings']['classes'] . ' ' . $col_width_info;
+        $vars['elements']['#groups']['group_paragraph_link']->format_settings['instance_settings']['classes'] = $vars['elements']['#groups']['group_paragraph_link']->format_settings['instance_settings']['classes'] . ' ' . $col_width_link;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_alter()
+ */
+function custom_drpl_paragraphs_entity_view_mode_alter(&$view_mode, $context) {
+  //[WIDGET GALLERY - SLIDESHOW]
+  if ($view_mode !== 'paragraphs_editor_preview' && $view_mode !== 'preview') {
+    if ($context['entity_type'] == 'paragraphs_item' && $context['entity']->bundle == 'gallery') {
+      $gallery_type = isset($context['entity']->field_paragraph_gallery_type[LANGUAGE_NONE][0]['value']) ? $context['entity']->field_paragraph_gallery_type[LANGUAGE_NONE][0]['value']: 1;
+      if (!empty($gallery_type)) {
+        switch ($gallery_type) {
+          case 1:
+            $view_mode = 'gallery';
+            break;
+          case 2:
+            $view_mode = 'coverflow';
+            break;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_field()
+ */
+function custom_drpl_paragraphs_preprocess_field(&$variables, $hook) {
+  //Groups paragraphs by bootstrap columns
+  if ($variables['element']['#field_type'] == 'paragraphs') {
+    if (isset($variables['element']['#items']) && !empty($variables['element']['#items'])) {
+      $count = 0;
+      $num_group = 0;
+      foreach ($variables['element']['#items'] as $key => $item) {
+        $delta = $key % 2 ? 'odd' : 'even';
+        if (isset($item['value']) && !empty($item['value'])) {
+          $paragraph_section_id = $item['value'];
+          if (!empty($paragraph_section_id)) {
+            if (isset($variables['element'][$key]['entity']['paragraphs_item'][$paragraph_section_id]['field_paragraph_container_size']) && !empty($variables['element'][$key]['entity']['paragraphs_item'][$paragraph_section_id]['field_paragraph_container_size'][0]['#markup'])) {
+              $valor = explode("_", $variables['element'][$key]['entity']['paragraphs_item'][$paragraph_section_id]['field_paragraph_container_size'][0]['#markup']);
+              if ($count == 0) {
+                $variables['items'][$key]['#prefix'] = '<div class="field-item ' . $delta . ' section-column ' . variable_get('one_columns') . '">';
+              }
+              if ($valor[0] + $count == 12) {
+                $num_group++;
+                $count = 0;
+                $variables['items'][$key]['#suffix'] = '</div>';
+              }
+              elseif ($valor[0] + $count > 12) {
+                $num_group++;
+              }
+              else{
+                $count += $variables['element'][$key]['entity']['paragraphs_item'][$paragraph_section_id]['field_paragraph_container_size'][0]['#markup'];
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  //[WIDGET PARAGRAPH CAROUSEL BANNERS SLIDES]
+  if ($variables['element']['#field_name'] == 'field_title' && $variables['element']['#bundle'] == 'carousel_banners_slide') {
+    $link = isset($variables['element']['#object']->field_link[LANGUAGE_NONE][0]) ? $variables['element']['#object']->field_link[LANGUAGE_NONE][0] : NULL;
+    $title = isset($variables['element']['#object']->field_title[LANGUAGE_NONE][0]['value']) ? $variables['element']['#object']->field_title[LANGUAGE_NONE][0]['value'] : NULL;
+    if (!empty($title) && !empty($link['url'])) {
+      if (isset($variables['ds-config']['fi-at'])) {
+        $target = "_self";
+        if (isset($link['attributes']['target']) && !empty($link['attributes']['target'])) {
+          $target = $link['attributes']['target'];
+        }
+        $variables['ds-config']['fi-at'] = 'target="' . $target . '" href="' . $link['url'] . '"';
+      }
+    }
+    else {
+      $variables['ds-config']['fi-el'] = 'span';
+      $variables['ds-config']['fi-cl'] = '';
+      $variables['ds-config']['fi-at'] = '';
+    }
+  }
+  //[WIDGET LIST - MANUAL NEWS REFERENCE]
+  if ($variables['element']['#field_name'] == 'field_news_reference' && $variables['element']['#bundle'] == 'list') {
+    $list_style = isset($variables['element']['#object']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $variables['element']['#object']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+    if (!empty($list_style)) {
+      $item = array();
+      switch ($list_style) {
+        case 'one_column':
+          $item['class'] = variable_get('one_columns');
+          break;
+        case 'two_columns':
+          $item['class'] = variable_get('two_columns');
+          break;
+        case 'three_columns':
+          $item['class'] = variable_get('three_columns');
+          break;
+        case 'four_columns':
+          $item['class'] = variable_get('four_columns');
+          break;
+      }
+    }
+    if (isset($variables['ds-config'])) {
+      $variables['ds-config']['fi-cl'] = $item['class'];
+    }
+  }
+  //[WIDGET PARAGRAPH LINK]
+  if ($variables['element']['#bundle'] == 'link') {
+    $background_color = isset($variables['element']['#object']->field_color[LANGUAGE_NONE][0]['rgb']) ? 'background-color: ' . $variables['element']['#object']->field_color[LANGUAGE_NONE][0]['rgb'] . '!important;' : '';
+    if (!empty($background_color)) {
+      $variables['items'][0]['#element']['attributes']['style'] = array(
+        $background_color
+      );
+    }
+  }
+   //[WIDGET BUTTON]
+  if ($variables['element']['#bundle'] == 'button') {
+    $background_color = isset($variables['element']['#object']->field_color[LANGUAGE_NONE][0]['rgb']) ? 'background-color: ' . $variables['element']['#object']->field_color[LANGUAGE_NONE][0]['rgb'] . '!important;' : 'background-color: #fff;';
+    $text_color = isset($variables['element']['#object']->field_color_text[LANGUAGE_NONE][0]['rgb']) ? 'color: ' . $variables['element']['#object']->field_color_text[LANGUAGE_NONE][0]['rgb'] . '!important;' : 'color: #000;';
+    $border_color = isset($variables['element']['#object']->field_color_border[LANGUAGE_NONE][0]['rgb']) ? 'border: 1px solid ' . $variables['element']['#object']->field_color_border[LANGUAGE_NONE][0]['rgb'] . '!important;' : 'border: 1px solid #000;';
+    $style = array();
+    if (!empty($background_color)) {
+      $style[] = $background_color;
+    }
+    if (!empty($text_color)) {
+      $style[] = $text_color;
+    }
+    if (!empty($border_color)) {
+      $style[] = $border_color;
+    }
+    if (!empty($style)) {
+      $variables['items'][0]['#element']['attributes']['style'] = $style;
+    }
+  }
+  //[WIDGET SEPARATOR]
+  if ($variables['element']['#bundle'] == 'separator') {
+    $border_color = isset($variables['element']['#object']->field_color_border[LANGUAGE_NONE][0]['rgb']) ? 'border-left: 12px solid ' . $variables['element']['#object']->field_color_border[LANGUAGE_NONE][0]['rgb'] . '!important;' : '';
+    $text_color = isset($variables['element']['#object']->field_color_text[LANGUAGE_NONE][0]['rgb']) ? 'color: ' . $variables['element']['#object']->field_color_text[LANGUAGE_NONE][0]['rgb'] . '!important;' : '';
+    if (!empty($border_color) || !empty($text_color)) {
+      $variables['attributes_array']['style'] = array(
+        $border_color,
+        $text_color
+      );
+    }
+  }
+  //[WIDGET FEATURED LIST]
+  if ($variables['element']['#bundle'] == 'featured_list') {
+    $list_style = isset($variables['element']['#object']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $variables['element']['#object']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+    $not_show_sort_description = isset($variables['element']['#object']->field_disabled_short_description[LANGUAGE_NONE][0]['value']) ? $variables['element']['#object']->field_disabled_short_description[LANGUAGE_NONE][0]['value'] : NULL;
+    if (!empty($list_style)) {
+      $item = array();
+      switch ($list_style) {
+        case 'one_column':
+          $item['class'] = variable_get('one_columns');
+          $view_mode_image_choosen = 'block_teaser_image_horizontal';
+          break;
+        case 'two_columns':
+          $item['class'] = variable_get('two_columns');
+          $view_mode_image_choosen = 'block_teaser_image_horizontal';
+          break;
+        case 'three_columns':
+          $item['class'] = variable_get('three_columns');
+          $view_mode_image_choosen = 'block_teaser_image_horizontal';
+          break;
+        case 'four_columns':
+          $item['class'] = variable_get('four_columns');
+          break;
+      }
+    }
+    if (isset($variables['ds-config'])) {
+      $variables['ds-config']['fi-cl'] = $item['class'];
+    }
+    $items = isset($variables['items']) ? $variables['items'] : NULL;
+    if (!empty($items)) {
+      foreach ($items as $key => $item_reference) {
+        if (isset($item_reference['node'])) {
+          foreach ($item_reference['node'] as $val => $node_item) {
+            if (is_numeric($val)) {
+              //change display image columns
+              if (isset($view_mode_image_choosen) && !empty($view_mode_image_choosen)) {
+                if (isset($node_item['field_image'][0]['#image_style']) && !empty($node_item['field_image'][0]['#image_style'])) {
+                  $variables['items'][$key]['node'][$val]['field_image'][0]['#image_style'] = $view_mode_image_choosen;
+                }
+              }
+              //show or not shor_description
+              if (isset($not_show_sort_description) && $not_show_sort_description > 0) {
+                if (isset($node_item['field_short_description'])) {
+                  unset($variables['items'][$key]['node'][$val]['field_short_description']);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  //[WIDGET GALLERY]
+  if ($variables['element']['#field_name'] == 'field_gallery' && $variables['element']['#bundle'] == 'gallery') {
+    $list_style = isset($variables['element']['#object']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $variables['element']['#object']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+    $type_gallery = isset($variables['element']['#object']->field_paragraph_gallery_type[LANGUAGE_NONE][0]['value']) ? $variables['element']['#object']->field_paragraph_gallery_type[LANGUAGE_NONE][0]['value'] : NULL;
+    if ($type_gallery == 1) { //only from gallery type 1
+      $items = $variables['items'];
+      if (!empty($items)) {
+        if (!empty($list_style)) {
+          $item = array();
+          switch ($list_style) {
+            case 'one_column':
+              $item['class'] = variable_get('one_columns');
+              break;
+            case 'two_columns':
+              $item['class'] = variable_get('two_columns');
+              break;
+            case 'three_columns':
+              $item['class'] = variable_get('three_columns');
+              break;
+            case 'four_columns':
+              $item['class'] = variable_get('four_columns');
+              break;
+          }
+        }
+        if (isset($variables['ds-config'])) {
+          $variables['ds-config']['fi-cl'] = $item['class'];
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_build()
+ */
+function custom_drpl_paragraphs_views_pre_build(&$view) {
+  //[WIDGETS - LIST - FEATURED LIST - LIST ENTITIES]
+  $content_types = node_type_get_types();
+  $contents = array(
+    'widget_featured_news_block',
+    'widget_coverflow_slider_featured_events_block',
+    'filter_content_by_terms',
+    'filter_content_by_terms_and_type',
+  );
+  $item = array();
+  if (in_array($view->current_display, $contents)) {
+    $node = node_load(arg(1));
+    $paragraphs = custom_drpl_paragraphs_get_node_paragraphs($node);
+    if (!empty($paragraphs)) {
+      foreach ($paragraphs as $key => $paragraph) {
+        $subparagraphs = isset($paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE]) ? $paragraphs[$key]->field_subparagraphs[LANGUAGE_NONE] : NULL;
+        if (!empty($subparagraphs)) {
+          foreach ($subparagraphs as $key => $subparagraph) {
+            if (isset($subparagraph['entity'])) {
+              //[WIDGET LIST - AUTOMATIC NEWS REFERENCE]
+              if ($subparagraph['entity']->bundle == 'list') {
+                if (isset($subparagraph['entity']->field_config_type) && $subparagraph['entity']->field_config_type[LANGUAGE_NONE][0]['value'] == 'auto') {
+                  $item_style = isset($subparagraph['entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value']) ? $subparagraph['entity']->field_paragraph_class_list[LANGUAGE_NONE][0]['value'] : NULL;
+                  $item['limit'] = isset($subparagraph['entity']->field_items_limit[LANGUAGE_NONE][0]['value']) ? $subparagraph['entity']->field_items_limit[LANGUAGE_NONE][0]['value'] : NULL;
+                  if (!empty($item_style)) {
+                    switch ($item_style) {
+                      case 'one_column':
+                        $item['class'] = variable_get('one_columns');
+                        $view_mode_choosen = 'block_teaser_horizontal';
+                        break;
+                      case 'two_columns':
+                        $item['class'] = variable_get('two_columns');
+                        $view_mode_choosen = 'block_teaser_horizontal';
+                        break;
+                      case 'three_columns':
+                        $item['class'] = variable_get('three_columns');
+                        break;
+                      case 'four_columns':
+                        $item['class'] = variable_get('four_columns');
+                        break;
+                    }
+                  }
+                }
+                $arguments = array();
+                if (isset($view->argument['nid']) && !empty($node->nid)) {
+                  $arguments[] = $node->nid; //exclude this node
+                }
+                $tax_filter = array();
+                $thematics = variable_get('thematics');
+                foreach ($thematics as $key => $thematic) {
+                  if (isset($view->argument['tid']) && isset($node->{'field_' . $thematic}[LANGUAGE_NONE]) && !empty($node->{'field_' . $thematic}[LANGUAGE_NONE])) {
+                    foreach ($node->{'field_' . $thematic}[LANGUAGE_NONE] as $key => $taxonomy_thematic) {
+                      if (isset($taxonomy_thematic['target_id'])) {
+                        $tax_filter[] = $taxonomy_thematic['target_id'];
+                      }
+                    }
+                  }
+                }
+                if (!empty($tax_filter)) {
+                  $tax_filter = implode('+', $tax_filter);
+                  $arguments[] = $tax_filter;
+                }
+                if (count($arguments) == 2) {
+                  $view->set_arguments($arguments);
+                }
+              }
+              //[WIDGET EVENTS FEATURED - COVERFLOW SLIDER]
+              elseif ($subparagraph['entity']->bundle == 'featured_events') {
+                $item['limit'] = isset($subparagraph['entity']->field_items_limit[LANGUAGE_NONE][0]['value']) ? $subparagraph['entity']->field_items_limit[LANGUAGE_NONE][0]['value'] : NULL;
+                $arguments = array();
+                if (isset($view->argument['nid']) && !empty($node->nid)) {
+                  $arguments[] = $node->nid; //exclude this node
+                }
+                if (isset($view->argument['tid']) && isset($subparagraph['entity']->field_filter_categories[LANGUAGE_NONE])) {
+                  $categories_show = $subparagraph['entity']->field_filter_categories[LANGUAGE_NONE];
+                  if (!empty($categories_show)) {
+                    $tax_filter = array();
+                    foreach ($categories_show as $key => $categorie) {
+                      if (isset($categorie['target_id'])) {
+                        $tax_filter[] = $categorie['target_id'];
+                      }
+                    }
+                    if (!empty($tax_filter)) {
+                      $tax_filter = implode('+', $tax_filter);
+                      $arguments[] = $tax_filter;
+                    }
+                  }
+                }
+                else{
+                  $arguments[] = 'all';
+                }
+                if (count($arguments) == 2) {
+                  $view->set_arguments($arguments);
+                }
+              }
+              //[LIST ENTITY FEATURED]
+              elseif ($subparagraph['entity']->bundle == 'featured_list_entity') {
+                $item['limit'] = isset($subparagraph['entity']->field_items_limit[LANGUAGE_NONE][0]['value']) ? $subparagraph['entity']->field_items_limit[LANGUAGE_NONE][0]['value'] : NULL;
+                $arguments = array();
+                if (isset($view->argument['nid']) && !empty($node->nid)) {
+                  $arguments[] = $node->nid; //exclude this node
+                }
+                if (isset($view->argument['tid']) && isset($subparagraph['entity']->field_content_types[LANGUAGE_NONE])) {
+                  $content_types_show = $subparagraph['entity']->field_content_types[LANGUAGE_NONE];
+                  if (!empty($content_types_show)) {
+                    $tax_content_type = array();
+                    foreach ($content_types_show as $key => $content_type) {
+                      if (isset($content_type['value'])) {
+                        $tax_content_type[] = $content_type['value'];
+                      }
+                    }
+                    $tax_content_type = implode('+', $tax_content_type);
+                    if (!empty($tax_content_type)) {
+                      $arguments[] = $tax_content_type;
+                    }
+                  }
+                }
+                else{
+                  $arguments[] = 'all';
+                }
+                if (isset($view->argument['tid']) && isset($subparagraph['entity']->field_filter_categories[LANGUAGE_NONE])) {
+                  $categories_show = $subparagraph['entity']->field_filter_categories[LANGUAGE_NONE];
+                  if (!empty($categories_show)) {
+                    $tax_filter = array();
+                    foreach ($categories_show as $key => $categorie) {
+                      if (isset($categorie['target_id'])) {
+                        $tax_filter[] = $categorie['target_id'];
+                      }
+                    }
+                    if (!empty($tax_filter)) {
+                      $tax_filter = implode('+', $tax_filter);
+                      $arguments[] = $tax_filter;
+                    }
+                  }
+                }
+                else{
+                  $arguments[] = 0;
+                }
+                if (count($arguments) == 3) {
+                  $view->set_arguments($arguments);
+                }
+              }
+            }
+          }
+        }
+      }
+      if (isset($item['limit'])) {
+        $view->set_items_per_page($item['limit']);
+      }
+      if (isset($item['class'])) {
+        $view->display_handler->display->display_options['style_options']['row_class'] = $item['class'];
+        $view->display_handler->options['style_options']['row_class'] = $item['class'];
+        //Change view mode to two columns for set new image style
+        if (isset($view_mode_choosen) && !empty($view_mode_choosen)) {
+          $view->display_handler->display->display_options['row_options']['view_mode'] = 'block_teaser_horizontal';
+          $view->display_handler->options['row_options']['view_mode']= 'block_teaser_horizontal';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Get node paragraphs
+ */
+function custom_drpl_paragraphs_get_node_paragraphs($node) {
+  if (!empty($node)) {
+    //get fields paragraphs type
+    $paragraphs_fields = array();
+    foreach ($node as $key => $field) {
+      if (strpos($key, "paragraph") !== FALSE && $key !== 'field_paragraphs_rebuild') {
+        $paragraphs_fields[] = $key;
+      }
+    }
+    if (!empty($paragraphs_fields)) {
+      $parag_id = array();
+      foreach ($paragraphs_fields as $key => $paragraph_field) {
+        if (isset($node->{$paragraph_field})) {
+          $node->field_paragraphs_rebuild = array();
+          if (isset($node->{$paragraph_field}[LANGUAGE_NONE])) {
+            foreach ($node->{$paragraph_field}[LANGUAGE_NONE] as $key => $paragraph) {
+              if (isset($paragraph['entity']->bundle)) {
+                $parag_id[] = intval($paragraph['entity']->item_id);
+              }
+              else {
+                $parag_id[] = intval($node->{$paragraph_field}[LANGUAGE_NONE][$key]['value']);
+              }
+              $node->field_paragraphs_rebuild = entity_load('paragraphs_item', $parag_id);
+            }
+          }
+          if (isset($node->field_paragraphs_rebuild)) {
+            return $node->field_paragraphs_rebuild;
+          }
+        }
+      }
+    }
+  }
+  return FALSE;
+}

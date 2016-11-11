@@ -1,0 +1,250 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-government-agenda-search
+//    Desripcion: Pagina de resultados busqueda agenda de gobierno
+//    Fecha: 04/11/2016
+//******************************************************************************/
+#views-exposed-form-goverment-agenda-search-page {
+  font-family: "Montserrat";
+  margin: 3rem 0;
+  padding: 0 10px;
+  label {
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .form-control {
+    &.form-text {
+      @include border-radius(100px);
+      border-color: #ddd;
+      width: 100%;
+    }
+  }
+  .views-exposed-form {
+    .views-exposed-widget {
+      float: none;
+      padding: 0 0 20px 0;
+      div {
+        width: 100%;
+      }
+      &.views-submit-button {
+        button {
+          &#edit-submit-goverment-agenda-search {
+            margin: 0;
+            @include border-radius(100px);
+            border-color: $red;
+            color: $red;
+            background-color: transparent;
+            padding: 6px 30px;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.view-goverment-agenda-search {
+  .view-content {
+    h3 {
+      margin: 0 15px 10px 15px;
+      padding: 10px;
+      font-family: "Montserrat-light";
+      text-transform: uppercase;
+      color: $white;
+      background-color: $red;
+    }
+    .views-row {
+      margin-bottom: 30px;
+      padding: 0 25px;
+      .group-left-column {
+        &.col-md-3 {
+          width: 15%;
+        }
+      }
+      .group-right-column {
+        &.col-md-9 {
+          width: 85%;
+          h2 {
+            margin: 10px 0;
+            text-transform: uppercase;
+            font-size: 2rem;
+          }
+        }
+      }
+      .field-name-field-date {
+        text-align: left;
+        font-family: "Montserrat-light";
+        font-size: 3rem;
+      }
+      .field-name-field-title {
+        text-transform: uppercase;
+        margin: 5px 0 10px 0;
+      }
+      .field-type-taxonomy-term-reference {
+        margin: 10px 0;
+        padding: 10px;
+        text-transform: uppercase;
+        text-align: center;
+        background-color: #ebebeb;
+      }
+      .field-name-field-description,
+      .field-name-field-short-description {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+      .field-name-field-place,
+      .field-name-field-location,
+      .field-name-field-municipality {
+        padding: 0 0 0 50px;
+        position: relative;
+        .field-label,
+        .field-items {
+          display: inline-block;
+          font-family: "Montserrat-light";
+        }
+      }
+      .field-name-field-place {
+        &:before {
+          font-family: "Font Awesome";
+          content: "\f041";
+          position: absolute;
+          left: 0;
+          top: 0;
+          font-size: rem(30);
+          color: #ccc;
+        }
+      }
+    }
+  }
+}
+
+.view-display-id-goverment_agenda_block {
+  .ui-accordion {
+    padding: 0 15px;
+    h3 {
+      &.ui-accordion-header {
+        border-radius: 0;
+        border: none;
+        background: #ebebeb;
+        margin-top: 1px;
+        font-size: 24px;
+        font-family: "Montserrat-light";
+        padding: 7px 10px 7px 40px;
+      }
+      &.ui-state-default,
+      &.ui-state-active {
+        a,
+        a:link,
+        a:visited {
+          text-transform: uppercase;
+        }
+      }
+      &.ui-state-default {
+        .ui-icon {
+          background-image: none;
+          text-indent: 0;
+          &:before {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: "\f105";
+            font-family: "Font Awesome";
+            font-size: 20px;
+            line-height: 18px;
+          }
+        }
+      }
+      &.ui-state-active {
+        background: $red;
+        a,
+        a:link,
+        a:visited {
+          color: #fff;
+        }
+        .ui-icon {
+          background-image: none;
+          text-indent: 0;
+          &:before {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: "\f107";
+            font-family: "Font Awesome";
+            font-size: 20px;
+            color: #fff;
+            line-height: 18px;
+          }
+        }
+      }
+    }
+    .ui-accordion-content {
+      padding: 10px;
+    }
+    .ui-widget-content {
+      border: none;
+        .views-row {
+        margin-bottom: 30px;
+        .group-left-column {
+          &.col-md-3 {
+            width: 15%;
+          }
+        }
+        .group-right-column {
+          &.col-md-9 {
+            width: 85%;
+            h2 {
+              margin: 10px 0;
+              text-transform: uppercase;
+              font-size: 2rem;
+            }
+          }
+        }
+        .field-name-field-date {
+          text-align: left;
+          font-family: "Montserrat-light";
+          font-size: 3rem;
+        }
+        .field-type-taxonomy-term-reference {
+          margin: 10px 0;
+          padding: 10px;
+          text-transform: uppercase;
+          text-align: center;
+          background-color: #ebebeb;
+        }
+        .field-name-field-title {
+          text-transform: uppercase;
+          margin: 5px 0 10px 0;
+        }
+        .field-name-field-description ,
+        .field-name-field-short-description {
+          text-align: left;
+          margin-bottom: 20px;
+        }
+        .field-name-field-place,
+        .field-name-field-location,
+        .field-name-field-municipality {
+          padding: 0 0 0 50px;
+          position: relative;
+          .field-label,
+          .field-items {
+            display: inline-block;
+            font-family: "Montserrat-light";
+          }
+        }
+        .field-name-field-place {
+          &:before {
+            font-family: "Font Awesome";
+            content: "\f041";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: rem(30);
+            color: #ccc;
+          }
+        }
+      }
+    }
+  }
+}

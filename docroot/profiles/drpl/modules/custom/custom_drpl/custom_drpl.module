@@ -1,0 +1,582 @@
+<?php
+/**
+ * @file
+ * Module for custom_drpl web page
+ */
+
+/**
+ * Implements hook_init().
+ */
+function custom_drpl_init() {
+  global $theme_path, $base_url, $language;
+  variable_set('one_columns', 'col-md-12');
+  variable_set('two_columns', 'col-md-6');
+  variable_set('three_columns', 'col-md-4');
+  variable_set('four_columns', 'col-md-3');
+  variable_set('taxonomy_term_css_path', 'public://css/taxonomy_term');
+  variable_set('nodes_css_path', 'public://css/nodes');
+  variable_set('thematics', array('invest_category', 'open_government', 'enjoy_category', 'live_category'));
+  //Load single taxonomy/node css
+  if (arg(0) ==  "taxonomy") {
+    $term = taxonomy_term_load(arg(2));
+    if (!empty($term)) {
+      drupal_add_css(variable_get('taxonomy_term_css_path') . '/' . md5($term->tid) . '.css'); 
+    }
+  }
+  elseif (arg(0) ==  "node") {
+    $node = node_load(arg(1));
+    if (!empty($node)) {
+      //GET COLOR FROM FIELD_CATEGORIE
+      if (isset($node->field_categories[LANGUAGE_NONE])) {
+        $term_id = isset($node->field_categories[LANGUAGE_NONE][0]['target_id']) ? $node->field_categories[LANGUAGE_NONE][0]['target_id'] : NULL;
+        if (!empty($term_id)) {
+          drupal_add_css(variable_get('taxonomy_term_css_path') . '/' . md5($term_id) . '.css'); 
+        }
+      }
+    }
+  }
+  //Add paths to JS
+  drupal_add_js(
+    array(
+      'settings' => array(
+        'path_theme' => $base_url . '/' . $theme_path,
+        'global_path' => $base_url,
+        'language' => $language->language
+      ),
+    ),
+    array(
+      'type' => 'setting'
+    )
+  );
+  drupal_add_js(drupal_get_path('module', 'custom_drpl') . '/js/custom_drpl.js');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_drpl_form_alter(&$form, &$form_state, $form_id) {
+  $custom_submit = FALSE;
+  if (isset($form['workbench_access'])) {
+    $form['workbench_access']['workbench_access']['#required'] = FALSE;
+    array_unshift($form['actions']['submit']['#submit'], 'custom_drpl_form_submit');
+    $custom_submit = TRUE;
+  }
+  if (strpos($form_id, "_node_form") !== FALSE) {
+    $thematics = variable_get('thematics');
+    if (!empty($thematics)) {      
+      foreach ($thematics as $key => $thematic) {
+        if (isset($form['field_' . $thematic][LANGUAGE_NONE]) && !empty($form['field_' . $thematic][LANGUAGE_NONE])) {
+          if (isset($form['field_' . $thematic][LANGUAGE_NONE]['#options']) && !empty($form['field_' . $thematic][LANGUAGE_NONE]['#options'])) {
+            $all_options['all'] = t('- Select all -');
+            $form['field_' . $thematic][LANGUAGE_NONE]['#options'] = $all_options + $form['field_' . $thematic][LANGUAGE_NONE]['#options']; 
+          }
+        }
+      }
+    }
+    if (isset($form['field_related_thematic']) && $custom_submit == FALSE) {
+      array_unshift($form['actions']['submit']['#submit'], 'custom_drpl_form_submit');
+    }
+  }
+  if (isset($form['#entity_type']) && $form['#entity_type'] == 'taxonomy_term') {
+    if (isset($form['field_color'])) {
+      $form['#submit'][] = 'custom_drpl_generate_css';
+    }
+  }
+  if (strpos($form_id, "search_api_page_search_form") !== FALSE) {
+    if (isset($form['form']['keys_1'])) {
+      $form['form']['keys_1']['#attributes'] = array('placeholder' => t('What information are you looking for?...'));
+    }
+    if (isset($form['keys_1'])) {
+      $form['keys_1']['#attributes'] = array('placeholder' => t('What information are you looking for?...'));
+    }
+  }
+  if (module_exists('geolocation_googlemaps')) {
+    $js_added_already = &drupal_static(__FUNCTION__, FALSE);
+    if (!$js_added_already) {
+      $form['#attached']['js'][] = array(
+        'data' => '//maps.google.com/maps/api/js?sensor=false',
+        'type' => 'external',
+      );
+      $form['#attached']['js'][] = array(
+        'data' => '//www.google.com/jsapi',
+        'type' => 'external',
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function custom_drpl_form_submit($form, &$form_state) {
+  $values = isset($form_state['values']) ? $form_state['values'] : NULL;
+  if (!empty($values)) {
+    $tax_filter = array();
+    $workbench_access = array();
+    $all_taxonomies = array();
+    $categories = array();
+    $thematics = variable_get('thematics');
+    if (!empty($thematics)) {
+      foreach ($thematics as $key => $thematic) {
+        if (isset($values['field_' . $thematic][LANGUAGE_NONE]) && !empty($values['field_' . $thematic][LANGUAGE_NONE])) {
+          foreach ($values['field_' . $thematic][LANGUAGE_NONE] as $val => $taxonomy_thematic) {
+            if (isset($taxonomy_thematic['target_id'])) {
+              if (!in_array($taxonomy_thematic['target_id'], $all_taxonomies)) {
+                $children_categories = taxonomy_get_children($taxonomy_thematic['target_id']);
+                foreach ($children_categories as $tid => $categorie_child) {
+                  if (!in_array($tid, $all_taxonomies)) {
+                    $categories[$thematic][] = array(
+                      'target_id' => $tid,
+                    );
+                    $tax_filter[] = array(
+                      'target_id' => $tid,
+                    );
+                    $workbench_access[$tid] =  $tid;
+                  }
+                }
+                $categories[$thematic][] = array(
+                  'target_id' => $taxonomy_thematic['target_id'],
+                );
+                $tax_filter[] = array(
+                  'target_id' => $taxonomy_thematic['target_id'],
+                );
+                $workbench_access[$taxonomy_thematic['target_id']] = $taxonomy_thematic['target_id'];
+              }
+              $all_taxonomies[] = $taxonomy_thematic['target_id'];
+            }
+            if (!empty($categories[$thematic])) {
+              $form_state['values']['field_' . $thematic][LANGUAGE_NONE] = $categories[$thematic];
+            }
+          }
+        }
+      }
+      if (!empty($tax_filter)) {
+        if (isset($values['field_related_thematic'])) {
+          $form_state['values']['field_related_thematic'][LANGUAGE_NONE] = $tax_filter;
+        }
+      }
+      if (!empty($workbench_access)) {
+       if (isset($values['workbench_access'])) {
+          $form_state['values']['workbench_access'] = $workbench_access;
+        }
+      } 
+      else {
+        foreach ($thematics as $key => $thematic) {
+          $form_state['values']['workbench_access'][$thematic] = $thematic;
+        } 
+      }  
+    }
+  }
+}
+
+/**
+ * Form submit handler
+ *
+ * @param array $form
+ * @param array $form_state
+ */
+function custom_drpl_generate_css($form, &$form_state) {
+  $color = isset($form_state['values']['field_color'][LANGUAGE_NONE][0]['rgb']) ? $form_state['values']['field_color'][LANGUAGE_NONE][0]['rgb'] : '#000';
+  $tid = isset($form_state['values']['tid']) ? $form_state['values']['tid'] : NULL;
+  if (!empty($color) && ! empty($tid)) {
+    $settings = array(
+      'color' => $color,
+      'tid' => $tid,
+      'md5_hash' => md5($tid),
+    );
+    custom_drpl_create_css_file($settings);
+  }
+}
+
+/**
+ * Create a CSS file
+ *
+ * @param string $content
+ * @param array $settings
+ */
+function custom_drpl_create_css_file($settings) {
+  $css = 'body > .main-container .col-content .pane-node-title,' . "\n";
+  $css .= 'body > .main-container .field-name-field-paragraph-title,' . "\n";
+  $css .= 'body > .main-container .col-top > .inside  h2 {
+    border-left: 12px solid ' . $settings['color'] . '!important; ' . "\n" . '}';
+  $css .= "\n";
+
+  $css .= 'body > .main-container .paragraph-menu-progress .bar span,' . "\n";
+  $css .= 'body > .main-container .col-top > .inside .pane-search-form form .input-group span.input-group-btn:before {
+    background-color: ' . $settings['color'] . '!important;' . "\n" . '}';
+
+  $evecss_dir = variable_get('taxonomy_term_css_path');
+  file_prepare_directory($evecss_dir, FILE_CREATE_DIRECTORY);
+  $css_path = $evecss_dir . '/' . $settings['md5_hash'] . '.css';
+
+  $file = file_save_data($css, $css_path, TRUE);
+
+  drupal_add_css(
+    $css_path,
+    [
+      'group' => CSS_THEME,
+      'type' => 'file',
+      'media' => 'all',
+      'preprocess' => TRUE,
+      'every_page' => FALSE,
+    ]
+  );
+
+}
+
+
+/**
+ * hook_list_option_info()
+ *
+ */
+function custom_drpl_list_option_info() {
+  $info['content_types'] = array(
+    'label' => t('Content types'),
+    'callback' => 'custom_drpl_list_content_types',
+  );
+  return $info;
+}
+
+/**
+ * hook_list_option_info_alter()
+ *
+ */
+function custom_drpl_list_content_types() {
+  $content_types = node_type_get_types();
+  foreach ($content_types as $key => $content_type) {
+    $options[$key] = t($content_type->name);
+  }
+  return $options;
+}
+
+/**
+ * Implements hook_views_query_substitutions().
+ *
+ */
+function custom_drpl_views_query_substitutions() {
+  $view = views_get_current_view();
+  $replacements = array();
+  if (isset($view->args) && is_array($view->args)) {
+    foreach ($view->args as $index => $argument) {
+      $newindex = $index + 1;
+      $replacements["!$newindex"] = $argument;
+      $replacements["%$newindex"] = $argument;
+    }
+  }
+  return $replacements;
+}
+
+/**
+ * hook_preprocess_hook()
+ *
+ */
+function custom_drpl_preprocess_html(&$variables) {
+  /*
+  global $theme;
+  if ($theme == 'seven') {
+    drupal_add_css(drupal_get_path('theme', 'drpl') . '/css/admin.css', array('weight' => CSS_THEME));
+  }*/
+}
+
+function custom_drpl_block_render_return($blocks_render = array()) {
+  if (!empty($blocks_render)) {
+    $block_output = '';
+    foreach ($blocks_render as $key => $block) {
+      $block_load = block_load($block["block_machine_name"], $block["id"]);
+      if (isset($block_load->bid)) {
+        $block_load_render = _block_render_blocks(array($block_load));
+        if (isset($block_load_render)) {
+          $block_load_render = _block_get_renderable_array($block_load_render);
+          $block_output .='<div class="' . $block['class'] . '">';
+          $block_output .= drupal_render($block_load_render);
+          $block_output .= '</div>';
+        }
+      }
+    }
+    return $block_output;
+  }
+  return;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ *
+ */
+function custom_drpl_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'panels' && $plugin_type == 'layouts') {
+    return "plugins/$plugin_type";
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function custom_drpl_block_info() {
+  $blocks = array();
+  $blocks['custom_drpl_related_content'] = array(
+    'info' => t('Related content'),
+  );
+  $blocks['custom_drpl_related_videos'] = array(
+    'info' => t('Related videos'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function custom_drpl_block_view($delta='') {
+  $block = array();
+  switch ($delta) {
+    case 'custom_drpl_related_content' :
+      $block['subject'] = t('Related content');
+      $block['content'] = custom_drpl_related_content();
+      break;
+    case 'custom_drpl_related_videos' :
+      $block['subject'] = t('Related videos');
+      $block['content'] = custom_drpl_related_videos();
+      break;     
+  }
+  return $block;
+}
+
+function custom_drpl_related_videos() {
+  $block_html = '<div class="related_videos">';
+    if (arg(0) == 'node' && is_numeric(arg(1)) && is_null(arg(2))) {
+      $nid = arg(1);
+      $node = node_load($nid);
+      $tids = array();
+      $thematics = variable_get('thematics');
+      if (!empty($thematics)) {
+        foreach ($thematics as $key => $thematic) {
+          if (isset($node->{'field_' . $thematic}[LANGUAGE_NONE])) {
+            foreach ($node->{'field_' . $thematic}[LANGUAGE_NONE] as $val => $categorie) {
+             if (!in_array($tids, $categorie['target_id'])) {
+                $tids[] = $categorie['target_id'];
+              }
+            }
+          }
+        }
+      }  
+      if (!empty($tids)) {
+        $tids = implode("+", $tids);
+        $arguments = $nid . '/' . $tids;
+        $related_videos = views_embed_view('videos', 'block_related_videos', $nid, $tids);
+        $block_html .= $related_videos;
+      }
+    }
+  $block_html .= '</div>';
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+function custom_drpl_related_content() {
+  $block_html = '<div class="related_content">';
+    if (arg(0) == 'node' && is_numeric(arg(1)) && is_null(arg(2))) {
+      $nid = arg(1);
+      $node = node_load($nid);
+      $tids = array();
+      if (isset($node->field_categories[LANGUAGE_NONE])) {
+        foreach ($node->field_categories[LANGUAGE_NONE] as $key => $categorie) {
+          $tids[] = $categorie['target_id'];
+        }
+      }
+      if (!empty($tids)) {
+        $tids = implode("+", $tids);
+        $arguments = $nid . '/' . $tids;
+        $related_content = views_embed_view('related_content_by_terms', 'related_content_by_terms', $nid, $tids);
+        $block_html .= $related_content;
+      }
+    }
+  $block_html .= '</div>';
+
+  $block = array(
+    '#markup' => $block_html,
+  );
+  return $block;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function custom_drpl_token_info() {
+  $info = array();
+  $taxonomyterm = taxonomy_term_load(12627);
+  foreach ($taxonomyterm as $key => $value) {
+    $label = '';
+    $description = '';
+    if ($key == 'name') {
+      $label = t('Main category parent name');
+      $description = t('The main category parent if it exists');
+    }
+    elseif ($key == 'vocabulary_machine_name') {
+      $key = 'vocabulary_name';
+      $label = t('Main category Vocabulary');
+      $description = t('The vocabulary of the main category');
+    }
+    elseif ($key == 'tid') {
+      $key = 'link';
+      $label = t('Main category parent Term Link');
+      $description = t('The Main category parent URL');
+    }
+    else{
+      continue;
+    }
+    $info['tokens']['node']['parent_' . $key] = array(
+      'name' => $label,
+      'description' => $description,
+    );
+  }
+  $info['tokens']['node']['parent_vocabulary_link'] = array(
+    'name' =>  t('Main category Vocabulary link'),
+    'description' => t('Link to the vocabulary landing'),
+  );
+  $info['tokens']['node']['parent_original_term_link'] = array(
+    'name' =>  t('Main category Term Link'),
+    'description' => t('Link to the Main category Term'),
+  );
+  $info['tokens']['node']['parent_section_breadcrumb'] = array(
+    'name' =>  t('Section breadcrumb elements'),
+    'description' => t('Elements from the section categorization'),
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_tokens(). This hook will operate the token and replace it with it's value.
+ */
+function custom_drpl_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+  $sanitize = !empty($options['sanitize']);
+  if ($type == 'node' && !empty($data['node'])) {
+    $node = $data['node'];
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'parent_name':
+          if (!empty($node->field_categories[LANGUAGE_NONE][0]['target_id'])) {
+            $parent = taxonomy_get_parents($node->field_categories[LANGUAGE_NONE][0]['target_id']);
+            if (!empty($parent)) {
+              foreach ($parent as $tid => $term) {
+                $replacements[$original] = $term->name;
+              }
+            }
+            else{
+              $replacements[$original] = '';
+            }
+          }
+          break;
+        case 'parent_link':
+          if (!empty($node->field_categories[LANGUAGE_NONE][0]['target_id'])) {
+            $parent = taxonomy_get_parents($node->field_categories[LANGUAGE_NONE][0]['target_id']);
+            if (!empty($parent)) {
+              foreach ($parent as $tid => $term) {
+                $path = url('taxonomy/term/' . $tid);
+                $replacements[$original] = $path;
+              }
+            }
+            else{
+              $replacements[$original] = '';
+            }
+          }
+          break;
+        case 'parent_vocabulary_name':
+          if (!empty($node->field_categories[LANGUAGE_NONE][0]['target_id'])) {
+            $term = taxonomy_term_load($node->field_categories[LANGUAGE_NONE][0]['target_id']);
+            if (!empty($term)) {
+              $vocabulary = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name);
+              $replacements[$original] = $vocabulary->name;
+            }
+          }
+          break;
+        case 'parent_vocabulary_link':
+          if (!empty($node->field_categories[LANGUAGE_NONE][0]['target_id'])) {
+            $term = taxonomy_term_load($node->field_categories[LANGUAGE_NONE][0]['target_id']);
+            if (!empty($term)) {
+              $land = '';
+              switch ($term->vocabulary_machine_name) {
+                case 'live_category':
+                  $land = 'vivir';
+                break;
+                case 'enjoy_category':
+                  $land = 'disfrutar';
+                break;
+                case 'open_government':
+                  $land = 'gobierno-abierto';
+                break;
+                case 'invest_category':
+                  $land = 'invertir';
+                break;
+              }
+              $replacements[$original] = $land;
+            }
+          }
+        break;
+        case 'parent_original_term_link':
+          if (!empty($node->field_categories[LANGUAGE_NONE][0]['target_id'])) {
+            $path = url('taxonomy/term/' . $node->field_categories[LANGUAGE_NONE][0]['target_id']);
+            $replacements[$original] = $path;
+          }
+        break;
+        case 'parent_section_breadcrumb':
+          $elementnum = 0;
+          $sectiontext = '';
+          if (!empty($node->field_segments[LANGUAGE_NONE][0]['tid'])) {
+            $parent = taxonomy_get_parents_all($node->field_segments[LANGUAGE_NONE][0]['tid']);
+            if (!empty($parent)) {
+              $allterms = array();
+              foreach ($parent as $tid => $term) {
+                $elementnum ++;
+                $allterms[] = $term->name;
+              }
+              $ignore_first_level = array_pop($allterms);
+              $final = array_reverse($allterms);
+              $returntext = '';
+              $first = TRUE;
+              foreach ($final as $textname) {
+                if ($first) {
+                  $first = FALSE;
+                }
+                else {
+                  $returntext .= '*/!';
+                }
+                $returntext .= $textname;
+              }
+              $sectiontext = $returntext;
+            }
+            else{
+              $sectiontext = '';
+            }
+          }
+          if($elementnum > 0){
+            $elementnum --;
+          }
+          //classification elements
+          $returnformatted = token_replace("[node:parent_vocabulary_name]", array('node' => $node));
+          $returnformatted .= '*/!';
+          $returnformatted .= token_replace("[node:parent_name]", array('node' => $node));
+          $returnformatted .= '*/!';
+          $returnformatted .= token_replace("[node:field_categories]", array('node' => $node));
+          $returnformatted .= '*/!';
+          $returnformatted .= $sectiontext;
+          //classification links
+          $returnlinks = token_replace("[node:parent_vocabulary_link]", array('node' => $node));
+          $returnlinks .= '*/!';
+          $returnlinks .= token_replace("[node:parent_link]", array('node' => $node));
+          $returnlinks .= '*/!';
+          $returnlinks .= token_replace("[node:parent_original_term_link]", array('node' => $node));
+          for($i = 1; $i <= $elementnum; $i++){
+            $returnlinks .= '*/!';
+            $returnlinks .= drupal_get_path_alias('node/' . $node->nid);
+          }
+          $returncompound = $returnformatted;
+          $returncompound .= '!!##//';
+          $returncompound .= $returnlinks;
+          $replacements[$original] = $returncompound;
+        break;
+      }
+    }
+  }
+  return $replacements;
+}

@@ -1,0 +1,85 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-two-columns
+//    Desripcion: Modulo para paragraphs de dos columnas
+//    Creador: Alfredo Rodríguez Bravo
+//    Fecha: 13/09/2016
+//******************************************************************************/
+// End _mod_paragraphs-item-two-columns
+.entity-paragraphs-item {
+  &.paragraphs-item-column {
+    .field-name-field-paragraph-title {
+      color: $grey;
+      margin: rem(30) 0 0 rem(15);
+      border-left: rem(12) solid #DB1F16;
+      .field-item {
+        font-size: rem(28);
+        line-height: 1.1;
+        font-family: 'Montserrat';
+      }
+    }
+    .paragraphs-item-two-columns {
+      padding: rem(30) 0;
+      .group-paragraph {
+        &.field-group-div {
+          p {
+            margin-bottom: rem(15);
+            font-family: 'Montserrat';
+          }
+        }
+      }
+    }
+    .field-name-field-videos {
+      .file-video {
+        .content {
+          video {
+            width: 100%;
+          }
+        }
+      }
+    }
+    .field-name-field-short-description-single {
+      border-top: 1px solid $black;
+      padding-top: 1.5em;
+      padding-bottom: 1.5em;
+    }
+  }
+}
+
+.group-paragraph-accordions {
+  h3:nth-child(1) {
+    margin-top: 0;
+  }
+}
+
+.paragraphs-item-switch {
+  fieldset {
+    margin-top: 0;
+  }
+}
+
+// End _mod_paragraphs-item-two-columns
+@mixin s-mod_paragraphs-item-two-columns {
+  .entity-paragraphs-item {
+    &.paragraphs-item-column {
+      .paragraphs-item-two-columns {
+        .paragraphs-items {
+          .entity-paragraphs-item {
+            + .entity-paragraphs-item {
+              //              margin-top: rem(20);
+            }
+          }
+        }
+      }
+      .field-name-field-videos {
+        .file-video {
+          .content {
+            video {
+              margin-top: rem(20);
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-government-agenda
+//    Desripcion: Pagina de resultados busqueda agenda de gobierno
+//    Fecha: 08/11/2016
+//******************************************************************************/
+
+.view-display-id-goverment_agenda_block_2 {
+  .field-name-field-date {
+    background: $red;
+    color: #fff;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    .field-item {
+      div {
+        display: inline-block;
+        width: 50%;
+        vertical-align: middle;
+        font-size: 12px;
+        font-family: "Montserrat-light";
+        text-align: right;
+        &.time {
+          font-size: 36px;
+          text-align: left;
+        }
+      }
+    }
+  }
+  .field-name-field-counselings {
+    .field-item {
+      padding: 10px;
+      font-family: "Montserrat-extraBold";
+      font-size: 18px;
+      line-height: normal;
+    }
+  }
+  .field-name-title {
+    margin: 0 0 10px 0;
+    h2 {
+      font-size: 18px;
+      text-transform: uppercase;
+      margin: 0;
+      padding: 0 10px;
+    }
+  }
+  .field-name-body {
+    padding: 0 10px;
+    margin: 0 0 10px 0;
+    p {
+      font-size: 14px;
+    }
+  }
+  .field-name-field-place,
+  .field-name-field-location,
+  .field-name-field-municipality {
+    color: #ccc;
+    padding: 0 0 0 35px;
+    position: relative;
+    font-size: 12px;
+    .field-label,
+    .field-items {
+      display: inline-block;
+      font-family: "Montserrat-light";
+    }
+  }
+  .field-name-field-place {
+    &:before {
+      font-family: "Font Awesome";
+      content: "\f041";
+      position: absolute;
+      left: 10px;
+      top: 0;
+      font-size: rem(20);
+      color: #ccc;
+    }
+  }
+}

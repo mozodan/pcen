@@ -1,0 +1,32 @@
+.page-user {
+  .nav-tabs {
+    width: 100%;
+    margin: 25px auto;
+    padding-left: 14%;
+  }
+  #user-login {
+    width: 70%;
+    margin: 5px auto;
+    #edit-pass,
+    #edit-name {
+      &:focus {
+        box-shadow: none;
+      }
+    }
+    #edit-submit {
+      background-color: $red;
+      color: $white;
+      font-weight: bold;
+      padding: 7.5px 15px;
+      border: 2px solid $red;
+      &:hover {
+        background-color: $white;
+        color: $red;
+      }
+    }
+  }
+  .profile {
+    width: 70%;
+    margin: 5px auto;
+  }
+}

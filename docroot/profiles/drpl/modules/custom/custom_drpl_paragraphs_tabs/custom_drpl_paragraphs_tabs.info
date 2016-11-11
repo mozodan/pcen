@@ -1,0 +1,5 @@
+name = DRPL - Manage Paragraphs Tags
+description = Add functionality in paragraphs in order to manipulate field_group agrupattions to set vertical tabs, horizontal tabs and accordion tabs
+package = drpl
+core = 7.x
+dependencies[] = paragraphs

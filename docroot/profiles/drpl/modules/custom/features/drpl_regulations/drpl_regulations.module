@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Regulations feature.
+ */
+
+include_once 'drpl_regulations.features.inc';

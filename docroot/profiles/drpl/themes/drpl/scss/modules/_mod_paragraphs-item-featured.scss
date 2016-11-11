@@ -1,0 +1,158 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-featured
+//    Desripcion: 4.4.5 Destacados
+//    Fecha: 12/09/2016
+//******************************************************************************/
+// _mod_paragraphs-item-featured
+.paragraphs-item-featured-list-entity {
+  .owl-carousel {
+    position: relative;
+    padding-top: rem(100);
+    .owl-item {
+      font-family: 'Montserrat';
+      // max-width: rem(260);
+      // min-width: rem(260);
+      min-height: rem(320);
+      box-shadow: 0 0 rem(10) #999;
+      margin: 0 rem(11);
+      &:first-child {
+        margin: 0;
+      }
+      .field-name-title {
+        border: 0 none;
+        margin: 0;
+      }
+      .group-text-information {
+        background: $white;
+        padding: rem(20);
+        h3 {
+          padding-left: 0;
+          padding-right: 0;
+          text-align: left;
+          a {
+            text-align: left;
+            font-family: 'Montserrat';
+            font-size: rem(16);
+          }
+        }
+      }
+      .view-mode-block_teaser{
+        margin: 0;
+      }
+    }
+    .owl-controls {
+      position: absolute;
+      top: rem(30);
+      left: 0;
+      width: 100%;
+      .owl-buttons {
+        position: relative;
+        vertical-align: middle;
+        div {
+          margin: 0;
+          padding: 0;
+          border-radius: rem(40);
+          width: rem(40);
+          height: rem(40);
+          background: $white;
+          border: rem(1) solid $light-grey;
+          position: absolute;
+          display: inline-block;
+          text-align: center;
+          &:before {
+            @include faicons;
+            color: $grey;
+            width: rem(40);
+            height: rem(40);
+            font-size: rem(30);
+            line-height: 1.25;
+          }
+          &.owl-prev {
+            left: 0;
+            &:before {
+              margin-left: rem(-3);
+              content: "\f104";
+            }
+          }
+          &.owl-next {
+            right: 0;
+            &:before {
+              content: "\f105";
+            }
+          }
+          &:hover {
+            background: $grey;
+            &:before {
+              color: $light-grey;
+            }
+          }
+        }
+      }
+    }
+    .owl-wrapper {
+      padding-bottom: rem(30);
+    }
+  }
+}
+
+.paragraphs-item-featured-list {
+  .paragraphs-item-featured-list-content {
+    .field-name-title {
+      .field-item {
+        a {
+          display: block;
+          font-family: "Montserrat-light";
+          font-size: rem(18);
+          color: #000;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.entity-paragraphs-item {
+  .group-paragraph {
+    & > .field-name-field-title {
+      position: relative;
+      top: 80px;
+      text-align: center;
+      font-family: "Montserrat";
+      color: $grey;
+      font-size: rem(24);
+    }
+  }
+}
+
+@mixin m-mod_paragraphs-item-featured {
+  .paragraphs-item-featured-list-entity {
+    .owl-carousel {
+      .group-text-information {
+        padding: rem(20);
+      }
+    }
+  }
+}
+
+@mixin s-mod_paragraphs-item-featured {
+  .paragraphs-item-featured-list-entity {
+    .owl-carousel {
+      .view-mode-block_teaser{
+        .group-text-information {
+          padding: rem(20);
+        }
+      }
+      .owl-item {
+        position: relative;
+        min-width: rem(232);
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+        border: rem(1) solid $grey;
+      }
+    }
+  }
+}
+
+// End _mod_paragraphs-item-featured

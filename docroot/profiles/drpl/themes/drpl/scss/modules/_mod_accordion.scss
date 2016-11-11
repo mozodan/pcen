@@ -1,0 +1,271 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_accordion
+//    Desripcion: 4.4.10 Conmutadores y acordeones
+//    Fecha: 12/09/2016
+//******************************************************************************/
+// _mod_accordion
+//CONMUTADORES
+.paragraphs-items-switch {
+  .field-item {
+    .panel-default {
+      margin-top: rem(15);
+      border-radius: 0;
+      border: 0;
+      &.open {
+        .panel-heading {
+          background-color: #FFF;
+        }
+        .panel-title {
+          font-family: "Montserrat";
+          border-bottom: 0;
+          border-color: #AAA;
+          .fieldset-legend-prefix {
+            &:before {
+              content: "\f068";
+              position: absolute;
+              left: 0;
+              width: 30px;
+              height: 30px;
+              line-height: 1em;
+              text-align: center;
+              text-indent: 0;
+              top: 0;
+              font-size: 20px;
+              padding: 5px;
+              border: 1px solid grey;
+              border-radius: 50%;
+              //              transform: rotate(180deg);//              transition: .4s all ease-out;
+            }
+          }
+        }
+      }
+      .panel-collapse {
+        float: left;
+        width: 100%;
+        opacity: 1;
+        .collapsing {
+          height: 0 !important;
+        }
+      }
+    }
+    .panel-heading {
+      padding: 0;
+      background-color: #F5F5F5;
+      border: 0;
+    }
+    .panel-body {
+      padding: rem(5) rem(15) rem(15);
+      font-family: "Montserrat-light";
+      font-size: rem(14);
+      border: 1px solid #AAA;
+      border-top: 0;
+    }
+    .panel-title {
+      position: relative;
+      margin: 0;
+      padding: rem(14) rem(40) rem(14) rem(15);
+      font-family: "Montserrat-light";
+      font-size: rem(14);
+      color: #555;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid #d3d3d3;
+      &:hover,
+      &:focus {
+        border-color: #AAA;
+      }
+      .fieldset-legend-prefix {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        font-family: "Font Awesome";
+        font-size: 1.8rem;
+        color: #AAA;
+        background: none;
+        clip: auto;
+        text-indent: -999rem;
+        width: 40px;
+        height: 100%;
+        &:before {
+          content: "\f067";
+          position: absolute;
+          left: 0;
+          width: 30px;
+          height: 30px;
+          line-height: 1em;
+          text-align: center;
+          text-indent: 0;
+          top: 0;
+          font-size: 20px;
+          padding: 5px;
+          border: 1px solid grey;
+          border-radius: 50%;
+          //          transform: rotate(0deg);
+          //          transition: .4s all ease-out;
+        }
+      }
+    }
+  }
+}
+
+//END CONMUTADORES
+//ACORDEONES
+.paragraphs-item-two-columns {
+  .paragraphs-item-accordion {
+    .field-item {
+      margin-top: 0;
+    }
+  }
+  .paragraphs-items-field-subparagraphs-switch .field-item:nth-child(1) {
+    #bootstrap-panel {
+      margin-top: 0;
+    }
+  }
+  .group-paragraph {
+    .field-name-field-paragraph-title {
+      margin: 0 !important;
+    }
+  }
+  .group-paragraph-accordions {
+    h3:nth-child(1) {
+      &.accordion-item {
+        margin-top: 0;
+      }
+    }
+  }
+  .field-name-field-subparagraphs {
+    margin: 0 !important;
+  }
+  .paragraphs-items {
+    & > div {
+      & > field-items {
+        & > div:first-child {
+          padding-top: 0 !important;
+          margin-top: 0 !important;
+        }
+      }
+    }
+  }
+  .paragraphs-item-switch {
+    margin-bottom: 20px;
+  }
+  .paragraphs-items {
+    & > div.first {
+      & > div {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        .field-item {
+          margin-top: 0 !important;
+          padding-top: 0 !important;
+        }
+      }
+    }
+    & > div:not(.first) {
+      margin: 10px 0 10px;
+    }
+    & > div.last {
+      & > .paragraphs-item-switch {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.group-paragraph .paragraphs-items-accordion {
+  .ui-accordion-header {
+    font-family: "Montserrat-light";
+    margin-top: rem(15);
+    padding: rem(14) rem(40) rem(14) rem(15);
+    border-radius: 0;
+    background: #F5F5F5;
+    a {
+      font-family: "Montserrat-light";
+      font-size: rem(14);
+      color: #555;
+      text-transform: uppercase;
+    }
+    &:not(.ui-state-active) {
+      .ui-accordion-header-icon {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        font-family: "Font Awesome";
+        font-size: 1.8rem;
+        color: #AAA;
+        background: none;
+        clip: auto;
+        text-indent: -999rem;
+        width: 40px;
+        height: 100%;
+        left: 94%;
+        margin-top: 0;
+        &:before {
+          content: "\f067";
+          position: absolute;
+          left: 0;
+          width: 30px;
+          height: 30px;
+          line-height: 1em;
+          text-align: center;
+          text-indent: 0;
+          top: 0;
+          font-size: 20px;
+          padding: 5px;
+          border: 1px solid grey;
+          border-radius: 50%;
+          //          transform: rotate(0deg);
+          //          transition: .4s all ease-out;
+        }
+      }
+    }
+    &.ui-state-active {
+      border-bottom: 0;
+      background: #FFF;
+      .ui-accordion-header-icon {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        font-family: "Font Awesome";
+        font-size: 1.8rem;
+        color: #AAA;
+        background: none;
+        clip: auto;
+        text-indent: -999rem;
+        width: 40px;
+        height: 100%;
+        left: 94%;
+        margin-top: 0;
+        &:before {
+          content: "\f068";
+          position: absolute;
+          left: 0;
+          width: 30px;
+          height: 30px;
+          line-height: 1em;
+          text-align: center;
+          text-indent: 0;
+          top: 0;
+          font-size: 20px;
+          padding: 5px;
+          border: 1px solid grey;
+          border-radius: 50%;
+          //          transform: rotate(180deg);
+          //          transition: .4s all ease-out;
+        }
+      }
+      a {
+        font-family: "Montserrat";
+      }
+    }
+  }
+  .ui-accordion-content {
+    padding: rem(5) rem(15) rem(15);
+    font-family: "Montserrat-light";
+    font-size: rem(14);
+    border-radius: 0;
+  }
+}
+
+//END ACORDEONES
+// End _mod_accordion

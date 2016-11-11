@@ -1,0 +1,25 @@
+//*****************************************************************************
+//*    Proyecto: drpl
+//*    Titulo: config.scss
+//*    Desripcion: Configuracion de rutas y entorno para SASS, NO DEBE GENERAR
+//*                ESTILOS
+//******************************************************************************/
+$CONFIG_IMG_PATH:"../img";
+//DEFINICION DE VARIABLES
+//BREAKPOINTS
+//$min-large: 1200;
+//$max-medium: 992;
+//$max-small: 768;
+//$max-sm-small: 480;
+//$min-small: 320;
+//**********Media Query**************************************
+$xxl: 1279; //1024
+$xl: 1023; //991
+$large: 990; //800
+$medium: 799; //768
+$little: 767; //640
+$xs: 639; //480
+$xxs: 479; //360
+$xxxs: 359; //320
+//***********************************************************
+$width-wrapper: rem(1170);

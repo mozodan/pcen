@@ -1,0 +1,13 @@
+name = DRPL - Users
+description = This feature contains: Roles and permissions from users with Roles and permissions module, and other user configuration
+core = 7.x
+package = DRPL
+version = 7.x-1.0
+dependencies[] = drpl_common_repository
+features[features_api][] = api:2
+features[roles_permissions][] = administrator
+features[roles_permissions][] = redactor
+features[roles_permissions][] = revisor
+features_exclude[dependencies][features] = features
+features_exclude[dependencies][features_roles_permissions] = features_roles_permissions
+project path = profiles/drpl/modules/custom/features

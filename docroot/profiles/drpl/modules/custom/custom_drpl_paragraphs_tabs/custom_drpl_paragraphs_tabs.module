@@ -1,0 +1,346 @@
+<?php
+
+/**
+ * @file
+ * Module to prepare information of paragraphs in order to work
+ * properly using Vertical and Horizontal tabs.
+ */
+
+/**
+ * Implements hook_preprocess_entity().
+ *
+ * Display rendered paragraph entities grouped on vertical tabs.
+ */
+function custom_drpl_paragraphs_tabs_preprocess_entity(&$vars) {
+  if ($vars['entity_type'] == 'paragraphs_item') {
+    // Get Paragraph ID.
+    $paragraph = $vars['elements']['#entity'];
+    $paragraph_id = $paragraph->item_id;
+    $parent_paragraph = $paragraph->hostEntity();
+
+    // Store possible static ID parent of paragraph.
+    if (is_object($parent_paragraph) && get_class($parent_paragraph) == 'ParagraphsItemEntity') {
+      $static_paragraph_id = $parent_paragraph->item_id;
+    }
+    else {
+      $static_paragraph_id = $paragraph_id;
+    }
+
+    // Check if paragraph has functionality to Show/Hide content.
+    _paragraph_show_hide($vars);
+
+    // Recover static variable.
+    $static = &drupal_static(__FUNCTION__ . '_paragraph_' . $static_paragraph_id);
+    if (!isset($static)) {
+      // Set static variable that we will use in children.
+      if (isset($paragraph->field_subparagraphs) && count($paragraph->field_subparagraphs) && count($paragraph->field_subparagraphs[LANGUAGE_NONE]) && $paragraph->bundle !== 'column') {
+        $static = &drupal_static(__FUNCTION__ . '_paragraph_' . $paragraph_id);
+        $static['number_of_tabs'] = count($paragraph->field_subparagraphs[LANGUAGE_NONE]);
+
+      }
+      // Could exists children paragraphs that not be able to be
+      // horizontal or vertical tabs, example, accordions.
+      else {
+        // return;
+      }
+    }
+
+    if (isset($vars['elements']['#bundle'])) {
+      if (!empty($parent_paragraph->bundle)) {
+        //HORIZONTAL TABS
+        if ($vars['elements']['#bundle'] == 'title_text' && $parent_paragraph->bundle == 'tabs') {
+          $tab_name = 'group_paragraph_tab';
+          $tab_name_group = 'group_paragraph_tabs';
+          if (!isset($static['tab_number'])) {
+            $static['tab_number'] = 1;
+          }
+          else {
+            $static['tab_number']++;
+          }
+          if (isset($vars['elements']['#groups'][$tab_name])) {
+            $tab = clone $vars['elements']['#groups'][$tab_name];
+            $tab->children = array('field_paragraph');
+            $tab->format_settings = $vars['elements']['#groups'][$tab_name]->format_settings;
+            $tab->id = $static['tab_number'];
+            $tab->weight = $static['tab_number'];
+            $tab->group_name = $tab_name . '_' . $static['tab_number'];
+            $tab->identifier = str_replace($tab_name, $tab->group_name, $tab->identifier);
+            $static['tabs'][$tab->group_name] = &$tab;
+            $static['tabs_children'][] = $tab->group_name;
+            $static['tabs_group'][$tab->group_name] = $tab_name_group;
+            $vars['elements']['#groups'] = array_merge($vars['elements']['#groups'], $static['tabs']);
+            $vars['elements']['#groups'][$tab_name_group]->children = $static['tabs_children'];
+            $vars['elements']['#fieldgroups'] = $vars['elements']['#groups'];
+            $vars['elements']['#group_children'] = array_merge($vars['elements']['#group_children'], $static['tabs_group']);
+            foreach ($vars['elements']['#group_children'] as $field_name => $target_group) {
+              if (strpos($field_name, 'field_') !== FALSE && isset($vars['content'][$field_name])) {
+                $field = $vars['content'][$field_name];
+                $field_item_data = $vars[$field_name];
+                if ($field_name == 'field_title') {
+                  $tab->label = $field_item_data['0']['value'];
+                }
+                $field['#field_name'] = $field_name . '_' . $static['tab_number'];
+                $field['_group_name'] = $tab->group_name;
+                $static['field_items'][$field['#field_name']] = $field_item_data;
+                $static['fields'][$field['#field_name']] = $field;
+                if ($field_name == 'field_title') {
+                  unset($static['field_items'][$field['#field_name']]);
+                  unset($static['fields'][$field['#field_name']]);
+                }
+                unset($vars['elements']['#group_children'][$field_name]);
+                unset($vars['content'][$field_name]);
+                unset($vars[$field_name]);
+                if ($static['tab_number'] == $static['number_of_tabs']) {
+                  foreach ($static['fields'] as $static_field_name => $static_field_value) {
+                    $vars['content'][$static_field_name] = $static_field_value;
+                    $vars[$static_field_name] = $static['field_items'][$static_field_name];
+                    $vars['elements']['#group_children'][$static_field_name] = $static_field_value['_group_name'];
+                  }
+                }
+              }
+            }
+            unset($vars['elements']['#groups'][$tab_name]);
+            unset($vars['elements']['#fieldgroups'][$tab_name]);
+            unset($vars['elements']['#group_children'][$tab_name]);
+          }  
+        //VERTICAL TABS
+        }
+        elseif ($vars['elements']['#bundle'] == 'title_text' && $parent_paragraph->bundle == 'vertical_tabs') {
+          $tab_name = 'group_paragraph_tab';
+          $tab_name_group = 'group_paragraph_tabs';
+          if (!isset($static['tab_number'])) {
+            $static['tab_number'] = 1;
+          }
+          else {
+            $static['tab_number']++;
+          }
+          if (isset($vars['elements']['#groups'][$tab_name])) {
+            $tab = clone $vars['elements']['#groups'][$tab_name];
+            $tab->children = array('field_paragraph');
+            $tab->format_settings = $vars['elements']['#groups'][$tab_name]->format_settings;
+            $tab->id = $static['tab_number'];
+            $tab->weight = $static['tab_number'];
+            $tab->group_name = $tab_name . '_' . $static['tab_number'] . '_' . $static_paragraph_id;
+            $tab->identifier = str_replace($tab_name, $tab->group_name, $tab->identifier);
+            $static['tabs'][$tab->group_name] = &$tab;
+            $static['tabs_children'][] = $tab->group_name;
+            $static['tabs_group'][$tab->group_name] = $tab_name_group;
+            $vars['elements']['#groups'] = array_merge($vars['elements']['#groups'], $static['tabs']);
+            $vars['elements']['#groups'][$tab_name_group]->children = $static['tabs_children'];
+            $vars['elements']['#fieldgroups'] = $vars['elements']['#groups'];
+            $vars['elements']['#group_children'] = array_merge($vars['elements']['#group_children'], $static['tabs_group']);
+            foreach ($vars['elements']['#group_children'] as $field_name => $target_group) {
+              if (strpos($field_name, 'field_') !== FALSE && isset($vars['content'][$field_name])) {
+                $field = $vars['content'][$field_name];
+                $field_item_data = $vars[$field_name];
+                if ($field_name == 'field_title') {
+                  $tab->label = $field_item_data['0']['value'];
+                  continue;
+                }
+                $field['#field_name'] = $field_name . '_' . $static['tab_number'];
+                $static['field_items'][$field['#field_name']] = $field_item_data;
+                $field['_group_name'] = $tab->group_name;
+                $static['fields'][$field['#field_name']] = $field;
+                unset($vars['elements']['#group_children'][$field_name]);
+                unset($vars['content'][$field_name]);
+                unset($vars[$field_name]);
+                if ($static['tab_number'] == $static['number_of_tabs']) {
+                  foreach ($static['fields'] as $static_field_name => $static_field_value) {
+                    $vars['content'][$static_field_name] = $static_field_value;
+                    $vars[$static_field_name] = $static['field_items'][$static_field_name];
+                    $vars['elements']['#group_children'][$static_field_name] = $static_field_value['_group_name'];
+                  }
+                }
+              }
+            }
+            unset($vars['elements']['#groups'][$tab_name]);
+            unset($vars['elements']['#fieldgroups'][$tab_name]);
+            unset($vars['elements']['#group_children'][$tab_name]);
+          }  
+        //ACCORDION   
+        }
+        elseif ($vars['elements']['#bundle'] == 'title_text' && $parent_paragraph->bundle == 'accordion') {
+          $tab_name = 'group_paragraph_accordion';
+          $tab_name_group = 'group_paragraph_accordions';
+          if (!isset($static['tab_number'])) {
+            $static['tab_number'] = 1;
+          }
+          else {
+            $static['tab_number']++;
+          }
+          if (isset($vars['elements']['#groups'][$tab_name])) {
+            $tab = clone $vars['elements']['#groups'][$tab_name];
+            $tab->children = array('field_paragraph');
+            $tab->format_settings = $vars['elements']['#groups'][$tab_name]->format_settings;
+            $tab->id = $static['tab_number'];
+            $tab->weight = $static['tab_number'];
+            $tab->group_name = $tab_name . '_' . $static['tab_number'] . '_' . $static_paragraph_id;
+            $tab->identifier = str_replace($tab_name, $tab->group_name, $tab->identifier);
+            $static['tabs'][$tab->group_name] = &$tab;
+            $static['tabs_children'][] = $tab->group_name;
+            $static['tabs_group'][$tab->group_name] = $tab_name_group;
+            $vars['elements']['#groups'] = array_merge($vars['elements']['#groups'], $static['tabs']);
+            $vars['elements']['#groups'][$tab_name_group]->children = $static['tabs_children'];
+            $vars['elements']['#fieldgroups'] = $vars['elements']['#groups'];
+            $vars['elements']['#group_children'] = array_merge($vars['elements']['#group_children'], $static['tabs_group']);
+            foreach ($vars['elements']['#group_children'] as $field_name => $target_group) {
+              if (strpos($field_name, 'field_') !== FALSE && isset($vars['content'][$field_name])) {
+                $field = $vars['content'][$field_name];
+                $field_item_data = $vars[$field_name];
+                if ($field_name == 'field_title') {
+                  $tab->label = $field_item_data['0']['value'];
+                  continue;
+                }
+                $field['#field_name'] = $field_name . '_' . $static['tab_number'];
+                $static['field_items'][$field['#field_name']] = $field_item_data;
+                $field['_group_name'] = $tab->group_name;
+                $static['fields'][$field['#field_name']] = $field;
+                unset($vars['elements']['#group_children'][$field_name]);
+                unset($vars['content'][$field_name]);
+                unset($vars[$field_name]);
+                if ($static['tab_number'] == $static['number_of_tabs']) {
+                  foreach ($static['fields'] as $static_field_name => $static_field_value) {
+                    $vars['content'][$static_field_name] = $static_field_value;
+                    $vars[$static_field_name] = $static['field_items'][$static_field_name];
+                    $vars['elements']['#group_children'][$static_field_name] = $static_field_value['_group_name'];
+                  }
+                }
+              }
+            }
+            unset($vars['elements']['#groups'][$tab_name]);
+            unset($vars['elements']['#fieldgroups'][$tab_name]);
+            unset($vars['elements']['#group_children'][$tab_name]);
+          }  
+        //SWITCH   
+        }
+        elseif ($vars['elements']['#bundle'] == 'title_text' && $parent_paragraph->bundle == 'switch') {
+          if (isset($vars['elements']['#groups']['group_paragraph_parent_fieldset'])) {
+            if (isset($vars['elements']['#entity']->field_title[LANGUAGE_NONE][0]['value'])) {
+              $vars['elements']['#groups']['group_paragraph_parent_fieldset']->label = $vars['elements']['#entity']->field_title[LANGUAGE_NONE][0]['value'];
+            }
+          }  
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_field().
+ *
+ * Extend fences functionality working with groups.
+ *
+ * Extends functionality of fences suggestion in order to manage information
+ * of fields where these are inside of groups.
+ *
+ * A field outside groups has a name "field_find_out_more"
+ * A field inside groups has a name "field_find_out_more_X" where "X" is the
+ *     number of group
+ *
+ * We must remove "_X" in order to accomodate the suggestion to main field name
+ *  "field_find_out_more"
+ *
+ * @see page.tpl.php
+ */
+function custom_drpl_paragraphs_tabs_preprocess_field(&$vars) {
+  if (isset($vars['element']['_group_name'])) {
+    $using_alias = FALSE;
+    // Recover the field name and field group name.
+    // Example: field_find_out_more_1
+    $field_name = $vars['element']['#field_name'];
+    if (strpos($vars['element']['_group_name'], 'group_paragraph_tab') !== FALSE) {
+      $vars['items'][0]['#markup'] = '<a style="display:none;" name="edit-' . $vars['element']['_group_name'] . '">&nbsp;</a>' . $vars['items'][0]['#markup'];
+
+      $load_js = &drupal_static(__FUNCTION__);
+      if (!isset($load_js)) {
+        drupal_add_js("
+            jQuery(function() {
+            if(jQuery(window).width() <= 768){
+              jQuery('a[href*=\"#\"]:not([href=\"#\"])').click(function() {
+                jQuery('.group-vtab-group .vertical-tabs-processed > fieldset').removeClass(\" in active \");
+                var lalala = jQuery('.group-vtab-group .vertical-tabs-processed ' + jQuery(this).attr('href'));
+                jQuery('.group-vtab-group .vertical-tabs-processed ' + jQuery(this).attr('href')).addClass(\" in active \");
+                jQuery('html, body').animate({
+                scrollTop: lalala.offset().top
+            }, 1000);
+            });
+            }
+        });
+            ", 'inline');
+        $load_js = TRUE;
+      }
+
+    }
+    // Example: group_htab_1
+    $group_name = $vars['element']['_group_name'];
+
+    // Get last component of group name (_1).
+    $tmp = explode('_', $group_name);
+    $iteration = '_' . $tmp[count($tmp) - 1];
+    // Check if second parameter is numeric. If this component of array is
+    // numeric set this component as $iteration used for fields inside group.
+    if (is_numeric($tmp[count($tmp) - 2])) {
+      $iteration = '_' . $tmp[count($tmp) - 2];
+    }
+
+    // Set real field name.
+    $real_field_name = str_replace($iteration, '', $field_name);
+    // Set default field name as class.
+    if ($real_field_name != $field_name) {
+      $class_key = array_search(str_replace('_', '-', $field_name), $vars['classes_array']);
+      $vars['classes_array'][] = str_replace('_', '-', $real_field_name);
+    }
+
+    // Set default suggestion, if not found set suggestion with realname.
+    $suggestion = fences_get_suggestion($vars['element']['#entity_type'], $vars['element']['#bundle'], $vars['element']['#field_name']);
+    if (empty($suggestion)) {
+      $suggestion = fences_get_suggestion($vars['element']['#entity_type'], $vars['element']['#bundle'], $real_field_name);
+      $using_alias = TRUE;
+    }
+
+    if ($suggestion) {
+      // Make fences' suggestions highest priority by placing them at the
+      // front of the queue.
+      $suggestion = 'field__fences_' . $suggestion;
+      if (count($vars['items']) > 1) {
+        // Add a "-multiple" suggestion if there are more than one field items.
+        array_push($vars['theme_hook_suggestions'], $suggestion . '_multiple');
+      }
+      array_push($vars['theme_hook_suggestions'], $suggestion);
+    }
+  }
+
+  // If exists field and is active.
+  if ($vars['element']['#field_name'] == 'field_paragraph_show_hide' && $vars['element']['#items'][0]['value'] == 1) {
+    $vars['items'][0]['#markup'] = theme('custom_drpl_toggle_buttons');
+  }
+}
+
+/**
+ * Check if this entity has check to Show/Hide content and their status.
+ *
+ * If is checked add styles to create this effect.
+ */
+function _paragraph_show_hide(&$vars) {
+  if (isset($vars['field_paragraph_show_hide']) && $vars['elements']['field_paragraph_show_hide']['#items'][0]['value'] == 1) {
+    // Add class to activate collapse.
+    if (isset($vars['elements']['#groups'])) {
+      foreach ($vars['elements']['#groups'] as $group_id => &$group) {
+        $group->format_settings['instance_settings']['classes'] .= ' collapse';
+      }
+    }
+    // Add jQuery functionality.
+    drupal_add_js(drupal_get_path('module', 'custom_drpl_paragraphs_tabs') . '/js/toggle_paragraph.js');
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function custom_drpl_paragraphs_tabs_theme() {
+  return array(
+    'custom_drpl_toggle_buttons' => array(
+      'template' => 'theme/toggle_buttons',
+    ),
+  );
+}

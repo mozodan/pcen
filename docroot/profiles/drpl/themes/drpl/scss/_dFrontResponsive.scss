@@ -1,0 +1,36 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _dFrontResponsive
+//    Desripcion: Carga de los mixin responsive que hay dentro de los modulos
+//    Fecha: 07/09/2016
+//******************************************************************************/
+// _dFrontResponsive
+// Desktop View
+@media only screen and (max-width: $xxl +px) {
+  @include l-mod_paragraphs-item-slideshow;
+  @include l-mod_calendar;
+}
+
+// Tablet View
+@media only screen and (max-width: $xl +px) {
+  @include m-mod_paragraphs-item-slideshow;
+  @include m-mod_paragraphs-item-featured;
+  @include m-mod_call;
+}
+
+// Mobile View
+@media only screen and (max-width: $little +px) {
+  @include s-mod_news;
+  @include s-mod_paragraphs-item-gallery;
+  @include s-mod_paragraphs-item-slideshow;
+  @include s-mod_carousel;
+  @include s-mod_paragraphs-item-featured;
+  @include s-mod_paragraphs-item-two-columns;
+  @include s-mod_call;
+  @include s-mod_paragraphs-item-action;
+}
+
+// Mobile Portrait View
+@media only screen and (max-width: $xs +px) {}
+
+// End _dFrontResponsive

@@ -1,0 +1,145 @@
+.item-list .field-widget-entity-reference-tree ul,
+.block .field-widget-entity-reference-tree ul,
+.field-widget-entity-reference-tree ul
+{
+  list-style-type: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+.item-list .field-widget-entity-reference-tree ul ul,
+.block .field-widget-entity-reference-tree ul ul,
+.field-widget-entity-reference-tree ul ul
+{
+  margin-left: 1.5em;
+}
+
+.item-list .field-widget-entity-reference-tree ul .form-item,
+.block .field-widget-entity-reference-tree ul .form-item,
+.field-widget-entity-reference-tree ul .form-item {
+  margin: 0;
+  padding: 0;
+}
+
+.entity-reference-tree-button,
+.no-entity-reference-tree-button {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.entity-reference-tree-button {
+  background-image: url('images/bullet_toggle_minus.png');
+}
+
+.no-entity-reference-tree-button {
+  background-color: #ddd;
+}
+
+.entity-reference-tree-button.entity-reference-tree-collapsed {
+  background-image: url('images/bullet_toggle_plus.png');
+}
+
+.field-widget-entity-reference-tree .form-item {
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  zoom: 1;
+}
+
+.field-widget-entity-reference-tree .disabled {
+  opacity: .5;
+}
+
+.field-widget-entity-reference-tree .parent-entity {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  font-weight: bold;
+}
+
+.form-type-checkbox-tree .error {
+  background-image: none;
+  border: 2px solid red;
+  padding: 3px;
+}
+
+.region-content ul.entity-reference-tree-level,
+.entity-reference-tree-level
+{
+  padding: 0;
+}
+
+/*
+ * Styles for track list of selected options.
+ */
+
+.entity-reference-tree-track-list li {
+  list-style-type: none;
+  list-style-image: none;
+  margin-left: 10px;
+  padding-left: 20px;
+  min-height: 16px;
+  cursor: pointer;
+}
+
+.entity-reference-tree-track-list li.track-item:hover {
+  color: red;
+  background-image: url("images/bullet_delete.png");
+  background-repeat: no-repeat;
+  background-position: middle left;
+}
+
+.entity-reference-tree-track-list li.term_ref_tree_nothing_message {
+  list-style-type: none;
+  list-style-image: none;
+  font-style: italic;
+  cursor: default;
+}
+
+.entity-reference-track-list-container {
+  padding: 5px;
+}
+
+.entity-reference-track-list-label {
+  font-weight: bold;
+}
+
+/*
+ * Styles for display element
+ */
+
+.entity-tree-list .selected {
+  font-weight: bold;
+}
+
+.entity-tree-list .unselected {
+  font-weight: normal;
+}
+
+.entity-tree-list ul {
+  margin-top: 0;
+}
+
+.field-type-taxonomy-entity-reference ul.links .entity-tree-list ul.entity li {
+  float: none;
+}
+
+div.entity-reference-tree-widget-level-ajax {
+  display: none;
+}
+
+ul.entity-reference-tree-level li.loading:after {
+  content: "";
+  background: transparent url(/misc/throbber-active.gif) no-repeat 0px center;
+  display: inline-block;
+  vertical-align: middle;
+  height: 15px;
+  margin: 2px;
+  width: 15px;
+}

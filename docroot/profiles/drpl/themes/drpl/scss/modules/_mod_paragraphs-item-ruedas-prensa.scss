@@ -1,0 +1,82 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-ruedas-prensa
+//    Desripcion: 4.2.20 - Pagina de Ruedas de Prensa
+//    Fecha: 02/11/2016
+//******************************************************************************/
+
+#views-exposed-form-press-conferences-search-page {
+  font-family: "Montserrat";
+  margin: 3rem 0;
+  padding: 0 10px;
+  label {
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .form-control {
+    &.form-text {
+      @include border-radius(100px);
+      border-color: #ddd;
+      width: 100%;
+    }
+  }
+  .views-exposed-form {
+    .views-exposed-widget {
+      float: none;
+      padding: 0 0 20px 0;
+      div {
+        width: 100%;
+      }
+      &.views-submit-button {
+        button {
+          &#edit-submit-press-conferences-search {
+            margin: 0;
+            @include border-radius(100px);
+            border-color: $red;
+            color: $red;
+            background-color: transparent;
+            padding: 6px 30px;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+.view-press-conferences {  
+  .view-content {
+    .views-row {
+      margin-bottom: 30px;
+      h3 {
+        a {
+          display: inline-block;
+          width: 100%;
+          text-align: center;
+          border-bottom: 1px solid #000;
+          color: #000;
+          font-size: 18px;
+          font-weight: bold;
+          padding: 0 15px 10px 15px;
+        }
+      }
+      .field-name-field-date,
+      .field-name-field-short-description {
+        text-align: center;
+      }
+      &:nth-child(4n) {
+        clear: left;
+      }
+    }
+  }
+}
+.view-press-conferences-search {
+  h3 {
+    a {
+      display: inline-block;
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 0 15px 10px 15px;
+    }
+  }
+}

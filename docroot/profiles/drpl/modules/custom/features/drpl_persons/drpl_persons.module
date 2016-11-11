@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the DRPL - Persons feature.
+ */
+
+include_once 'drpl_persons.features.inc';

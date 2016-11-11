@@ -1,0 +1,60 @@
+/*****************************************************************************
+*    Proyecto: MADRID.ORG
+*    Titulo: dFront.scss
+*    Desripcion: Estilos para la realización de los modulos
+******************************************************************************/
+
+@import "_config";
+@import "_mixins";
+// General
+@import "general/_colors";
+//@import "general/_reset";
+// End General
+//Components
+.main-container {
+  @import "modules/_mod_news";
+  @import "modules/_mod_calendar";
+  @import "modules/_mod_title";
+  @import "modules/_mod_paragraphs-item-featured";
+  @import "modules/_mod_accordion";
+  @import "modules/_mod_tabs";
+  @import "modules/_mod_paragraphs-item-two-columns";
+  @import "modules/_mod_paragraphs-item-text-video";
+  @import "modules/_mod_entitytype-newsletter-form";
+  @import "modules/_mod_paragraphs-item-gallery";
+  @import "modules/_mod_paragraphs-item-slideshow";
+  @import "modules/_mod_carousel";
+  @import "modules/_mod_carousel_banners";
+  @import "modules/_mod_call";
+  @import "modules/_mod_paragraphs-item-action";
+  @import "modules/_mod_paragraphs-item-map-imagen-text";
+  @import "modules/_mod_paragraphs_item_featured_image";
+  @import "modules/_mod_paragraphs_item_featured_100";
+  @import "modules/_mod_carousel_banners_100";
+  @import "modules/_mod_carousel_banners_50";
+  @import "modules/_mod_faq";
+  @import "modules/_mod_activity_search";
+  @import "modules/_mod_paragraphs-item-news-search";
+  @import "modules/_mod_paragraphs-item-information-container";
+  @import "modules/_mod_banner";
+  @import "modules/_mod_buscador_ficheros";
+  @import "modules/_mod_paragraphs-item-button";
+  @import "modules/_mod_view-mode-video_thumbnail";
+  @import "modules/_mod_paragraphs-item-centros";
+  @import "modules/_mod_paragraphs-item-notas-prensa";
+  @import "modules/_mod_paragraphs-item-persons-search";
+  @import "modules/_mod_paragraphs-item-ruedas-prensa";
+  @import "modules/_mod_pagination";
+  @import "modules/_mod_paragraphs-item-download-files";
+  @import "modules/_mod_paragraphs-item-government-agenda-search";
+  @import "modules/_mod_paragraphs-item-government-agenda";
+  @import "modules/_mod_search-api-page-search-form";
+  //@import "modules/_mod_paragraphs_section_column";
+  //Responsive
+  @import "_dFrontResponsive";
+}
+
+//End Components
+//for IE
+@import "_ie9";
+//End for IE

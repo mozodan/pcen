@@ -1,0 +1,81 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_search-api-page-search-form
+//    Desripcion: Resulado Busqueda general
+//    Fecha: 08/11/2016
+//******************************************************************************/
+
+//formulario busqueda
+#search-api-page-search-form {
+  background-color: #0d53ac;
+  margin: 0 0 30px 0;
+  padding: 20px;
+  .form-type-textfield {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0 60px 0 0;
+    label {
+      // color: #fff;
+      // font-weight: normal;
+      display: none;
+    }
+    .form-text {
+      min-height: 50px;
+      border-radius: 0;
+      border: 0;
+    }
+  }
+  .form-submit {
+    height: 50px;
+    width: 50px;
+    opacity: 0;
+    z-index: 2;
+    position: absolute;
+    left: auto;
+    right: 0;
+    top: 0;
+  }
+  > div {
+    position: relative;
+    &:before {
+      position: absolute;
+      left: auto;
+      right: 0;
+      font-family: "Font Awesome";
+      content: "\f002";
+      width: 50px;
+      height: 50px;
+      font-size: 2.4em;
+      text-align: center;
+      color: #0d53ac;
+      background-color: #FFFFFF;
+      z-index: 1;
+    }
+  }
+}
+
+
+//resultados busqueda
+.search-api-page-results {
+  .search-performance {
+    padding: 5px;
+    border: 1px solid #ccc;
+    color: #666;
+    font-size: 14px;
+  }
+  h2 {
+    display: none;
+  }
+  ol.search-results {
+    .contextual-links-region {
+      h3 {
+        a {
+          font-size: 28px;
+          color: #000;
+          //font-family: "Montserrat-semiBold";
+        }
+      }
+    }
+  }
+}

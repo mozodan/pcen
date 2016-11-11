@@ -1,0 +1,9 @@
+<?php
+/**
+ * @file
+ * Implements hook_install
+ */
+
+function custom_drpl_flowplayer_install() {
+
+}

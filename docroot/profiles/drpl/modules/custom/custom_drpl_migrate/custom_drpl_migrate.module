@@ -1,0 +1,58 @@
+<?php
+/**
+ * @file
+ * Declares our migrations.
+ */
+    
+/**
+ * Implements hook_migrate_api().
+ */
+function custom_drpl_migrate_migrate_api() {
+  $api = array(
+    'api' => 2,
+    'groups' => array(
+      'drpl' => array(
+        'title' => t('DRPL - Migration package'),
+      ),
+    ),
+    'migrations' => array(
+      'live_taxonomy' => array(
+        'class_name' => 'ThematicTaxonomyMigration',
+        'group_name' => 'drpl',
+      ),
+      'invest_taxonomy' => array(
+        'class_name' => 'ThematicTaxonomyMigration',
+        'group_name' => 'drpl',
+      ),
+      'enjoy_taxonomy' => array(
+        'class_name' => 'ThematicTaxonomyMigration',
+        'group_name' => 'drpl',
+      ),
+      'open_government_taxonomy' => array(
+        'class_name' => 'ThematicTaxonomyMigration',
+        'group_name' => 'drpl',
+      ),
+      'segments_taxonomy' => array(
+        'class_name' => 'ThematicTaxonomyMigration',
+        'group_name' => 'drpl',
+      ),
+      'counseling_taxonomy' => array(
+        'class_name' => 'CounselingTaxonomyMigration',
+        'group_name' => 'drpl',
+      ),
+      'persons' => array(
+        'class_name' => 'PersonsMigration',
+        'group_name' => 'drpl',
+      ),
+    ),
+  );
+  return $api;
+}
+
+function prepareValuesXML($xmlObject, $out = array()) {
+  $xml = $xmlObject->asXML();
+  $simpleXML = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
+  $json = json_encode($simpleXML);
+  $xml_array = json_decode($json,TRUE);
+  return $xml_array;
+}

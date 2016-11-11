@@ -1,0 +1,91 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_paragraphs_item_featured_100
+//    Desripcion: 4.3.15 Destacado al 100%
+//    Fecha: 06/10/2016
+//******************************************************************************/
+// _mod_paragraphs_item_featured_100
+
+.paragraphs-item-featured {
+  .group-paragraph {
+    display: table;
+    .group-paragraph-image,
+    .group-paragraph-information,
+    .group-paragraph-link {
+      display: table-cell;
+      div {
+        width: 100%;
+      }
+    }
+  }
+  .group-paragraph-image {
+    width: 40%;
+    margin: 0 5% 0 0;
+    vertical-align: top;
+    padding: 2rem 2rem 3rem 0;
+    div {
+      img {
+        width: 100%;
+      }
+    }
+  }
+  .group-paragraph-information {
+    width: 30%;
+    margin: 0 5% 0 0;
+    vertical-align: top;
+    padding: 2rem 2rem 3rem 0;
+    h3 {
+      margin: 0 0 2rem;
+      a {
+        font-size: 2.5rem;
+        font-weight: bold;
+        line-height: 1.1;
+        font-family: 'Montserrat';
+        color: #666;
+      }
+    }
+  }
+  .group-paragraph-link {
+    width: 20%;
+    border-left: 5px solid $white;
+    vertical-align: middle;
+    padding: 2rem 2rem 3rem;
+    a {
+      display: block;
+      background-color: $red;
+      color: $white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      padding: 2rem 1rem;
+      border: 3px solid $red;
+      &:hover {
+        background-color: $white;
+        color: $red;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .paragraphs-item-featured {
+    .group-paragraph {
+      display: inline-block;
+      .group-paragraph-image,
+      .group-paragraph-information,
+      .group-paragraph-link {
+        display: inline-block;
+        width: 100%;
+        margin: 0;
+        padding: 2rem 0 1rem;
+      }
+      .group-paragraph-link {
+        border-left: none;
+        border-top: 5px solid $white;
+        padding: 2rem 0;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {}

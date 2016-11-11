@@ -1,0 +1,158 @@
+.view-display-id-first_level_distributor_live {
+  .ui-accordion {
+    padding: 20px 0 0;
+    & > div {
+      display: flex;
+      flex-direction: row;
+      .views-row {
+        width: 17%;
+        display: inline-block;
+        a {
+          display: block;
+          width: 100%;
+          .icon {
+            .field-name-field-icon {
+              img {
+                margin: auto;
+              }
+            }
+          }
+          .name {
+            font-family: "Montserrat-semiBold";
+            color: $white;
+            text-align: center;
+            display: block;
+            width: 100%;
+            font-size: 25px;
+          }
+        }
+      }
+    }
+  }
+  .attachment {
+    float: left;
+    width: 100%;
+    .view-first-level-distributor .ui-accordion {
+      padding: 0;
+    }
+    .views-accordion-first_level_distributor-attachment_live-header {
+      padding: 0;
+      border: 0;
+      background: none;
+      .ui-icon {
+        display: none;
+      }
+      a {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        text-align: center;
+        height: 100%;
+        color: $white;
+        background-color: #1B4482;
+        font-size: 16px;
+      }
+    }
+    .view-first-level-distributor {
+      .ui-widget-content {
+        background: #1B4482;
+        height: auto !important;
+        width: 100%;
+        border: 0;
+        .views-row {
+          width: 16%;
+          display: inline-block;
+          border: 0;
+          margin: auto;
+          text-align: center;
+        }
+        a {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.view-display-id-first_level_distributor_invest {
+  height: auto;
+  float: left;
+  //  background-color: #f2f2f2;
+  .ui-accordion {
+    padding: 20px 0 10px;
+    & > div {
+      display: flex;
+      flex-direction: row;
+      .views-row {
+        width: 19%;
+        margin: 0 auto;
+        padding: 10px !important;
+        display: inline-block;
+        background-color: $light_grey;
+        a {
+          display: block;
+          width: 100%;
+          .name {
+            font-family: "Montserrat-semiBold";
+            color: #1B4482;
+            display: block;
+            width: 100%;
+            text-align: left !important;
+            padding-bottom: 10px;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+  .attachment {
+    float: left;
+    width: 100%;
+    .view-first-level-distributor .ui-accordion {
+      padding: 0;
+    }
+    .view-display-id-attachment_invest {
+      padding: 0;
+      border: 0;
+      background-color: $light_grey;
+      h3,
+      .ui-widget-content {
+        background: transparent;
+        border: none;
+      }
+      .ui-icon {
+        display: none;
+      }
+      a {
+        display: block;
+        width: 100%;
+        padding: 5px 15px;
+        text-align: center;
+        height: 100%;
+        color: #1B4482;
+        font-family: "Montserrat-semiBold";
+        font-size: 16px;
+      }
+    }
+    .ui-widget-content a {
+      font-family: "Montserrat";
+    }
+    .view-first-level-distributor {
+      .ui-widget-content {
+        height: auto !important;
+        width: 100%;
+        border: 0;
+        .views-row {
+          width: auto;
+          display: inline-block;
+          border: 0;
+          margin: auto;
+          text-align: center;
+        }
+        a {
+          color: #1B4482;
+        }
+      }
+    }
+  }
+}

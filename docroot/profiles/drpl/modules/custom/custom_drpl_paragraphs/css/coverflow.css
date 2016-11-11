@@ -1,0 +1,234 @@
+.slider_coverflow .one-third {
+  width: 527px;
+  height: 612px;
+  position: relative;
+  margin-bottom: 70px;
+}
+.slider_coverflow .block-title {
+  height: 43px;
+  padding-top: 16px;
+  margin-bottom: 5px;
+}
+.slider_coverflow .coverflow {
+  margin-top: 34px;
+}
+.slider_coverflow li {
+  width: 251px;
+  height: 430px;
+  background-color: white;
+  list-style: none;
+}
+.slider_coverflow .text {
+  padding: 20px;
+}
+.slider_coverflow a {
+  text-decoration: none;
+}
+.slider_coverflow .field-name-title {
+  font-size: 22px;
+  color: black;
+}
+.slider_coverflow .field_short_description {
+  font-size: 16px;
+  color: #666666;
+}
+.slider_coverflow .field_short_description strong {
+  font-size: 14px;
+  color: black;
+  text-transform: uppercase;
+}
+.slider_coverflow .arrows,
+.coverflow-slider .bx-default-pager {
+  top: auto;
+  left: auto;
+  right: 0;
+  /*bottom: 58px;*/
+  z-index: 99;
+  background-color: transparent;
+}
+.slider_coverflow .arrow {
+  background-color: #465666;
+}
+.slider_coverflow .bx-default-pager {
+  color: #465666;
+  right: 85px;
+}
+@media (max-width: 1080px) {
+  .slider_coverflow .block-title {
+    padding-top: 6px;
+  }
+  .slider_coverflow .one-third {
+    width: 443px;
+    height: 531px;
+  }
+  .slider_coverflow li {
+    width: 210px;
+    height: 366px;
+  }
+  .slider_coverflow li img {
+    width: 210px;
+    height: 210px;
+  }
+  .slider_coverflow .text {
+    padding: 10px;
+  }
+  .slider_coverflow .field-name-title {
+    font-size: 18px;
+  }
+  .slider_coverflow .field_short_description {
+    font-size: 14px;
+  }
+}
+@media (max-width: 919px) {
+  .slider_coverflow .one-third {
+    width: 600px;
+    height: 745px;
+  }
+  .slider_coverflow .one-third .box {
+    height: 480px;
+  }
+  .slider_coverflow li {
+    width: 297px;
+    height: 500px;
+  }
+  .slider_coverflow li img {
+    width: 297px;
+    height: 297px;
+  }
+  .slider_coverflow .field-name-title {
+    font-size: 21px;
+  }
+  .slider_coverflow .field_short_description {
+    font-size: 16px;
+  }
+  .slider_coverflow .arrows,
+  .coverflow-slider .bx-default-pager {
+    bottom: 108px;
+  }
+  .slider_coverflow .bx-default-pager {
+    right: auto;
+    left: 0;
+  }
+}
+.bxslider {
+  margin: 0;
+  padding: 0;
+}
+.bx-controls-direction {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.bx-controls-direction a {
+  width: 40px;
+  height: 40px;
+  float: left;
+  margin-right: 2px;
+  display: block;
+  background-image: url(../img/sprite.png);
+  direction: rtl;
+  text-align: right;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+.bx-controls-direction a.bx-prev {
+  background-position: -86px -40px;
+}
+.bx-controls-direction a.bx-next {
+  background-position: -126px -40px;
+}
+.bx-controls-direction .disabled {
+  opacity: 0.5;
+  /*color: #000;
+    background-color: #fff;*/
+  cursor: default;
+}
+.bx-default-pager {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  line-height: 40px;
+  text-align: center;
+  color: #137d05;
+  font-size: 16px;
+  letter-spacing: -0.05em;
+}
+.box {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 50px;
+}
+@media (max-width: 1080px) {
+  .box {
+    margin-bottom: 20px;
+  }
+}
+.box .poster {
+  width: 100%;
+  height: auto;
+}
+.text,
+.top-text,
+.related-text {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+.text .date,
+.top-text .date,
+.related-text .date {
+  font-size: 19px;
+  font-weight: 300;
+  margin: 0 0 5px;
+}
+.text .link,
+.top-text .link,
+.related-text .link {
+  bottom: 0;
+  margin: 30px 0 0 0;
+  padding-bottom: 20px;
+}
+.text .link p,
+.top-text .link p,
+.related-text .link p {
+  margin: 0;
+}
+.text .link a,
+.top-text .link a,
+.related-text .link a {
+  position: relative;
+  font-weight: 600;
+  color: inherit;
+}
+.text .link a:before,
+.top-text .link a:before,
+.related-text .link a:before {
+  content: '+ ';
+}
+.text .link a:after,
+.top-text .link a:after,
+.related-text .link a:after {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  content: '';
+  opacity: 0.4;
+}
+.text .link a:hover:after,
+.top-text .link a:hover:after,
+.related-text .link a:hover:after {
+  opacity: 0.9;
+}
+.text {
+  padding: 30px 40px 55px;
+  height: 100%;
+}

@@ -1,0 +1,148 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_news
+//    Desripcion: 4.4.3. listado de destacados de actualidad
+//    Fecha: 08/09/2016
+//******************************************************************************/
+// _mod_news
+.ds-1col {
+  .view-mode-block_teaser,
+  .view-mode-block_teaser_horizontal {
+    margin-top: rem(20);
+  }
+  &.one-column {
+    .view-mode-block_teaser,
+    .view-mode-block_teaser_horizontal {
+      .field-name-field-image,
+      .field-name-field-images {
+        float: left;
+        width: 50%;
+      }
+      .group-text-information {
+        float: left;
+        width: 50%;
+        padding: 0 rem(15) rem(15);
+      }
+      .field-name-title h3 {
+        text-align: left;
+      }
+    }
+  }
+}
+
+.view-mode-block_teaser,
+.view-mode-block_teaser_horizontal {
+  @include clearfix;
+  .field-name-field-image,
+  .field-name-field-images {
+    a {
+      display: block;
+      img {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        height: auto;
+      }
+    }
+  }
+  .group-text-information {
+    padding: rem(15) 0 0;
+  }
+  .field-name-title {
+    margin: 0 0 rem(10) 0;
+    //		border-bottom: 1px solid #000;
+    h3 {
+      margin: 0;
+      padding: 0 rem(15) rem(15) rem(15);
+      font-family: "Montserrat";
+      font-size: rem(21);
+      text-align: center;
+      a {
+        display: inline-block;
+        color: #000;
+      }
+    }
+  }
+  .field-name-field-short-description,
+  .field-name-body {
+    padding: 0 rem(15);
+    font-family: "Montserrat-ligth";
+    font-size: rem(20);
+    color: #666;
+  }
+}
+
+// End _mod_news
+@mixin s-mod_news {
+  .ds-1col {
+    .view-mode-block_teaser,
+    .view-mode-block_teaser_horizontal {
+      .field-name-field-image ,
+      .field-name-field-images {
+        //float: left;
+        //width: 50%;
+      }
+      .group-text-information {
+        //float: left;
+        //width: 50%;
+        padding: rem(15) 0 0;
+      }
+      .field-name-title {
+        h3 {
+          padding: 0 0 rem(10);
+          text-align: left;
+        }
+      }
+      .field-name-field-short-description {
+        padding: 0;
+      }
+    }
+    &.one-column {
+      .view-mode-block_teaser,
+      .view-mode-block_teaser_horizontal {
+        .field-name-field-image,
+        .field-name-field-images {
+          width: 100%;
+        }
+        .group-text-information {
+          width: 100%;
+          padding: rem(15) 0 0;
+        }
+      }
+    }
+  }
+}
+
+.view-news-search {
+  margin: 3rem 0;
+  .view-content {
+    .views-row {
+      margin-bottom: 30px;
+    }
+  }
+  .img-responsive {
+    width: 100%;
+  }
+  .text {
+    padding: 0;
+    h3 {
+      margin-top: 0;
+      a {
+        color: #000;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .view-news-search {
+    .text {
+      h3 {
+        margin-top: 30px;
+        a {
+          color: #000;
+        }
+      }
+    }
+  }
+}

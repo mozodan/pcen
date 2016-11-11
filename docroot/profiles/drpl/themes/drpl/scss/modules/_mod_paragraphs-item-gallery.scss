@@ -1,0 +1,124 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-gallery
+//    Desripcion: Modulo para paragraphs de gaslería
+//    Creador: Alfredo Rodríguez Bravo
+//    Fecha: 13/09/2016
+//******************************************************************************/
+// End _mod_paragraphs-item-gallery
+.paragraphs-item-gallery {
+  margin-top: rem(20);
+  padding-bottom: rem(30);
+  .group-paragraph-coverflow {
+    position: relative;
+    overflow: hidden;
+    padding: 0 rem(50) rem(60);
+    .coverflow {
+      position: relative;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      min-height: rem(480);
+      li {
+        position: relative;
+        padding-bottom: rem(100);
+        //overflow: hidden;
+        max-width: 100%;
+        width: inherit;
+        height: inherit;
+        min-height: rem(580);
+        background: 0 none;
+        .colorbox {
+          position: relative;
+          display: block;
+          &:before {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: rem(100);
+            top: 100%;
+            left: 0;
+            z-index: 9999;
+            content: " ";
+            //background-image: -moz-linear-gradient(center bottom, rgb(255, 255, 255) 60%, rgba(255, 255, 255, 0) 75%);
+            //background-image: -o-linear-gradient(rgba(255, 255, 255, 0) 25%, rgb(255, 255, 255) 40%);
+            //background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.30, rgb(255, 255, 255)), color-stop(1, rgba(255, 255, 255, 0)));
+            //            filter: progid: DXImageTransform.Microsoft.Gradient(gradientType=0, startColor=0, EndColorStr=$white);
+            background: -moz-linear-gradient(center top, #FFFFFF, #FFFFFF 30%, rgba(255, 255, 255, 0.9) 65%, rgba(255, 255, 255, 0.7)) repeat scroll 0 0 padding-box, -moz-element(#colorbox-gallery-3) no-repeat scroll 0 -310px content-box rgba(0, 0, 0, 0);
+            transform: scaleY(-1);
+          }
+        }
+        img {
+          position: relative;
+          border-radius: rem(6);
+          height: auto;
+          max-width: rem(350);
+          max-height: rem(350);
+          border: rem(2) solid $grey;
+          -webkit-box-reflect: below 0px -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0.3) 30%, transparent 0, transparent 100%);
+          -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+          -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+          box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+        }
+      }
+    }
+    .bx-default-pager {
+      right: auto;
+      left: -9999rem
+    }
+    .arrow {
+      background-color: initial;
+    }
+    .arrows {
+      display: block;
+      top: 50%;
+      margin: auto;
+      margin-top: rem(-40);
+      z-index: 1;
+      &.bx-controls-direction {
+        width: 100%;
+        padding: 0;
+        a {
+          display: inline-block;
+          vertical-align: middle;
+          float: none;
+          width: 50px;
+          height: 80px;
+          background-color: transparent;
+          &.bx-prev {
+            background-position: -56px -450px;
+          }
+          &.bx-next {
+            background-position: -45px -530px;
+            float: right;
+          }
+        }
+      }
+    }
+    .block-title {
+      height: auto;
+      margin: 0;
+      padding: 0;
+    }
+  }
+  [class*="col"] {
+    padding-top: rem(30);
+    img {
+      width: 100%;
+      &.img-reponsive {
+        width: 100%;
+      }
+    }
+  }
+  &.one-column {}
+  &.two-columns {}
+  &.three-columns {}
+  &.four-columns {}
+}
+
+// End _mod_paragraphs-item-gallery
+@mixin s-mod_paragraphs-item-gallery {
+  .paragraphs-item-gallery {
+    .slider_coverflow {}
+  }
+}

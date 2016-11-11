@@ -1,0 +1,30 @@
+/* CSS file for the 15 85 stacked layout */
+@import url('../../../css/base-grid.css');
+
+.panel-col-fifty {
+  width: 50%;
+}
+.panel-col-hundred {
+  width: 100%;
+}
+.panel-col-fifteen {
+  width: 15%;
+}
+.panel-col-eightyfive {
+  width: 85%;
+}
+
+.panel-header, .panel-top, .panel-footer {
+  width: 100%;
+}
+
+/* Margins taken from the Panels module plugins */
+.lastUnit .inside {
+  margin: 0 0 1em .5em;
+}
+.firstUnit .inside {
+  margin: 0 .5em 1em 0;
+}
+.unit .inside {
+  margin: 0 .5em 1em .5em;
+}

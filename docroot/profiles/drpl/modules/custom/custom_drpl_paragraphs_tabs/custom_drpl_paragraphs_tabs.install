@@ -1,0 +1,9 @@
+<?php
+/**
+ * @file
+ * Implements hook_install
+ */
+function custom_drpl_paragraphs_tabs_install() {
+  //set 3 after display suite extras (2)
+  db_query("UPDATE {system} SET weight = 3 WHERE name = 'custom_drpl_paragraphs_tabs'");
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Ejemplos de contenidos compuestos feature.
+ */
+
+include_once 'ejemplos_de_contenidos_compuestos.features.inc';

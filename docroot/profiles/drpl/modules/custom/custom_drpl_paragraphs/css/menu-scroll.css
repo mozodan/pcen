@@ -1,0 +1,52 @@
+.paragraph-menu-progress {
+  position: relative;
+  float: left;
+  text-align: left;
+  width: 330px;
+  /*
+  padding: 45px 0 0 2%;
+  */
+}
+  .paragraph-menu-progress .wrapper {
+    position: absolute;
+    width: inherit;
+  }
+  /*
+    .paragraph-menu-progress .wrapper.affix {
+      position: fixed;
+      top: 10px;
+
+    }*/
+  .paragraph-menu-progress .bar {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 10px;
+    background-color: #fff;
+  }
+  .paragraph-menu-progress .bar span {
+    position: absolute;
+    display: block;
+    top: 0;
+    width: 0;
+    height: 40px;
+    z-index: 0;
+    background-color: #DB1F16;
+  }
+  .paragraph-menu-progress .bar a {
+    line-height: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .paragraph-menu-progress .bar i {
+    position: absolute;
+    right: -30px;
+    height: 40px;
+    line-height: 40px;
+    color: #36a7f3;
+
+    -webkit-transition: color .3s;
+    transition: color .3s;
+  }
+  

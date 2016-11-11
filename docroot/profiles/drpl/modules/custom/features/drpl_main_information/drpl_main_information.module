@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Main information feature.
+ */
+
+include_once 'drpl_main_information.features.inc';

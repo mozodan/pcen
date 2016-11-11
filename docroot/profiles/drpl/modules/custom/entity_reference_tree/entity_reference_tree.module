@@ -1,0 +1,242 @@
+<?php
+/**
+ * @file
+ * Module for entity_reference_tree
+ */
+
+module_load_include('inc', 'entity_reference_tree', 'entity_reference_tree.field');
+module_load_include('inc', 'entity_reference_tree', 'entity_reference_tree.widget');
+
+/**
+ * Implements hook_element_info().
+ */
+function entity_reference_tree_element_info() {
+  $types = array(
+    'entity_tree' => array(
+      '#input' => TRUE,
+      '#process' => array('entity_reference_tree_process_entity_tree'),
+      '#theme' => array('entity_tree'),
+      '#pre_render' => array('form_pre_render_conditional_form_element'),
+    ),
+    'entity_tree_level' => array(
+      '#input' => FALSE,
+      '#theme' => array('entity_tree_level'),
+      '#pre_render' => array('form_pre_render_conditional_form_element'),
+    ),
+    'entity_tree_item' => array(
+      '#input' => FALSE,
+      '#theme' => array('entity_tree_item'),
+      '#pre_render' => array('form_pre_render_conditional_form_element'),
+    ),
+    'entity_tree_label' => array(
+      '#input' => FALSE,
+      '#theme' => array('entity_tree_label'),
+      '#pre_render' => array('form_pre_render_conditional_form_element'),
+    ),
+    'entity_tree_track_list' => array(
+      '#input' => FALSE,
+      '#theme' => array('entity_tree_track_list'),
+      '#pre_render' => array('form_pre_render_conditional_form_element'),
+    ),
+  );
+  return $types;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function entity_reference_tree_theme() {
+  return array(
+    'entity_tree_tree' => array(
+      'render element' => 'element',
+    ),
+    'entity_tree_level' => array(
+      'render element' => 'element',
+    ),
+    'entity_tree_item' => array(
+      'render element' => 'element',
+    ),
+    'entity_tree_label' => array(
+      'render element' => 'element',
+    ),
+    'entity_tree_track_list' => array(
+      'render element' => 'element',
+    ),
+    'entity_tree_list' => array(
+      'render element' => 'element',
+    ),
+  );
+}
+
+function _entity_reference_tree_flatten($element, &$form_state) {
+  $output = array();
+  $children = element_children($element);
+  foreach ($children as $c) {
+    $child = $element[$c];
+    if (array_key_exists('#type', $child) && ($child['#type'] == 'radio' || $child['#type'] == 'checkbox')) {
+      $output[] = $child;
+    }
+    else {
+      $output = array_merge($output, _entity_reference_tree_flatten($child, $form_state));
+    }
+  }
+  return $output;
+}
+
+function _entity_reference_tree_get_options(&$entities, &$allowed, $filter, $id, $name) {
+  $options = array();
+  if (is_array($entities) && count($entities) > 0) {
+    foreach ($entities as $entity) {
+      if (!$filter || (is_array($allowed) && isset($allowed[$entity->{$id}]))) {
+        $options[$entity->{$id}] = $entity->{$name};
+        $options += _entity_reference_tree_get_options($entity->children, $allowed, $filter, $id, $name);
+      }
+    }
+  }
+  return $options;
+}
+
+
+/**
+ * Implements hook_get_entity_hierarchy().
+ */
+function entity_reference_tree_get_entity_hierarchy($element, $allowed_ids, $label = '') {
+  if ($element['#field'] == 'entity_reference_tree') {
+    if ($element['#allowed_bundles']['entity_type'] == 'taxonomy_term') {
+      foreach ($element['#allowed_bundles']['bundle_names'] as $voc_name) {
+        $voc = taxonomy_vocabulary_machine_name_load($voc_name);
+        $bundles[] = $voc->vid;
+      }
+    } 
+    else {
+      $bundles = $element['#allowed_bundles']['bundle_names'];
+    }
+    return _entity_reference_tree_get_hierarchy($element['#allowed_bundles']['#parent_id'], $element['#allowed_bundles']['entity_type'], $bundles, $element['#field_name'], $allowed_ids, $element['#filter_view'], $label, NULL, 0);
+  }
+}
+
+function _entity_reference_tree_get_hierarchy($parent_id, $entity_type, $bundle_names, $field_name, &$allowed, $filter, $label, $default = array(), $use_ajax = FALSE) {
+  switch ($entity_type) {
+    case 'taxonomy_term' :  
+      $entities = _entity_reference_tree_term_get_children($parent_id, $bundle_names);
+      break;
+    case 'node' :           
+      $entities = _entity_reference_tree_node_get_children($parent_id, $entity_type, $bundle_names, $field_name);break;
+    default :               
+      return;
+  }
+  $entity_info = entity_get_info($entity_type);
+  $result = array();
+  if ($filter != '') {
+    foreach ($allowed as $k => $v) {
+      if (array_key_exists($k, $entities)) {
+        $entity =& $entities[$k];
+        $children = _entity_reference_tree_get_hierarchy($entity->{$entity_info['entity keys']['id']}, $entity_type, $bundle_names, $field_name, $allowed, $filter, $label, $default);
+        if (is_array($children)) {
+          $entity->children = $children;
+          $entity->children_selected = _entity_reference_reference_tree_children_selected($entity, $default, $entity_info['entity keys']['id']);
+        }
+        else {
+          $entity->children_selected = FALSE;
+        }
+        array_push($result, $entity);
+      }
+    }
+  }
+  elseif ($entities) {
+    foreach ($entities as &$entity) {
+      if ($filter == '' || array_key_exists($entity->{$entity_info['entity keys']['id']}, $allowed)) {
+        $children = _entity_reference_tree_get_hierarchy($entity->{$entity_info['entity keys']['id']}, $entity_type, $bundle_names, $field_name, $allowed, $filter, $label, $default);
+        if (is_array($children)) {
+          $entity->children = $children;
+          $entity->children_selected = _entity_reference_tree_children_selected($entity, $default, $entity_info['entity keys']['id']);
+        }
+        else {
+          $entity->children_selected = FALSE;
+        }
+        array_push($result, $entity);
+      }
+    }
+  }
+  return $result;
+}
+
+function _entity_reference_tree_term_get_children($tid, $vids) {
+  $query = db_select('taxonomy_term_data', 't');
+  $query->join('taxonomy_term_hierarchy', 'h', 't.tid = h.tid');
+  $query->join('taxonomy_vocabulary', 'v', 'v.vid = t.vid');
+  $query->fields('t', array('tid', 'name'));
+  $query->addField('v', 'machine_name', 'vocabulary_machine_name');
+  $query->condition('t.vid', $vids, 'IN');
+  $query->condition('h.parent', $tid);
+  $query->addTag('term_access');
+  $query->addTag('translatable');
+  $query->orderBy('t.weight');
+  $query->orderBy('t.name');
+  $results = $query->execute();
+  $terms = array();
+  while ($term = $results->fetchObject()) {
+    $terms[$term->tid] = $term;
+  }
+  return $terms;
+}
+
+function _entity_reference_tree_node_get_children($parent_id, $entity_type, $bundle_names, $field_name) {
+  if ($parent_id) {
+    $query = db_select('field_data_' . $field_name, 'f');
+    $query->join('node', 'n', 'n.nid = f.' . $field_name . '_target_id');
+    $query->fields('n', array('nid', 'title'));
+    $query->condition('f.entity_id', $parent_id);
+    $query->condition('f.entity_type', $entity_type);
+    $query->orderBy('n.title');
+    $results = $query->execute();
+  } 
+  else {
+    $query1 = db_select('field_data_' . $field_name, 'f1')->fields('f1', array('entity_id'));
+    $query1->condition('f1.entity_type', $entity_type);
+    if ($bundle_names) {
+      $bundles_allowed = db_or();
+      foreach ($bundle_names as $bundle) {
+        $bundles_allowed->condition('bundle', $bundle);
+      }
+      $query1->condition($bundles_allowed);
+    }
+    $query1->where('f2.entity_id = f1.' . $field_name . '_target_id');
+    $query2 = db_select('field_data_' . $field_name, 'f2');
+    $query2->join('node', 'n', 'n.nid = f2.entity_id');
+    $query2->fields('n', array('nid', 'title'));
+    $query2->notExists($query1);
+    $results = $query2->execute();
+  }
+  $nodes = array();
+  while ($node = $results->fetchObject()) {
+    $nodes[$node->nid] = $node;
+  }
+  return $nodes;
+}
+
+function _entity_reference_tree_children_selected($entities, $default, $id) {
+  foreach ($entities->children as $entity) {
+    if (isset($default[$entity->$id]) || $entity->children_selected) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_get_entity_parent().
+ */
+function _entity_reference_tree_get_entity_parent($element, $parent_id) {
+  switch ($entity_type) {
+    case 'taxonomy_term' : $entities = db_query_range("select h.parent from {taxonomy_term_hierarchy} h where h.tid = :tid", 0, 1, array(':tid'  => $parent_id));
+      break;
+    case 'node' : $field_name = $element['#field_name'];$entities = db_query_range("select h.entity_id as parent from {field_data_" . $field_name . "} h where h." . $field_name . "_target_id = :target_id", 0, 1, array(':target_id'  => $parent_id));
+      break;
+  }
+  $parent = 0;
+  foreach ($entities as $entity) {
+    $parent = $entity->parent;
+  }
+  return $parent;
+}

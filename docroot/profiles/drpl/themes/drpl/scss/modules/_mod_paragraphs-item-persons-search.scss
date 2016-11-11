@@ -1,0 +1,61 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-persons-search
+//    Desripcion: 4.2.20 - Pagina de Personas
+//    Fecha: 02/11/2016
+//******************************************************************************/
+
+#views-exposed-form-persons-search-page {
+  font-family: "Montserrat";
+  margin: 3rem 0;
+  padding: 0 10px;
+  label {
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .form-control {
+    &.form-text {
+      @include border-radius(100px);
+      border-color: #ddd;
+      width: 100%;
+    }
+  }
+  .views-exposed-form {
+    .views-exposed-widget {
+      float: none;
+      padding: 0 0 20px 0;
+      div {
+        width: 100%;
+      }
+      &.views-submit-button {
+        button {
+          &#edit-submit-persons-search {
+            margin: 0;
+            @include border-radius(100px);
+            border-color: $red;
+            color: $red;
+            background-color: transparent;
+            padding: 6px 30px;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.view-persons-search {
+  .view-content {
+    .views-row {
+      padding: 0 15px;
+      h3 {
+        a {
+          color: #000;
+          font-size: 18px;
+          font-weight: bold;
+          padding: 0 0 10px 0;
+        }
+      }
+    }
+  }
+}

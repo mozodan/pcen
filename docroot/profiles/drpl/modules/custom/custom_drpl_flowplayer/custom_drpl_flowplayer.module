@@ -1,0 +1,50 @@
+<?php
+/**
+ * @file
+ * Module for custom_drpl_flowplayer web page
+ */
+
+
+/**
+ * Implements hook_views_api().
+ */
+function custom_drpl_flowplayer_views_api() {
+  return array('api' => 2);
+}
+
+
+/**
+ * Template function for views_accordion style plugin.
+ *
+ * @param array $vars
+ *   Array of template variables.
+ *
+ * The JS file is loaded within render() in views_accordion_style_plugin.inc
+ */
+function template_preprocess_views_view_flowplayer(&$vars) {
+  // Inherit the normal unformatted classes.
+  template_preprocess_views_view_unformatted($vars);
+
+}
+
+
+/**
+ * Implements hook_views_plugin().
+ */
+function custom_drpl_flowplayer_views_plugins() {
+  return array(
+    'style' => array(
+      'flowplayer' => array(
+        'title' => t('Flowplayer'),
+        'theme' => 'views_view_flowplayer',
+        'help' => t('Display with Flowplayer format.'),
+        'handler' => 'custom_drpl_flowplayer_style_plugin',
+        'uses row plugin' => TRUE,
+        'uses row class' => FALSE,
+        'uses options' => TRUE,
+        'uses fields' => FALSE,
+        'type' => 'normal',
+      ),
+    ),
+  );
+}

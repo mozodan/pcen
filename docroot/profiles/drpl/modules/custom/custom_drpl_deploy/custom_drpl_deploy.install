@@ -1,0 +1,396 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the custom drpl deploy.
+ */
+
+define("ENVIRONMENT", "everis"); //everis or commadrid
+
+/**
+ * Implements hook_install
+ */
+function custom_drpl_deploy_install() {
+  for ($i = 7101; $i < 8000; $i++) {
+    $candidate = 'custom_drpl_deploy_update_' . $i;
+    if (function_exists($candidate)) {
+      $candidate();
+    }
+    else{
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_unistall
+ */
+function custom_drpl_deploy_unistall() {
+
+}
+
+/**
+ * Features enabled
+ */
+function custom_drpl_deploy_update_7101() {
+  $features = array(
+    'drpl_dependencies',
+    'drpl_common_repository',
+    'drpl_paragraphs',
+    'drpl_terms',
+    'drpl_events',
+    'drpl_news',
+    'drpl_main_information',
+    'drpl_landing',
+    'drpl_formalities',
+    'drpl_publications',
+    'drpl_regulations',
+    'drpl_users',
+    'drpl_translations'
+  );
+  if (ENVIRONMENT == "commadrid") {
+    $strings_search = array(
+      "'enjoy_category'",
+      "'live_category'",
+      "'invest_category'",
+      "|enjoy_category|",
+      "|live_category|",
+      "|invest_category|",
+      "term_enjoy_category",
+      "term_live_category",
+      "term_invest_category",
+      "term__enjoy_category",
+      "term__live_category",
+      "term__invest_category",
+      "term-enjoy_category",
+      "term-live_category",
+      "term-invest_category",
+      '/enjoy_category"',
+      '/live_category"',
+      '/invest_category"',
+      ":enjoy_category:",
+      ":live_category:",
+      ":invest_category:",
+      " enjoy_category ",
+      " live_category ",
+      " invest_category ",
+      "= enjoy_category",
+      "= live_category",
+      "= invest_category",
+      'Administrar municipios {"url":"admin\/structure\/taxonomy\/municipalities","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-37"}',
+      'Administrar provincias {"url":"admin\/structure\/taxonomy\/provinces","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-33"}'
+    );
+    $strings_replace = array(
+      "'disfrutar'",
+      "'vivir'",
+      "'invertir'",
+      "|disfrutar|",
+      "|vivir|",
+      "|invertir|",
+      "term_disfrutar",
+      "term_vivir",
+      "term_invertir",
+      "term__disfrutar_category",
+      "term__vivir_category",
+      "term__invertir_category",
+      "term-disfrutar",
+      "term-vivir",
+      "term-invertir",
+      '/disfrutar"',
+      '/vivir"',
+      '/invertir"',
+      ":disfrutar:",
+      ":vivir:",
+      ":invertir:",
+      " disfrutar ",
+      " vivir ",
+      " invertir ",
+      "= disfrutar",
+      "= vivir",
+      "= invertir",
+      "",
+      "",
+    );
+    foreach ($features as $val => $feature) {
+      $path_to_file = drupal_get_path('module', $feature);
+      if (is_dir($path_to_file)) {
+        $files = scandir($path_to_file);
+        foreach ($files as $key => $file) {
+          if ($file !== '.' && $file !=='..' && $file !='menu_source') {
+            $file_contents = file_get_contents($path_to_file . '/' . $file);
+            $file_contents = str_replace($strings_search, $strings_replace, $file_contents);
+            file_put_contents($path_to_file . '/' . $file, $file_contents);
+          }
+          if ($file == 'menu_source') {
+            $path = $path_to_file . "/menu_source";
+            $files = scandir($path);
+            foreach ($files as $key => $file) {
+              if ($file !== '.' && $file !=='..') {
+                $file_contents = file_get_contents($path . '/' . $file);
+                $file_contents = str_replace($strings_search, $strings_replace, $file_contents);
+                file_put_contents($path . '/' . $file, $file_contents);
+              }
+            }
+          }
+        }
+      }
+    }
+  } 
+  $message = HookUpdateDeployTools\Modules::enable($features);
+  drupal_flush_all_caches();
+  return $message;
+}
+
+/**
+ * Features revert
+ */
+function custom_drpl_deploy_update_7102() {
+  $features = array(
+    'drpl_users',
+    'drpl_translations',
+    'drpl_common_repository',
+    'drpl_paragraphs',
+    'drpl_terms',
+    'drpl_news',
+    'drpl_events',
+    'drpl_main_information',
+    'drpl_landing',
+    'drpl_formalities',
+    'drpl_publications',
+    'drpl_regulations',
+  );
+  $message = HookUpdateDeployTools\Features::revert($features);
+  drupal_flush_all_caches();
+  return $message;
+}
+
+/**
+ * Change weight modules
+ */
+function custom_drpl_deploy_update_7103() {
+  db_query("UPDATE {system} SET weight = 4 WHERE name = 'custom_drpl_paragraphs'");
+}
+
+/**
+ * Add transliteration set
+ */
+function custom_drpl_deploy_update_7104() {
+  if (module_exists('transliteration')) {
+    $message = HookUpdateDeployTools\Settings::set('pathauto_transliterate', 1);
+    return $message;
+  }
+}
+
+/**
+ * Alias regenerate
+ */
+function custom_drpl_deploy_update_7105() {
+  if (module_exists('pathauto')) {
+    module_load_include('inc', 'pathauto');
+    module_load_include('inc', 'pathauto.pathauto');
+    db_delete('url_alias')->execute();
+    //Regenerate nodes
+    $nids = db_query("SELECT nid FROM {node}")->fetchCol();
+    pathauto_node_update_alias_multiple($nids, 'bulkupdate');
+    //Regenerate taxonomies
+    $tids = db_query("SELECT tid FROM {taxonomy_term_data}")->fetchCol();
+    pathauto_taxonomy_term_update_alias_multiple($tids, 'bulkupdate');
+    cache_clear_all('*', 'cache_path', TRUE);
+  }
+}
+
+/**
+ * Enable field templates to ds extras
+ */
+function custom_drpl_deploy_update_7106() {
+  if (module_exists('ds')) {
+    $message = HookUpdateDeployTools\Settings::set('ds_extras_field_template', 1);
+    return $message;
+  }
+}
+
+/**
+ * Multilenguage configuration
+ */
+function custom_drpl_deploy_update_7107() {
+  if (module_exists('admin_language')) {
+    $message = HookUpdateDeployTools\Settings::set('admin_language_default', 'es');
+  }
+  if (module_exists('i18n')) {
+    $message .= HookUpdateDeployTools\Settings::set('i18n_string_source_language', 'es');
+  }
+  if (module_exists('locale')) {
+    $lang = array(
+      'locale-session' => array(
+        'callbacks' => array(
+          'language' => 'locale_language_from_session',
+          'switcher' => 'locale_language_switcher_session',
+          'url_rewrite' => 'locale_language_url_rewrite_session'
+        ),
+        'file' => 'includes/locale.inc'
+      ),
+      'language-default' => array(
+        'callbacks' => array(
+          'language' => 'language_from_default'
+        )
+      )
+    );
+    $message .= HookUpdateDeployTools\Settings::set('language_negotiation_language', $lang);
+  }
+  return $message;
+}
+
+/**
+ * Import menus
+ * Note: URLS not import with drush <https://www.drupal.org/node/2031825>
+ */
+function custom_drpl_deploy_update_7108() {
+  if (module_exists('menu_import')) {
+    $message = HookUpdateDeployTools\Menus::import('main-menu');
+    $message .= HookUpdateDeployTools\Menus::import('menu-administration-menu-tools');
+    $message .= HookUpdateDeployTools\Menus::import('menu-bottom');
+    $message .= HookUpdateDeployTools\Menus::import('menu-footer');
+    $message .= HookUpdateDeployTools\Menus::import('menu-open-government');
+    $message .= HookUpdateDeployTools\Menus::import('menu-social-media');
+    return $message;
+  }
+}
+
+/**
+* Copy files to other directories
+*/
+function custom_drpl_deploy_update_7109() {
+  $files_to_import = array(
+    0 => array(
+      'location_files' =>  drupal_get_path('module', 'custom_drpl_deploy') . "/includes/photos/general",
+      'directory_to_move' => drupal_realpath('public://'),
+    ),
+    1 => array(
+      'location_files' =>  drupal_get_path('module', 'custom_drpl_deploy') . "/includes/photos/menu_icons",
+      'directory_to_move' => drupal_realpath('public://menu_icons'),
+    )
+  );
+  foreach ($files_to_import as $key => $import) {
+    if (!is_writable($import['directory_to_move'])) {
+      if (!mkdir($import['directory_to_move'], 0777, TRUE)) {
+        $message .= $import['directory_to_move'] . ' - ' . t('error when triying to create directory');
+      }
+    }
+    if (is_writable($import['directory_to_move'])) {
+      $files_location_files = scandir($import['location_files']);
+      foreach ($files_location_files as $val => $file) {
+        if ($file !== "." && $file !== "..") {
+          if (file_exists($import['directory_to_move'] . '/' . $file)) {
+            unlink($import['directory_to_move'] . '/' . $file);
+          }
+          copy($import['location_files'] . '/' . $file, $import['directory_to_move'] . '/' . $file);
+        }
+      }
+    }
+  }
+  return $message;
+}
+
+
+/**
+ * Create users
+ */
+function custom_drpl_deploy_update_7110() {
+  $new_users = array(
+    0 => array(
+      'administer_users' => TRUE,
+      'name' => 'redactor',
+      'mail' => 'redactor@redactor.com',
+      'init' => 'redactor@redactor.com',
+      'pass' => 'redactor',
+      'status' => 1,
+      'roles' => array(
+        2 => TRUE,
+        4 => TRUE,
+      ),
+      'notify' => 0,
+      'signature' => '',
+      'picture' => '',
+      'picture_delete' => 0,
+      'picture_upload' => '',
+    ),
+    1 => array(
+      'administer_users' => TRUE,
+      'name' => 'revisor',
+      'mail' => 'revisor@revisor.com',
+      'init' => 'revisor@revisor.com',
+      'pass' => 'revisor',
+      'status' => 1,
+      'roles' => array(
+        2 => TRUE,
+        5 => TRUE,
+      ),
+      'notify' => 0,
+      'signature' => '',
+      'picture' => '',
+      'picture_delete' => 0,
+      'picture_upload' => '',
+    ),
+  );
+  if (ENVIRONMENT == "commadrid") {
+    $new_users[] = array(
+      'administer_users' => TRUE,
+      'name' => 'cms-sys-admin',
+      'mail' => 'cms-sys-admin@cms-sys-admin.com',
+      'init' => 'cms-sys-admin@cms-sys-admin.com',
+      'pass' => 'admin',
+      'status' => 1,
+      'roles' => array(
+        2 => TRUE,
+        3 => TRUE,
+      ),
+      'notify' => 0,
+      'signature' => '',
+      'picture' => '',
+      'picture_delete' => 0,
+      'picture_upload' => '',
+    );
+  } 
+  foreach ($new_users as $key => $new_user) {
+    user_save(NULL, $new_user);
+  }
+}
+
+/**
+ * Active theme
+ */
+function custom_drpl_deploy_update_7111() {
+  $theme = array(
+    'drpl'
+  );
+  theme_enable($theme);
+  $message = HookUpdateDeployTools\Settings::set('theme_default', 'drpl');
+  return $message;
+}
+
+/**
+ * Remove title from blocks
+ */
+function custom_drpl_deploy_update_7112() {
+  db_query("UPDATE {block} SET title = 'Disfrutar' WHERE delta = 'menu_categories-enjoy_menu'");
+  db_query("UPDATE {block} SET title = 'Vivir' WHERE delta = 'menu_categories-live_menu'");
+  db_query("UPDATE {block} SET title = 'Invertir' WHERE delta = 'menu_categories-invest_menu'");
+  db_query("UPDATE {block} SET title = 'Gobierto abierto' WHERE delta = 'menu-open-government'");
+  db_query("UPDATE {block} SET title = '<none>' WHERE delta = 'menu-bottom'");
+  db_query("UPDATE {block} SET title = '<none>' WHERE delta = 'menu-footer'");
+}
+
+/**
+ * Remove captcha in login form
+ */
+function custom_drpl_deploy_update_7113() {
+  if (module_exists('captcha')) {
+    module_load_include('inc', 'captcha');
+    captcha_set_form_id_setting("user_login", "none");
+  }
+}
+
+
+
+
+
+

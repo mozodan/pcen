@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Terms feature.
+ */
+
+include_once 'drpl_terms.features.inc';

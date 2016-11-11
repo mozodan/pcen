@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the DRPL - Goverment agenda feature.
+ */
+
+include_once 'drpl_goverment_agenda.features.inc';

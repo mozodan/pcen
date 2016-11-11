@@ -1,0 +1,123 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_paragraphs_item_featured_image
+//    Desripcion: 4.3.17 Destacado con imagen
+//    Fecha: 06/10/2016
+//******************************************************************************/
+// _mod_paragraphs_item_featured_image
+
+.paragraphs-item-featured-image {
+  width: 100%;
+  display: inline-block;
+  float: none;
+  margin: 3rem 0;
+  font-family: 'Montserrat-light';
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  .group-paragraph-background {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    .field-name-field-image,
+    .field-items,
+    .field-item {
+      height: 100%;
+    }
+    img {
+      width: 100%;
+      min-height: 100%;
+    }
+  }
+  .group-content {
+    position: relative;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.4);
+    &:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+  .field-group-div {
+    &.group-paragraph,
+    &.group-content {
+      .group-content {
+        padding: 40px 20px 80px 40px;
+        background: rgba(122,25,16,1);
+        background: -moz-linear-gradient(left, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 20%, rgba(122,25,16,0) 100%);
+        background: -webkit-gradient(left top, right top, color-stop(0%, rgba(122,25,16,1)), color-stop(0%, rgba(122,25,16,1)), color-stop(20%, rgba(122,25,16,1)), color-stop(100%, rgba(122,25,16,0)));
+        background: -webkit-linear-gradient(left, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 20%, rgba(122,25,16,0) 100%);
+        background: -o-linear-gradient(left, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 20%, rgba(122,25,16,0) 100%);
+        background: -ms-linear-gradient(left, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 20%, rgba(122,25,16,0) 100%);
+        background: linear-gradient(to right, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 0%, rgba(122,25,16,1) 20%, rgba(122,25,16,0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7a1910', endColorstr='#7a1910', GradientType=1 );
+        transition: .2s all linear;
+      }
+    }
+  }
+  .group-paragraph-main-information,
+  .group-paragraph-link {
+    text-align: left;
+    border-left: 1.5rem solid white;
+    padding: 0 0 0 20px;
+    max-width: 200px;
+  }
+  .field-name-field-short-description {
+    font-weight: bold;
+    margin: 0 0 10px 0;
+  }
+  .field-name-field-title {
+    text-align: left;
+    font-size: 2.5rem;
+    font-family: "Montserrat-bold";
+    color: #fff;
+    text-shadow: 1px 1px 2px black;
+    .field-item {
+      display: inline-block;
+      vertical-align: middle;
+      line-height: normal;
+    }
+  }
+  .field-name-field-description {
+    padding: 2rem 10rem 0;
+  }
+  .field-name-field-link {
+    display: inline-block;
+    max-width: 100%;
+    padding: 2rem 0 0 0;
+  }
+   .field-name-field-link {
+     a {
+       color: #FFF;
+       font-size: 1.6rem;
+     }
+   }
+}
+
+@media only screen and (max-width: 1023px) {}
+
+@media only screen and (max-width: 767px) {
+  .paragraphs-item-featured-image {
+    .field-group-div {
+      &.group-paragraph,
+      &.group-content {
+        .group-content {
+          padding: 20px;
+          .group-paragraph-main-information,
+          .group-paragraph-link {
+            width: 100%;
+            max-width: 100%;
+            border: none;
+            padding: 0;
+          }
+          .group-paragraph-link {
+            border-bottom: 1.5rem solid white;
+            padding: 0 0 20px 0;
+          }
+        }
+      }
+    }
+  }
+}

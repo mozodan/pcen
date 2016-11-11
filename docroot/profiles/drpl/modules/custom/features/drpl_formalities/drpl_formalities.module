@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Formalities feature.
+ */
+
+include_once 'drpl_formalities.features.inc';

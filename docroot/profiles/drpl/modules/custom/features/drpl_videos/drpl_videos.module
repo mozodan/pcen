@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the DRPL - Videos feature.
+ */
+
+include_once 'drpl_videos.features.inc';

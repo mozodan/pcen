@@ -1,0 +1,7 @@
+name = DRPL - Deployment
+description = Apply updates to website
+package = DRPL
+dependencies[] = hook_update_deploy_tools
+dependencies[] = menu_import
+core = 7.x
+php = 5.x

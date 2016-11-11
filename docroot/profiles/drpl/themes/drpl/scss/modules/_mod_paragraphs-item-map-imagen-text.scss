@@ -1,0 +1,114 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-map-imagen-text
+//    Desripcion: paragraphs-item-map-imagen-text
+//    Creador: Carlos Casalengua
+//    Fecha: 23/09/2016
+//******************************************************************************/
+// _mod_paragraphs-item-map-imagen-text
+
+.paragraphs-item-map-imagen-text{
+	margin-top: rem(20);
+	.group-paragraph{
+		position: relative;
+		overflow: hidden;
+	}
+	.group-paragraph-information{
+		position: relative;
+		max-height: rem(600);
+		&:after {
+			content: "";
+			background-color: white;
+			height: 5px;
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			z-index: 3;
+			@include box-shadow(0px, 0px, 10px, 0px, #000);
+		}
+	}
+	.field-name-field-image{
+		img{
+			position: relative;
+			min-width: 100%;
+			width: auto;
+			max-height: rem(600);
+			margin: auto;
+			max-width: inherit;
+			left: 50%;
+			top: 0;
+			-webkit-transform: translate(-50%, 0);
+			-moz-transform: translate(-50%, 0);
+			-o-transform: translate(-50%, 0);
+			-ms-transform: translate(-50%, 0);
+			-sand-transform: translate(-50%, 0);
+			transform: translate(-50%,0);
+		}
+	}
+	.field-name-field-title{
+		position: absolute;
+		bottom: 20%;
+		left: 0;
+		right: 0;
+		display:block;
+		width: 100%;
+		margin: auto;
+		padding: 0 rem(10);
+		font-family: "Montserrat-Light";
+		font-size: rem(40);
+		color: $white;
+		text-align:center;
+	}
+	.group-paragraph-map{
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: rem(600);
+		width: 100%;
+		z-index: 2;
+		margin-top: rem(560);
+		-webkit-transition: margin 0.4s ease;
+		transition: margin 0.4s ease;
+		&.open{
+			margin-top: 0;
+		}
+	}
+	.group-paragraph-tag{
+		position: absolute;
+		bottom: 0;
+		z-index: 999;
+		right: 10%;
+		color: #000000;
+		font-family: "Montserrat";
+		padding: rem(11) rem(20) rem(11) rem(40);
+		font-size: rem(20);
+		background: $white;
+		cursor: pointer;
+		border-radius: 5px 5px 0 0;
+		@include box-shadow(0px, -3px, 15px, -3px, #000);
+		&:hover{
+			color: #DB1F16;
+		}
+		&:before{
+			content:"\f041";
+			font-family: "Font Awesome";
+			position: absolute;
+			top: 0;
+			left: rem(11);
+			bottom: 0;
+			margin: auto;
+			width: rem(20);
+			height: rem(20);
+			font-size: rem(20);
+			line-height: 1em;
+			color: #000000;
+			text-align: center;
+		}
+	}
+	.geolocation-help, .geolocation-map{
+		margin: 0;
+		min-height: rem(600);
+	}
+}
+
+// End _mod_paragraphs-item-map-imagen-text

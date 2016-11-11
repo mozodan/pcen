@@ -1,0 +1,114 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-slideshow
+//    Desripcion: Modulo para paragraphs de gaslería
+//    Creador: Alfredo Rodríguez Bravo
+//    Fecha: 13/09/2016
+//******************************************************************************/
+// End _mod_paragraphs-item-slideshow
+.paragraphs-item-slideshow {
+  .fgroup-paragraph-controls {
+    position: relative;
+    margin: rem(10) 0;
+    .controls {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.paragraphs-item-featured-events {
+  margin-top: rem(20);
+  .slider_coverflow {
+    position: relative;
+    padding-bottom: rem(60);
+    .contextual-links-region {
+      position: static;
+      position: initial;
+    }
+    li {
+      background: 0 none;
+      height: auto;
+      max-width: 100%;
+      -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+      -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+      .view-mode-block_teaser {
+        margin: 0;
+      }
+    }
+    .coverflow {
+      margin: rem(5);
+      padding: 0;
+      //padding-bottom: rem(30);
+    }
+    .group-text-information {
+      background: $white;
+      font-family: 'Montserrat';
+      padding: rem(30) rem(20) rem(20);
+      .field-name-title {
+        border: 0 none;
+        margin: 0;
+      }
+      .field-item {
+        h3 {
+          padding-left: 0;
+          padding-right: 0;
+          text-align: left;
+          a {
+            text-align: left;
+            font-family: 'Montserrat';
+            font-size: rem(22);
+          }
+        }
+      }
+    }
+    .bx-default-pager {
+      bottom: rem(10);
+      right: rem(100);
+      left: auto;
+    }
+    .arrows {
+      bottom: rem(10);
+      right: 0;
+      a {
+        float: none;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// End _mod_paragraphs-item-slideshow
+@mixin s-mod_paragraphs-item-slideshow {
+  .paragraphs-item-featured-events {
+    .slider_coverflow {
+      .group-text-information {
+        padding: rem(20);
+      }
+      .coverflow-slider {
+        position: relative;
+        padding-top: rem(90);
+        overflow: hidden;
+      }
+      .bx-default-pager {
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: auto;
+        margin: auto;
+      }
+      .arrows {
+        left: 0;
+        right: 0;
+        top: rem(40);
+        bottom: auto;
+        text-align: center;
+      }
+    }
+  }
+}

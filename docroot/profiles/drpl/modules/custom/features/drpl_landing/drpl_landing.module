@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Landing feature.
+ */
+
+include_once 'drpl_landing.features.inc';

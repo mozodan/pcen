@@ -1,0 +1,15 @@
+name = Ejemplos de contenidos compuestos
+core = 7.x
+package = Features
+dependencies[] = drpl_common_repository
+dependencies[] = drpl_main_information
+dependencies[] = strongarm
+dependencies[] = uuid_features
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[uuid_node][] = 56aaf042-70a9-49c2-be76-6514d4e0b635
+features[uuid_node][] = 706f0e99-254e-4212-8201-cc1c74736410
+features[uuid_node][] = 7e503d83-e1dd-4137-9933-e74f05e17941
+features[uuid_node][] = 9b8cd3dd-35f2-4a07-a13d-e2457fc992d5
+features[uuid_node][] = a0cb7d0a-2f16-482d-8c27-6c9dfbf99516
+features[uuid_node][] = aa523239-07c1-40a4-8a25-49e57619752b

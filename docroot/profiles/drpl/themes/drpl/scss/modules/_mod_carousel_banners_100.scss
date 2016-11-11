@@ -1,0 +1,229 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_carousel_banners_100
+//    Desripcion: 4.3.3
+//    Fecha: 06/10/2016
+//******************************************************************************/
+// _mod_carousel_banners_100
+.carousel-100_x_100 {
+  /* SHOW / HIDE ARROWS / BUTTONS IN CAROUSELS */
+  .img-responsive {
+    width: 100%;
+  }
+  &.carousel-navigation-bullets {
+    .owl-buttons {
+      display: none;
+    }
+  }
+  &.carousel-navigation-arrows {
+    .owl-pagination {
+      display: none;
+    }
+  }
+  /* STYLING BUTTONS IN CAROUSELS */
+  &.carousel-navigation-all,
+  &.carousel-navigation-bullets,
+  &.carousel-navigation-arrows {
+    .owl-wrapper-outer {
+      //margin: 20px auto;
+      .owl-wrapper {
+        background-color: #e4e4e4;
+        .owl-item {}
+      }
+    }
+    .owl-controls {
+      margin-top: 0;
+      .owl-page {
+        span {
+          width: 20px;
+          height: 20px;
+          background-color: $light_grey_2;
+        }
+      }
+      .owl-pagination {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        & > div.active {
+          span {
+            background-color: $red;
+          }
+        }
+      }
+      .owl-buttons {
+        position: absolute;
+        top: 40%;
+        width: 100%;
+        .owl-prev {
+          width: 50px;
+          height: 80px;
+          position: absolute;
+          left: 0;
+          background: none;
+          &:before {
+            font-family: "Font Awesome";
+            content: "\f104";
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 10rem;
+            color: #000;
+            line-height: 80px;
+          }
+        }
+        .owl-next {
+          width: 50px;
+          height: 80px;
+          position: absolute;
+          right: 0;
+          background: none;
+          &:before {
+            font-family: "Font Awesome";
+            content: "\f105";
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 10rem;
+            color: #000;
+            line-height: 80px;
+          }
+        }
+      }
+    }
+  }
+  .group-paragraph-main-information {
+    position: relative;
+    .field-name-field-title {
+      background-color: #e4e4e4;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 10px 20px 10px 100px;
+      font-family: "Montserrat-bold";
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #0c518a;
+      text-align: right;
+      margin-right: 100px;
+      a {
+        color: #0c518a;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .carousel-100_x_100 {
+    &.carousel-navigation-all,
+    &.carousel-navigation-arrows {
+      .owl-controls {
+        .owl-buttons {
+          top: 30%;
+          .owl-next,
+          .owl-prev {
+            width: 40px;
+            height: 50px;
+            &:before {
+              font-size: 8rem;
+              line-height: 50px;
+              width: auto;
+              height: auto;
+            }
+          }
+        }
+      }
+    }
+    &.carousel-navigation-all,
+    &.carousel-navigation-bullets,
+    &.carousel-navigation-arrows {
+      .owl-wrapper-outer {
+        .owl-wrapper {
+          .owl-item {
+            .field-name-field-title {
+              font-size: 2.2rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .carousel-100_x_100 {
+    &.carousel-navigation-all,
+    &.carousel-navigation-arrows {
+      .owl-controls {
+        .owl-buttons {
+          top: 20%;
+        }
+      }
+    }
+    &.carousel-navigation-all,
+    &.carousel-navigation-bullets,
+    &.carousel-navigation-arrows {
+      .owl-wrapper-outer {
+        .owl-wrapper {
+          .owl-item {
+            .field-name-field-title {
+              font-size: 1.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .carousel-100_x_100 {
+    &.carousel-navigation-all {
+      .owl-controls {
+        .owl-buttons {
+          top: 0;
+        }
+        .owl-pagination {
+          width: 100%;
+          right: 0;
+          bottom: 40%;
+        }
+      }
+    }
+    &.carousel-navigation-arrows {
+      .owl-controls {
+        .owl-buttons {
+          top: 10%;
+        }
+      }
+    }
+    &.carousel-navigation-bullets {
+      .owl-controls {
+        .owl-pagination {
+          width: 100%;
+          right: 0;
+          bottom: 40%;
+        }
+      }
+    }
+    &.carousel-navigation-all,
+    &.carousel-navigation-bullets,
+    &.carousel-navigation-arrows {
+      .owl-wrapper-outer {
+        .owl-wrapper {
+          .owl-item {
+            .field-name-field-title {
+              position: relative;
+              width: 100%;
+              text-align: center;
+              padding: 10px;
+              font-size: 1.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

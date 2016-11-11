@@ -1,0 +1,68 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-text-video
+//    Desripcion: Modulo para paragraphs con texto y video
+//    Creador: Alfredo Rodríguez Bravo
+//    Fecha: 14/09/2016
+//******************************************************************************/
+// _mod_paragraphs-item-text-video
+.paragraphs-item-text-video {
+	font-family: 'Montserrat';
+	margin-top: rem(20);
+	margin-bottom: rem(30);
+	.field-name-field-title {
+		.field-item {
+			font-family: 'Montserrat-light';
+			font-size: rem(26);
+			margin-bottom: rem(10);
+		}
+	}
+	.field-name-field-description {
+		margin-bottom: rem(10);
+		p {
+			font-size: rem(12);
+			margin-top: rem(10);
+		}
+	}
+	.field-type-link-field {
+		a {
+			font-family: 'Montserrat-light';
+			font-size: rem(12);
+			text-transform: uppercase;
+			padding: rem(2) rem(5);
+			color: #D9D2B8;
+			border: rem(1) solid #D9D2B8;
+			border-radius: rem(2);
+			padding-right: rem(15);
+			position: relative;
+			display: inline-block;
+			&:after {
+				@include faicons;
+				display: inline-block;
+				text-decoration: none;
+				color: #D9D2B8;
+				content: "\f105";
+				position: absolute;
+				top: rem(4);
+				right: rem(5);
+			}
+			&:hover {
+				text-decoration: none;
+				background-color: #D9D2B8;
+				color: #f4f1f1;
+				&:after {
+					color: #f4f1f1;
+				}
+			}
+		}
+	}
+	.group-multimedia {
+		.content {
+			video{
+				max-width: 100%;
+			}
+		}
+	}
+}
+
+// End _mod_paragraphs-item-text-video

@@ -1,0 +1,157 @@
+.paragraphs-item-multiple-compound-links {
+  padding: 0 0 0 0;
+  border-left: 10px solid #fff;
+  border-right: 10px solid #fff;
+  position: relative;
+  .field-name-field-title:first-child {
+    top: 0 !important;
+    background-color: white;
+    font-family: "Montserrat-extraBold" !important;
+    .field-item {
+      padding-bottom: 10px;
+    }
+  }
+  .field-name-field-image {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    img {
+      padding: 0;
+      padding: 0;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: auto;
+      width: 100%;
+      -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+    }
+  }
+  > .field-group-div {
+    height: 100%;
+    padding: 0 0 100px 0;
+  }
+  &:hover {
+    > .field-group-div {
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+  }
+  .field-item {
+    a {
+      color: #fff;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    &:before {
+      position: absolute;
+      left: -10px;
+      top: 6px;
+      color: #fff;
+      content: '\f111';
+      font-family: "Font Awesome";
+      font-size: 8px;
+    }
+  }
+  ul {
+    margin: 0;
+    color: #fff;
+    list-style: none;
+    padding: 0;
+    li {
+      margin: 10px 20px;
+      padding: 0;
+      line-height: normal;
+      position: relative;
+    }
+  }
+  .field-group-div {
+    .title-icon {
+      border-top: 1px solid #fff;
+      padding: 20px 0 10px 0;
+      margin: 20px 20px 0 20px;
+      font-size: 20px;
+      .field-name-field-icon,
+      .field-name-field-title {
+        display: inline-block;
+        color: #fff;
+        vertical-align: top;
+        &:first-child {
+          padding: 0 10px 0 0;
+          width: 20%;
+          .field-item {
+            &:before {
+              display: none;
+            }
+          }
+        }
+        &:last-child {
+          width: 80%;
+          .field-item {
+            &:before {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  .paragraphs-item-link-list {
+    &.link-style-simple_links {
+      &:nth-child(2) {
+        .field-group-div {
+          font-size: 22px;
+          font-family: "Montserrat-light";
+          .field-item {
+            a {
+              display: block;
+              margin: 0 0 0 5px;
+            }
+            &:before {
+              left: -10px;
+              top: 10px;
+            }
+          }
+        }
+      }
+      &:nth-child(3) {
+        .field-group-div {
+          div {
+            &:nth-child(2) {
+              a {
+                display: block;
+                margin: 0 0 0 5px;
+                font-family: "Montserrat-light";
+                font-size: 18px;
+              }
+            }
+            &:nth-child(3){
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              text-align: center;
+              padding: 0 0 40px 0;
+              a {
+                background-color: #fff;
+                padding: 0 70px;
+                color: #666;
+                font-size: 30px;
+                font-weight: bold;
+                @include border-radius(50px);
+              }
+              .field-item {
+                position: relative;
+                &:before {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

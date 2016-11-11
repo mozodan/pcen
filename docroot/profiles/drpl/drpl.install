@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * drpl installation profile
+ * Implements hook_install().
+ */
+function drpl_install() {
+  include_once DRUPAL_ROOT.'/profiles/standard/standard.install';
+  standard_install();
+}
+
+/**
+ * Implements hook_install_tasks().
+ */
+function drpl_install_tasks($install_state) {
+  $current_task = variable_get('install_task', 'done');
+  $tasks = array(
+    'drpl_install_additional_modules' => array(
+      'display_name' => st('Enable DRPL requested modules'),
+      'type' => 'batch',
+      'display' => TRUE,
+    ),
+    'drpl_install_finished' => array(
+    ),
+  );
+  return $tasks;
+}
+
+
+/**
+ * Task callback: Install additional modules selected in settings form
+ * @see drpl_install_tasks()
+ */
+function drpl_install_additional_modules() {
+  $modules = array(
+    "custom_drpl_deploy",
+  );
+  
+  $files = system_rebuild_module_data();
+  $modules_sorted = array();
+  foreach ($modules as $module) {
+    if (isset($files[$module]->requires)) {
+      $dependencies = array_keys($files[$module]->requires);
+      $dependencies = array_filter($dependencies, '_drpl_filter_dependencies');
+      $modules = array_merge($modules, $dependencies);
+    }
+  }
+  $modules = array_unique($modules);
+  foreach ($modules as $module) {
+    $modules_sorted[$module] = isset($files[$module]->sort) ? $files[$module]->sort : null;
+  }
+  arsort($modules_sorted);
+
+  $operations = array();
+  $operations[] = array('_drpl_enable_theme', array('bootstrap', 'bartik'));
+  foreach ($modules_sorted as $module => $weight) {
+    $operations[] = array('_drpl_enable_module', array($module, isset($files[$module]->info['name'])));
+  }
+  $batch = array(
+    'title' => st('Installing additional functionality'),
+    'operations' => $operations,
+    'file' => drupal_get_path('profile', 'drpl') . '/drpl.install_callbacks.inc',
+  );
+
+  return $batch;
+}
+
+
+function drpl_install_finished(&$install_state) {
+  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_distribution_name())), PASS_THROUGH);
+  $messages = drupal_set_message();
+  variable_set('install_profile', drupal_get_profile());
+  variable_set('install_task', 'done');
+
+  drupal_flush_all_caches();
+
+  db_update('system')
+    ->fields(array('weight' => 1000))
+    ->condition('type', 'module')
+    ->condition('name', drupal_get_profile())
+    ->execute();
+  registry_update();
+  drupal_get_schema(NULL, TRUE);
+
+}
+
+/**
+ * array_filter() callback used to filter out already installed dependencies.
+ */
+function _drpl_filter_dependencies($dependency) {
+  return !module_exists($dependency);
+}

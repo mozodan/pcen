@@ -1,0 +1,13 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Paragraphs feature.
+ */
+
+include_once 'drpl_paragraphs.features.inc';
+/**
+ * @file
+ * Code for the drpl - Common repository feature.
+ */
+
+include_once 'drpl_paragraphs.features.inc';

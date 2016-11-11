@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Publications feature.
+ */
+
+include_once 'drpl_publications.features.inc';

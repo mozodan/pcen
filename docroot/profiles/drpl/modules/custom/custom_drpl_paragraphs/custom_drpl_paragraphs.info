@@ -1,0 +1,5 @@
+name = DRPL - Manage Paragraphs
+description = Add functionality in paragraphs.
+package = DRPL
+core = 7.x
+dependencies[] = paragraphs

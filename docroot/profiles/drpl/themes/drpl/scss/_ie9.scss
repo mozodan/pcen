@@ -1,0 +1,47 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _ie9
+//    Desripcion: Modulo para
+//    Creador: Carlos Casalengua
+//    Fecha: 21/09/2016
+//******************************************************************************/
+
+//for IE
+.for-ie{
+	.main-container {
+		// paragraphs-item-gallery
+		.paragraphs-item-gallery {
+			.group-paragraph-coverflow {
+				.coverflow {
+					li {
+						opacity: 0.3;
+						min-height: rem(40);
+						&.current {
+							opacity: 1;
+						}
+					}
+				}
+			}
+		}
+		//  END paragraphs-item-gallery
+		
+		.paragraphs-item-featured-events {
+			.slider_coverflow {
+				li {
+					opacity: 0.3;
+					&.current{
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+}
+.owl-item {
+	.group-paragraph-main-information {
+		position: relative;
+	}
+}
+//End for IE
+
+

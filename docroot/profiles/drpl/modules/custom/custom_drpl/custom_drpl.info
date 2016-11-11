@@ -1,0 +1,6 @@
+name = DRPL - Custom
+description = Module custom from drpl
+package = DRPL
+core = 7.x
+files[] = custom_drpl.module
+dependencies[] = list_predefined_options

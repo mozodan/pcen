@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - News feature.
+ */
+
+include_once 'drpl_news.features.inc';

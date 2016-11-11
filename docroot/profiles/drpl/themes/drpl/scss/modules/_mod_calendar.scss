@@ -1,0 +1,183 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_calendar
+//    Desripcion: 4.4.4. Agenda con vista mensual
+//    Fecha: 08/09/2016
+//******************************************************************************/
+// _mod_calendar
+.paragraphs-item-calendar-block {
+  position: relative;
+  margin: 0 rem(20) rem(40);
+  color: $white;
+  //  background-color: #2a68ff;
+  //  padding: 30px;
+  .calendar-block-title {
+    padding-left: rem(15);
+    font-family: "Montserrat-bold";
+    font-size: rem(30);
+    line-height: rem(50);
+    border-left: 12px solid $white;
+  }
+  .calendar-block-date {
+    position: absolute;
+    //    bottom: 20px;
+    bottom: 0;
+    left: 0;
+    width: 20%;
+  }
+  [id^="calendar_block_date_day_v1"] {
+    display: block;
+    text-align: right;
+    font-family: "Montserrat-semiBold";
+    font-size: rem(30);
+  }
+  [id^="calendar_block_date_day_v2"] {
+    display: block;
+    text-align: right;
+    font-family: "Montserrat-semiBold";
+    font-size: rem(24);
+  }
+  #diary_fullcalendar {
+    @include clearfix;
+  }
+  .calendar-main-text {
+    float: left;
+    width: 21%;
+    margin-top: rem(30);
+  }
+  .fc-unthemed {
+    float: left;
+    width: 31%;
+    margin: rem(30) 0 0;
+    padding: 0 rem(20);
+    .fc-toolbar {
+      display: none;
+    }
+    .fc-today {
+      background-color: $white;
+    }
+  }
+  .fc th,
+  .fc td {
+    font-family: "Montserrat";
+    font-size: rem(18);
+    text-align: center;
+    border: 0;
+    &.fc-sat,
+    &.fc-sun {
+      font-family: "Montserrat-bold";
+    }
+  }
+  .fc td {
+    cursor: pointer;
+  }
+  .fc-basic-view .fc-body .fc-row {
+    min-height: rem(25);
+    height: auto!important;
+  }
+  .fc-day-number {
+    &.fc-today {
+      color: $blue;
+      background-color: $white;
+    }
+  }
+  .fc-day-header {
+    text-transform: capitalize;
+  }
+  .fc-head {
+    color: $blue;
+    background-color: $white;
+  }
+  .view-events {
+    float: left;
+    width: 48%;
+    padding: 0 0 0 rem(10);
+    .views-row {
+      float: left;
+      width: 50%;
+    }
+    .views-row-even {
+      padding-left: rem(15);
+    }
+  }
+  .node-events {
+    margin-top: rem(30);
+    padding: 0;
+    //max-height: rem(80);
+    overflow: hidden;
+    .field-name-title {
+      h3 {
+        margin: 0;
+        a {
+          font-family: "Montserrat-semiBold";
+          font-size: rem(22);
+          color: $white;
+        }
+      }
+    }
+    .field-name-field-short-description-single {
+      border: none !important;
+      padding-top: 0 !important;
+    }
+    .field-name-body,
+    .field-name-field-short-description {
+      font-family: "Montserrat-light";
+      font-size: rem(19);
+      color: $white;
+      &.field-type-text-with-summary {
+        p {
+          margin: 0;
+          font-family: "Montserrat-light";
+          color: $white;
+        }
+      }
+    }
+  }
+  .fc-day-grid-container {
+    height: auto!important;
+  }
+}
+
+// End _mod_calendar
+@mixin l-mod_calendar {
+  .paragraphs-item-calendar-block {
+    .calendar-main-text {
+      width: 100%;
+    }
+    .fc-unthemed {
+      width: 100%;
+    }
+    .calendar-block-title {
+      width: 100%;
+    }
+    .calendar-block-date {
+      position: inherit;
+      width: 100%;
+      max-width: inherit;
+      text-align: center;
+    }
+    .view-events {
+      width: 100%;
+      .views-row {
+        width: 100%;
+      }
+      .views-row-even {
+        padding-left: 0;
+      }
+      .views-row-first {
+        display: block;
+      }
+    }
+    [id^="calendar_block_date_day_v1"] {
+      display: inline-block;
+    }
+    [id^="calendar_block_date_day_v2"] {
+      display: inline-block;
+      padding-left: rem(10);
+    }
+    .node-events {
+      width: 100%;
+      margin: rem(30) auto 0;
+    }
+  }
+}

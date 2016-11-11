@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the DRPL - Press conferences feature.
+ */
+
+include_once 'drpl_press_conferences.features.inc';

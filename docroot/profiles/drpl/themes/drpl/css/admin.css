@@ -1,0 +1,226 @@
+/*TEXTOS*/
+/*BORDES*/
+/*BACKGROUNDS*/
+/* ************************************************************************** generic */
+body #admin-menu {
+  z-index: 9999999999 !important;
+}
+
+ul[id*="admin-menu"] > li {
+  font-size: 140%;
+}
+
+.menu-menu-administration-menu-tools.admin-tab-active,
+.menu-menu-administration-menu-tools {
+  display: block;
+  min-height: 32px;
+  line-height: 32px;
+}
+
+div#admin-toolbar.vertical {
+  top: 20px;
+  z-index: 999999;
+}
+
+div#admin-toolbar.vertical div.admin-tab-active,
+#admin-toolbar ul.menu li a {
+  height: 25px;
+  border: 0;
+}
+
+body.admin-expanded.admin-vertical.admin-nw,
+body.admin-expanded.admin-vertical.admin-sw {
+  margin: 0 0 0 260px !important;
+}
+
+body.admin-expanded.admin-vertical.admin-nw > .main-container,
+body.admin-expanded.admin-vertical.admin-sw > .main-container {
+  width: 100% !important;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar,
+body.admin-expanded.admin-vertical.admin-sw #navbar {
+  border: 0;
+  border-bottom: 1px solid #FFFFFF;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container {
+  width: 100%;
+  margin: auto;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: #DB1F16;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navbar-header,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navbar-header {
+  margin: auto;
+  z-index: 9999;
+  display: inline-block;
+  width: 100%;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navbar-header > .logo-page,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navbar-header > .logo-page {
+  margin: auto;
+  width: 70%;
+  height: 68px;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary {
+  width: 100%;
+  height: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: auto;
+  display: block;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="false"],
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse:not(.in),
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="false"],
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse:not(.in) {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  transition: all .3s ease-out;
+  transition: all .3s ease-out;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="false"] ul,
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse:not(.in) ul,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="false"] ul,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse:not(.in) ul {
+  height: 0;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="true"],
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse.in,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="true"],
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse.in {
+  opacity: 1;
+  visibility: visible;
+  height: auto;
+  transition: all .3s ease-out;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="true"] ul,
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary .navbar-collapse.in ul,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse[aria-expanded="true"] ul,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary .navbar-collapse.in ul {
+  height: auto;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary div.navbar-collapse,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary div.navbar-collapse {
+  width: 100%;
+  z-index: 9999;
+  border: 0;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary ul.menu,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary ul.menu {
+  margin: 0 auto;
+  width: 100%;
+  margin-top: 1px;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary ul.menu > li,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary ul.menu > li {
+  display: table-row;
+  width: 100% !important;
+  height: 60px;
+  padding: 0;
+  margin-top: 0;
+  border-top: 1px solid #FFFFFF;
+  background-color: #DB1F16;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary ul.menu > li a,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary ul.menu > li a {
+  color: #FFFFFF;
+  display: block !important;
+  border-bottom: 1px solid #FFFFFF;
+  width: 100%;
+  height: 60px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 40px;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary ul.menu > li:hover,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary ul.menu > li:hover {
+  background-color: #DB1F16;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary ul.menu > li:hover a,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary ul.menu > li:hover a {
+  color: white;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navigation-primary ul.menu > li.last a,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navigation-primary ul.menu > li.last a {
+  padding-top: 10px;
+  border-bottom: 0;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navbar-toggle,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navbar-toggle {
+  display: block;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .navbar-toggle:focus,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .navbar-toggle:focus {
+  background-color: transparent;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .block-search-header,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .block-search-header {
+  position: absolute;
+  top: 5px;
+  height: 68px;
+}
+
+body.admin-expanded.admin-vertical.admin-nw #navbar > .container .block-search-header:before,
+body.admin-expanded.admin-vertical.admin-sw #navbar > .container .block-search-header:before {
+  background-color: #DB1F16;
+  color: #FFFFFF;
+}
+
+body.admin-expanded.admin-vertical.admin-nw .navbar,
+body.admin-expanded.admin-vertical.admin-sw .navbar {
+  margin: 0 !important;
+}
+
+.messages,
+.action-links,
+.nav-tabs {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0;
+}
+
+.action-links,
+.nav-tabs {
+  background-color: white;
+}
+
+.field-name-field-filter-categories {
+  display: flex;
+}
+
+.field-name-field-filter-categories > .form-type-checkboxes > div > div {
+  width: 50%;
+  float: left;
+  white-space: normal;
+}

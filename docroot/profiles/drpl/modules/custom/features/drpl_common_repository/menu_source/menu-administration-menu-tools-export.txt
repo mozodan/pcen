@@ -1,0 +1,20 @@
+Administrar contenidos compuestos {"url":"admin\/main-information","options":{"attributes":{"title":""},"identifier":"menu-administration-menu-tools_administrar-informaciones-prcticas:admin\/main-information"},"weight":"-50"}
+Administrar media {"url":"admin\/content\/file","options":{"attributes":{"title":""},"identifier":"menu-administration-menu-tools_administrar-media:admin\/content\/file"},"weight":"-43"}
+Administrar noticias {"url":"admin\/news","options":{"attributes":{"title":""},"identifier":"menu-administration-menu-tools_administrar-noticias:admin\/news"},"weight":"-35"}
+Administrar actividades {"url":"admin\/events","options":{"attributes":{"title":""},"identifier":"menu-administration-menu-tools_administrar-eventos:admin\/events"},"weight":"-49"}
+Administrar suscriptores newsletter {"url":"admin\/structure\/entityform_types\/manage\/newsletter\/submissions","options":{"attributes":{"title":""},"identifier":"menu-administration-menu-tools_suscriptores-newsletter:admin\/structure\/entityform_types\/manage\/newsletter\/submissions"},"weight":"-31"}
+Administrar menú disfrutar {"url":"admin\/structure\/taxonomy\/enjoy_category","options":{"attributes":{"title":""}},"weight":"-42"}
+Administrar menú vivir {"url":"admin\/structure\/taxonomy\/live_category","options":{"attributes":{"title":""}},"weight":"-38"}
+Administrar menú invertir {"url":"admin\/structure\/taxonomy\/invest_category","options":{"attributes":{"title":""}},"weight":"-39"}
+Administrar actividades - categorías {"url":"<front>","options":{"attributes":{"title":""}},"weight":"-48"}
+Administrar menú gobierno abierto {"url":"admin\/structure\/menu\/manage\/menu-open-government","options":{"attributes":{"title":""}},"weight":"-41"}
+Administrar menú inferior {"url":"admin\/structure\/menu\/manage\/menu-footer","options":{"attributes":{"title":""}},"weight":"-40"}
+Administrar etiquetas {"url":"admin\/structure\/taxonomy\/tags","options":{"attributes":{"title":""}},"weight":"-46"}
+Administrar trámites {"url":"admin\/formalities","options":{"attributes":{"title":""}},"weight":"-30"}
+Administrar normátivas {"url":"admin\/regulations","options":{"attributes":{"title":""}},"weight":"-36"}
+Administrar publicaciones {"url":"admin\/publications","options":{"attributes":{"title":""}},"weight":"-34"}
+Administrar redes sociales {"url":"admin\/structure\/menu\/manage\/menu-social-media","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-32"}
+Administrar landings {"url":"admin\/landings","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-44"}
+Administrar consejerias {"url":"admin\/structure\/taxonomy\/counseling","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-47"}
+Administrar provincias {"url":"admin\/structure\/taxonomy\/provinces","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-33"}
+Administrar municipios {"url":"admin\/structure\/taxonomy\/municipalities","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-37"}

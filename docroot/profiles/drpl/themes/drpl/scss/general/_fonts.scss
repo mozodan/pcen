@@ -1,0 +1,23 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _fonts.scss
+//    Desripcion: Fuentes
+//******************************************************************************/
+
+/* TYPOGRAPHY */
+
+//@include font-face(Samplinoff, fonts/Samplinoff, null, null, woff woff2);
+//@include font-face("Samplina Neue", fonts/SamplinaNeue, bold, italic);
+// FONT AWESOME
+@include font-face('Font Awesome', '../fonts/fontawesome/fontawesome', normal);
+// END FONT AWESOME
+// MONTSERRAT
+@include font-face('Montserrat', '../fonts/montserrat/Montserrat-Regular', normal, null, eot ttf svg);
+@include font-face('Montserrat-hairline', '../fonts/montserrat/Montserrat-Hairline', normal, null, eot ttf svg);
+@include font-face('Montserrat-ultraLight', '../fonts/montserrat/Montserrat-UltraLight', normal, null, eot ttf svg);
+@include font-face('Montserrat-light', '../fonts/montserrat/Montserrat-Light', normal, null, eot ttf svg);
+@include font-face('Montserrat-semiBold', '../fonts/montserrat/Montserrat-SemiBold', normal, null, eot ttf svg);
+@include font-face('Montserrat-bold', '../fonts/montserrat/Montserrat-Bold', normal, null, eot ttf svg);
+@include font-face('Montserrat-extraBold', '../fonts/montserrat/Montserrat-ExtraBold', normal, null, eot ttf svg);
+@include font-face('Montserrat-black', '../fonts/montserrat/Montserrat-Black', normal, null, eot ttf svg);
+// END MONTSERRAT

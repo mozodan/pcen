@@ -1,0 +1,273 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_call
+//    Desripcion: Parragraph de llamada
+//    Creador: Alfredo Rodríguez Bravo
+//    Fecha: 21/09/2016
+//******************************************************************************/
+// _mod_call
+.paragraphs-item-call {
+  width: 100%;
+  display: inline-block;
+  float: none;
+  margin: rem(30) 0;
+  font-family: 'Montserrat-light';
+  color: $white;
+  position: relative;
+  overflow: hidden;
+  .group-paragraph-background {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    .field-name-field-image,
+    .field-items,
+    .field-item {
+      height: 100%;
+    }
+    img {
+      width: 100%;
+      min-height: 100%;
+    }
+  }
+  .group-content {
+    position: relative;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.4);
+    @include clearfix;
+  }
+  .field-group-div {
+    &.group-paragraph,
+    &.group-content {
+      .group-content {
+        padding: 0;
+      }
+    }
+  }
+  .group-paragraph-main-information,
+  .group-paragraph-link {
+    text-align: center;
+  }
+  .field-name-field-title {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: rem(14);
+    padding: rem(20) rem(100) 0;
+    color: #d4b030;
+    .field-item {
+      display: inline-block;
+      vertical-align: middle;
+      &:before,
+      &:after {
+        font-family: 'Montserrat';
+        content: ". . . . . . . .";
+        width: rem(28);
+        height: rem(15);
+        word-break: break-word;
+        display: inline-block;
+        vertical-align: baseline;
+        margin: 0 rem(10);
+        line-height: 0.6;
+      }
+    }
+  }
+  .field-name-field-description {
+    padding: rem(20) rem(100) 0;
+  }
+  .field-name-field-link {
+    display: inline-block;
+    max-width: 100%;
+    padding: rem(20) 0;
+    a {
+      padding: rem(10);
+      width: rem(200);
+      max-width: 100%;
+      text-align: center;
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.4) !important;
+      color: #FFF;
+      border: rem(1) solid #FFF;
+      border-radius: rem(3);
+      font-size: rem(16);
+      text-transform: uppercase;
+    }
+  }
+  &.call-style-lateral_disposition {
+    .group-content {
+      width: 50%;
+      .group-paragraph-main-information {
+        width: 100%;
+      }
+      .group-paragraph-link {
+        width: 100%;
+        text-align: center;
+        padding-bottom: rem(30);
+      }
+    }
+  }
+  &.paragraphs-item-call-no-text {
+    .group-content {
+      background-color: transparent;
+    }
+  }
+  &.horizontal-disposition {
+    .group-paragraph-main-information,
+    .field-name-field-title {
+      text-align: left;
+    }
+    .field-name-field-description {
+      padding: rem(20) rem(100);
+    }
+    .group-paragraph-link,
+    .group-paragraph-main-information {
+      float: none;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}
+
+.hover-disposition {
+  .group-content {
+    .group-paragraph-link {
+      opacity: 0;
+      transition: .2s all linear;
+      .field-name-field-description {
+        text-align: left;
+        padding: 0;
+      }
+    }
+    .group-paragraph-main-information {
+      border-left: rem(15) solid white;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      & > .field-name-field-title {
+        padding: 0;
+        text-align: left;
+        .field-item {
+          font-size: rem(20);
+          font-family: "Montserrat-bold";
+          color: white;
+          white-space: nowrap;
+          text-shadow: 1px 1px 2px black;
+          text-transform: uppercase;
+          &:after,
+          &:before {
+            display: none;
+          }
+        }
+      }
+      & > .field-name-field-link {
+        text-align: left;
+        float: left;
+        padding: 0;
+        a {
+          width: auto !important;
+          border: none !important;
+          background: none !important;
+          padding: 0 20px 0 0;
+          position: relative;
+          text-align: left;
+          &:before {
+            font-family: "Font Awesome";
+            content: "\f105";
+            position: absolute;
+            font-weight: bold;
+            right: 0;
+          }
+        }
+      }
+    }
+  }
+  .group-content {
+    padding: 20px !important;
+    display: flex;
+    align-content: center;
+    background: rgba(252, 3, 3, 1);
+    background: -moz-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(252, 3, 3, 1)), color-stop(33%, rgba(241, 12, 9, 1)), color-stop(100%, rgba(219, 31, 22, 0)));
+    background: -webkit-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0) 100%);
+    background: -o-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0) 100%);
+    background: -ms-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0) 100%);
+    background: linear-gradient(to right, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0) 100%);
+    transition: .2s all linear;
+    &:hover {
+      background: rgba(252, 3, 3, 0);
+      background: -moz-linear-gradient(left, rgba(252, 3, 3, 0) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 1) 100%);
+      background: -webkit-gradient(left top, right top, color-stop(0%, rgba(252, 3, 3, 0)), color-stop(33%, rgba(241, 12, 9, 1)), color-stop(100%, rgba(219, 31, 22, 1)));
+      background: -webkit-linear-gradient(left, rgba(252, 3, 3, 0) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 1) 100%);
+      background: -o-linear-gradient(left, rgba(252, 3, 3, 0) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 1) 100%);
+      background: -ms-linear-gradient(left, rgba(252, 3, 3, 0) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 1) 100%);
+      background: linear-gradient(to right, rgba(252, 3, 3, 0) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 1) 100%);
+      transition: .2s all linear;
+    }
+    &:hover .group-paragraph-link {
+      opacity: 1;
+      transition: .2s all linear;
+    }
+  }
+}
+
+@mixin m-mod_call {
+  .paragraphs-item-call {
+    .field-name-field-description,
+    .field-name-field-title {
+      padding: rem(10) rem(10) 0;
+    }
+    &.horizontal-disposition {
+      .group-paragraph-main-information {
+        text-align: left;
+      }
+      .field-name-field-description {
+        padding: rem(10);
+      }
+    }
+  }
+  .hover-disposition {
+    .group-content {
+      flex-direction: column;
+      background: rgba(252, 3, 3, 1);
+      background: -moz-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+      background: -webkit-gradient(left top, right top, color-stop(0%, rgba(252, 3, 3, 1)), color-stop(33%, rgba(241, 12, 9, 1)), color-stop(100%, rgba(219, 31, 22, 0.47)));
+      background: -webkit-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+      background: -o-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+      background: -ms-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+      background: linear-gradient(to right, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+      & > div {
+        width: 100%;
+      }
+      .group-paragraph-main-information {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid white;
+      }
+      .group-paragraph-link {
+        opacity: 1;
+        //        border-left: 1.5rem solid transparent;
+      }
+      &:hover {
+        background: rgba(252, 3, 3, 1);
+        background: -moz-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+        background: -webkit-gradient(left top, right top, color-stop(0%, rgba(252, 3, 3, 1)), color-stop(33%, rgba(241, 12, 9, 1)), color-stop(100%, rgba(219, 31, 22, 0.47)));
+        background: -webkit-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+        background: -o-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+        background: -ms-linear-gradient(left, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+        background: linear-gradient(to right, rgba(252, 3, 3, 1) 0%, rgba(241, 12, 9, 1) 33%, rgba(219, 31, 22, 0.47) 100%);
+      }
+    }
+  }
+  .paragraphs-item-call.call-style-lateral_disposition .group-content {
+    width: 100%;
+  }
+}
+
+// End _mod_call
+@mixin s-mod_call {
+  .paragraphs-item-call {
+    .group-paragraph-link,
+    .group-paragraph-main-information {
+      width: 100%;
+    }
+  }
+}

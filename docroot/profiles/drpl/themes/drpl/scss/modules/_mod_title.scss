@@ -1,0 +1,18 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_title
+//    Desripcion: Modulo para los titulos generales
+//    Fecha: 09/09/2016
+//******************************************************************************/
+// _mod_title
+.field-name-field-paragraph-title {
+  margin-left: rem(15);
+  margin-right: rem(15);
+  padding: 10px rem(20);
+  font-size: rem(30);
+  color: #666;
+  line-height: rem(50);
+  border-left: 12px solid $red;
+}
+
+// End _mod_title

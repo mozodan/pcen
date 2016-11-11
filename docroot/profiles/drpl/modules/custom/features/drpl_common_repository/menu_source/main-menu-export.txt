@@ -1,0 +1,5 @@
+Inicio {"url":"<front>","hidden":true,"weight":"-50"}
+Vivir {"url":"<front>","options":{"attributes":{"title":""}},"weight":"-49"}
+Invertir {"url":"<front>","options":{"attributes":{"title":""}},"weight":"-47"}
+Gobierno abierto {"url":"<front>","options":{"attributes":{"title":""}},"weight":"-46"}
+Disfrutar {"url":"<front>","options":{"attributes":{"title":""},"menu_icon":{"enable":0,"path":"profiles\/drpl\/modules\/contrib\/menu_icons\/images\/default_icon.png","image_style":"menu_icon"}},"weight":"-48"}

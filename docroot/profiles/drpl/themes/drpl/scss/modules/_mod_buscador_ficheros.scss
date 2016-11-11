@@ -1,0 +1,100 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_buscador_ficheros
+//    Desripcion: 4.2.18
+//    Fecha: 27/10/2016
+//******************************************************************************/
+
+.paragraphs-item-file-search-by-date {
+  margin: 3rem 0;
+  padding: 2rem;
+  background-color: /* $light_grey */ #ceceff;
+  color: #747489;
+  .block-title {
+    text-align: center;
+    font-family: "Montserrat-light";
+    font-size: 24px;
+    margin: 0 0 2rem 0;
+  }
+  .date-container,
+  .date-container + div {
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+    .block-info-date {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 50px 0 0;
+      .date-diary {
+        font-family: "Montserrat-light";
+        font-size: 24px;
+      }
+      .glyphicon {
+        color: #fff;
+        font-size: 30px;
+      }
+    }
+    .showall {
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      padding: 0 20px 0 0;
+      position: relative;
+      line-height: 35px;
+      &:after {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-family: "Font Awesome";
+        content: "\f105";
+        font-size: 24px;
+        line-height: 35px;
+      }
+    }
+  }
+  .date-container + div {
+    .table-striped > tbody > tr:nth-of-type(odd) {
+      background-color: transparent;
+    }
+    .table > tbody > tr > td {
+      border: none;
+      a {
+        color: #747489;
+      }
+    }
+  }
+}
+
+.col-md-6 {
+  .paragraphs-item-file-search-by-date {
+    .date-container,
+    .date-container + div {
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .paragraphs-item-file-search-by-date {
+    .date-container,
+    .date-container + div {
+      width: 100%;
+      .table-responsive {
+        border: none;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .paragraphs-item-file-search-by-date {
+    .date-container,
+    .date-container + div {
+      .block-info-date {
+        margin: 0 20px 0 0;
+      }
+    }
+  }
+}

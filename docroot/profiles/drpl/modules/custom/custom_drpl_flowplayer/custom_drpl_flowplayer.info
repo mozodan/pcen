@@ -1,0 +1,5 @@
+name = DRPL - Flowplayer
+description = Add Flowplayer formatter
+package = DRPL
+core = 7.x
+files[] = custom_drpl_flowplayer_style_plugin.inc

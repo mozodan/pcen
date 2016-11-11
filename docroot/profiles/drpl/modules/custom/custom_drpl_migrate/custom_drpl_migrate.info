@@ -1,0 +1,13 @@
+name = DRPL - Custom migrate
+description = Migration module content to DRPL profile
+package = DRPL
+core = 7.x
+dependencies[] = migrate
+dependencies[] = migrate_extras
+#  include the files that contain your Migrate classes
+files[] = custom_drpl_migrate.module
+files[] = migrations/thematics.inc
+files[] = migrations/persons.inc
+files[] = migrations/counseling.inc
+files[] = src/migrate/handlers/file.inc
+files[] = src/migrate/handlers/xml.inc

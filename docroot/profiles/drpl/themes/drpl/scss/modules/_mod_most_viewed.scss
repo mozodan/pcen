@@ -1,0 +1,28 @@
+.view-id-most_viewed_content {
+  ul {
+    li {
+      list-style: none;
+      float: left;
+      a {
+        background-color: #e4e4e4;
+        color: $blue;
+        padding: 10px 20px;
+        display: block;
+        border-radius: 15px;
+        text-decoration: none;
+        margin: 10px 5px;
+        font-size: 16px;
+        &:hover {
+          background-color: $blue;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+//.view-display-id-most_viewed_live {
+//  width: 60%;
+//  position: absolute;
+//  top: 120px;
+//}

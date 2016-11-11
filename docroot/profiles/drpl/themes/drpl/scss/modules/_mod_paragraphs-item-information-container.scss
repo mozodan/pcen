@@ -1,0 +1,83 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-information-container
+//    Desripcion: 4.3.14
+//    Fecha: 21/10/2016
+//******************************************************************************/
+// _mod_paragraphs-item-information-container
+
+.paragraphs-item-information-container {
+  margin: 3rem 0;
+  div > .field-item {
+    margin: 0 0 30px 0;
+    font-family: "Montserrat-light";
+    color: #fff;
+    .paragraphs-item-information-container-block {
+      height: 200px;
+      .group-paragraph-image,
+      .group-paragraph-main-information {
+        padding: 15px;
+      }
+      .field-name-field-image {
+        .field-item {
+          margin: 0;
+        }
+      }
+      .field-name-field-paragraph-title {
+        margin: 0;
+        border: none;
+        padding: 0;
+        .field-item {
+          border-bottom: 1px solid #fff;
+          margin: 0 0 10px 0;
+          padding: 0 0 10px 0;
+        }
+      }
+      .field-name-field-description {
+        .field-item {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .paragraphs-item-information-container {
+    div > .field-item {
+      .paragraphs-item-information-container-block {
+        height: 240px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1170px) {
+  .paragraphs-item-information-container {
+    div > .field-item {
+      &.col-md-6 {
+        width: 100%;
+      }
+      .paragraphs-item-information-container-block {
+        height: 280px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .paragraphs-item-information-container {
+    div > .field-item {
+      .paragraphs-item-information-container-block {
+        height: auto;
+        .group-paragraph-image,
+        .group-paragraph-main-information {
+          text-align: center;
+          .img-responsive {
+            margin: 0 auto;
+          }
+        }
+      }
+    }
+  }
+}

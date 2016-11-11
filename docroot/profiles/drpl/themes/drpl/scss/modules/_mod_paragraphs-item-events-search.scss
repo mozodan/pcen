@@ -1,0 +1,134 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-events-search
+//    Desripcion: 4.3.10 - Busqueda de actividades mensual
+//    Fecha: 21/10/2016
+//******************************************************************************/
+// _mod_paragraphs-item-events-search
+
+
+.paragraphs-item-events-search {
+  font-family: "Montserrat";
+  margin: 3rem 0;
+  padding: 0 10px;
+  background-color: red;
+  .block-title {
+    font-size: 16px;
+    margin: 0 0 30px 0;
+    position: relative;
+  }
+  // .calendar-description {
+  //   margin: 0 0 30px 0;
+  //   .description {
+  //     font-size: 16px;
+  //   }
+  // }
+  // .date-start,
+  // .date-end {
+  //   display: inline-block;
+  //   width: 320px;
+  //   margin: 0 0 30px 0;
+  //   .date-container {
+  //     span {
+  //       &.date-from,
+  //       &.date-to {
+  //         display: block;
+  //         width: 100%;
+  //       }
+  //     }
+  //     .block-info-date {
+  //       display: inline-block;
+  //       text-align: center;
+  //       padding: 0;
+  //       box-sizing: border-box;
+  //       .date-diary {
+  //         font-size: 24px;
+  //         text-transform: uppercase;
+  //         font-family: "Montserrat-light";
+  //       }
+  //       .date-arrow {
+  //         color: #999;
+  //         cursor: pointer;
+  //       }
+  //       &:nth-child(2) {
+  //         width: 40px;
+  //       }
+  //       &:nth-child(3) {
+  //         width: 210px;
+  //       }
+  //       &:last-child {
+  //         width: 70px;
+  //       }
+  //     }
+  //   }
+  // }
+  // .form-control {
+  //   &.form-text {
+  //     @include border-radius(100px);
+  //     border-color: #ddd;
+  //   }
+  // }
+  // .form-type-select {
+  //   background-color: #fff;
+  //   @include border-radius(4px);
+  //   position: relative;
+  //   .form-control {
+  //     &.form-select {
+  //       border-color: #ddd;
+  //       @include appearance(none);
+  //       background-color: transparent;
+  //       position: relative;
+  //       z-index: 1;
+  //       padding: 6px 40px 6px 12px;
+  //     }
+  //   }
+  //   &:after {
+  //     font-family: "Font Awesome";
+  //     content: "\f0d7";
+  //     position: absolute;
+  //     right: 10px;
+  //     top: 8px;
+  //     font-size: 24px;
+  //     line-height: 22px;
+  //   }
+  // }
+  // .views-exposed-form {
+  //   .views-exposed-widget {
+  //     float: none;
+  //     display: block;
+  //     padding: 0 0 20px 0;
+  //     width: 640px;
+  //     &.views-widget-filter-field_date_value,
+  //     &.views-widget-filter-field_date_value2 {
+  //       display: none;
+  //     }
+  //     button {
+  //       &#edit-submit-news-search {
+  //         margin: 0;
+  //         @include border-radius(100px);
+  //         border-color: $red;
+  //         color: $red;
+  //         background-color: transparent;
+  //         padding: 6px 30px;
+  //         width: 100%;
+  //       }
+  //     }
+  //   }
+  // }
+}
+
+@media only screen and (max-width: 1090px) {
+  
+}
+
+@media only screen and (max-width: 1025px) {
+  
+}
+
+@media only screen and (max-width: 470px) {
+  
+}
+
+@media only screen and (max-width: 365px) {
+  
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the drpl - Common repository feature.
+ */
+
+include_once 'drpl_common_repository.features.inc';

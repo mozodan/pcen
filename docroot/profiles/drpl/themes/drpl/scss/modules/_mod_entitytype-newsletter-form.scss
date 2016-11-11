@@ -1,0 +1,176 @@
+//*****************************************************************************
+//    Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-newsletter
+//    Desripcion: Modulo para paragraphs con texto y video
+//    Creador: Alfredo Rodríguez Bravo
+//    Fecha: 14/09/2016
+//******************************************************************************/
+// _mod_paragraphs-item-newsletter
+.paragraphs-item-newsletter {
+  color: #EFEFF0;
+  font-family: 'Montserrat-light';
+  padding: rem(24) 0;
+  position: relative;
+  text-align: center;
+  .group-paragraph {
+    position: relative;
+    margin: 0 auto;
+  }
+  .field-name-field-title,
+  .field-name-field-short-description,
+  .field-name-field-block-reference {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .field-name-field-title {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: rem(30);
+    top: 0 !important;
+    color: inherit !important;
+    .field-item {
+      font-size: rem(24);
+      text-align: left;
+    }
+  }
+  .field-name-field-short-description {
+    width: rem(235);
+    padding-right: rem(30);
+    .field-item {
+      font-size: rem(12);
+      text-align: left;
+    }
+  }
+  .field-name-field-block-reference {
+    .field-widget-email-textfield {
+      display: inline-block;
+    }
+  }
+  .field-name-field-email {
+    margin-bottom: 0;
+  }
+  .block-entityform-block {
+    .block-title {
+      @include only-reader;
+    }
+    .form-item-field-email-und-0-email {
+      padding-right: rem(15);
+    }
+    .entitytype-newsletter-form,
+    .pre-instructions,
+    .field-widget-email-textfield,
+    .form-actions,
+    .contextual-links-wrapper,
+    #newsletter {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .entitytype-newsletter-form {
+      > div {
+        display: inline-block;
+      }
+    }
+  }
+  .form-control {
+    &.form-text {
+      font-family: 'Montserrat-bold';
+      text-align: left;
+      width: rem(207);
+      color: $black;
+      padding: rem(7) rem(15);
+      font-size: rem(11);
+    }
+  }
+  .form-actions {
+    clear: none;
+    .form-submit {
+      padding: rem(10);
+      width: rem(120);
+      background: $BG-color-2;
+      color: #FFF;
+      border: rem(1) solid #FFF;
+      border-radius: rem(3);
+      font-size: rem(10);
+      text-transform: uppercase;
+    }
+  }
+  .field-widget-email-textfield {
+    display: inline-block;
+  }
+  .control-label {
+    @include only-reader;
+  }
+}
+
+// End _mod_paragraphs-item-newsletter
+@mixin l-mod_paragraphs-item-slideshow {
+  .paragraphs-item-newsletter {
+    .field-name-field-title,
+    .field-name-field-short-description,
+    .field-name-field-block-reference {
+      margin-bottom: rem(20);
+    }
+  }
+}
+
+@mixin m-mod_paragraphs-item-slideshow {
+  .paragraphs-item-newsletter {
+    .field-name-field-title,
+    .field-name-field-short-description,
+    .field-name-field-block-reference {
+      width: 100%;
+      padding-left: rem(30);
+      margin-bottom: rem(15);
+    }
+    .field-name-field-block-reference {
+      padding-right: rem(30);
+      margin-bottom: 0;
+    }
+    .entitytype-newsletter-form,
+    .pre-instructions,
+    .field-widget-email-textfield,
+    .form-actions,
+    .contextual-links-wrapper,
+    #newsletter {
+      width: 100%;
+    }
+    .entitytype-newsletter-form {
+      > div {
+        width: 100%;
+      }
+    }
+    .field-name-field-short-description {
+      margin-bottom: rem(5);
+    }
+    .block-entityform-block {
+      .form-item-field-email-und-0-email {
+        padding-right: 0;
+      }
+    }
+    .field-widget-email-textfield {
+      .form-control {
+        &.form-text {
+          width: 100%;
+          margin-bottom: rem(20);
+        }
+      }
+    }
+    .form-actions {
+      text-align: left;
+      .form-submit {
+        float: left;
+      }
+    }
+  }
+}
+
+@mixin s-mod_paragraphs-item-slideshow {
+  .paragraphs-item-newsletter {
+    .form-actions {
+      text-align: left;
+      .form-submit {
+        width: 100%;
+      }
+    }
+  }
+}

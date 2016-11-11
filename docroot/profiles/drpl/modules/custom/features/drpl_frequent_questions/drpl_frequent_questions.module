@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the DRPL - Preguntas frecuentes feature.
+ */
+
+include_once 'drpl_frequent_questions.features.inc';

@@ -1,0 +1,83 @@
+//*****************************************************************************
+//	  Proyecto: drpl
+//    Titulo: _mod_paragraphs-item-action
+//    Desripcion: paragraphs-item-action
+//    Creador: Carlos Casalengua
+//    Fecha: 23/09/2016
+//******************************************************************************/
+// _mod_paragraphs-item-action
+
+.paragraphs-item-action{
+	margin-top: rem(20);
+	.group-paragraph-information{
+		display: inline-block;
+		vertical-align: middle;
+		float: none;
+		font-family: "Montserrat-light";
+		font-size: rem(16);
+		img{
+			width: rem(100);
+			max-width: 100%;
+			margin: auto;
+		}
+		p{
+			+p{
+				margin: rem(20) 0 0;
+			}
+		}
+	}
+	.group-paragraph-link{
+		display: inline-block;
+		vertical-align: middle;
+		float: none;
+	}
+	.field-name-field-link{
+		text-align: center;
+		a{
+			position: relative;
+			display: inline-block;
+			max-width: 100%;
+			padding: rem(7) rem(12) rem(7) rem(40);
+			font-family: "Montserrat";
+			font-size: rem(16);
+			color: #FFF;
+			background: #DB1F16;
+			border-radius: 10px;
+			&:before{
+				content:"\f04b";
+				font-family: "Font Awesome";
+				position: absolute;
+				top:0;
+				bottom: 0;
+				left: rem(8);
+				width: 22px;
+				height: 22px;
+				margin: auto;
+				padding: rem(3) rem(5);
+				line-height: 1em;
+				font-size: rem(14);
+				color: #FFF;
+				border: 1px solid #8A2908;
+				border-radius: 50%;
+			}
+		}
+	}
+}
+
+// End _mod_paragraphs-item-action
+
+@mixin s-mod_paragraphs-item-action{
+	.paragraphs-item-action {
+		p {
+			margin: rem(20) 0 0;
+		}
+		.field-name-field-link{
+			a {
+				margin-top: rem(20);
+			}
+		}
+		.group-paragraph-link{
+			width: 100%;
+		}
+	}
+}
